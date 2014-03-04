@@ -5,9 +5,8 @@ license that can be found in the LICENSE file.
 -->
 <!--
 /**
- * @module Polymer Core Elements
- */
-/**
+ * @group Polymer Core Elements
+ *
  * core-xhr can be used to perform XMLHttpRequests.
  
  * Example:
@@ -16,17 +15,21 @@ license that can be found in the LICENSE file.
  *     ...
  *     this.$.xhr.request({url: url, params: params, callback: callback});
  *
- * @class core-xhr
+ * @element core-xhr
  */
 -->
 <link rel="import" href="../polymer/polymer.html">
 
-<polymer-element name="core-xhr">
-
+<core-element name="core-xhr">
+  <template>
+    <style>
+      :host {
+        display: none;
+      }
+    </style>
+  </template>
   <script>
-
     Polymer('core-xhr', {
-
       makeReadyStateHandler: function(xhr, callback) {
         xhr.onreadystatechange = function() {
           if (xhr.readyState == 4) {
@@ -34,7 +37,6 @@ license that can be found in the LICENSE file.
           }
         };
       },
-
       setRequestHeaders: function(xhr, headers) {
         if (headers) {
           for (var name in headers) {
@@ -42,7 +44,6 @@ license that can be found in the LICENSE file.
           }
         }
       },
-
       toQueryString: function(params) {
         var r = [];
         for (var n in params) {
@@ -52,7 +53,6 @@ license that can be found in the LICENSE file.
         }
         return r.join('&');
       },
-
       /**
        * Sends a HTTP request to the server and returns the XHR object.
        *
@@ -90,9 +90,6 @@ license that can be found in the LICENSE file.
         }
         return xhr;
       }
-
     });
-
   </script>
-
-</polymer-element>
+</core-element>

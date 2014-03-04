@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>polymer-ajax</title>
+  <title>core-ajax</title>
   <script src="../platform/platform.js"></script>
-  <link rel="import" href="polymer-ajax.html">
+  <link rel="import" href="core-ajax.html">
 </head>
 <body>
-  <polymer-ajax auto url="http://gdata.youtube.com/feeds/api/videos/" 
+  <core-ajax auto url="http://gdata.youtube.com/feeds/api/videos/" 
       params='{"alt":"json", "q":"chrome"}'
-      handleAs="json"></polymer-ajax>
+      handleAs="json"></core-ajax>
    
   <template repeat="{{response.feed.entry}}">
     <div>{{title.$t}}</div>
@@ -16,8 +16,8 @@
   
   <script>
     document.addEventListener('polymer-ready', function() {
-      var ajax = document.querySelector("polymer-ajax");
-      ajax.addEventListener("polymer-response", 
+      var ajax = document.querySelector("core-ajax");
+      ajax.addEventListener("core-response", 
         function(e) {
           document.querySelector('template').model = {
             response: e.detail.response

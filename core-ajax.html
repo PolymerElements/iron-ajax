@@ -51,11 +51,15 @@ license that can be found in the LICENSE file.
  */
  
 -->
+
 <link rel="import" href="core-xhr.html">
 
 <polymer-element name="core-ajax" attributes="url handleAs auto params response method headers body contentType">
+
   <script>
+
     Polymer('core-ajax', {
+ 
       /**
        * The URL target of the request.
        * 
@@ -64,6 +68,7 @@ license that can be found in the LICENSE file.
        * @default ''
        */
       url: '',
+
       /**
        * Specifies what data to store in the `response` property, and
        * to deliver as `event.response` in `response` events.
@@ -81,6 +86,7 @@ license that can be found in the LICENSE file.
        * @default 'text'
        */
       handleAs: '',
+
       /**
        * If true, automatically performs an Ajax request when either `url` or `params` changes.
        *
@@ -89,6 +95,7 @@ license that can be found in the LICENSE file.
        * @default false
        */
       auto: false,
+
       /**
        * Parameters to send to the specified URL, as JSON.
        *  
@@ -97,6 +104,7 @@ license that can be found in the LICENSE file.
        * @default ''
        */
       params: '',
+
       /**
        * Returns the response object.
        *
@@ -105,6 +113,7 @@ license that can be found in the LICENSE file.
        * @default null
        */
       response: null,
+
       /**
        * The HTTP method to use such as 'GET', 'POST', 'PUT', or 'DELETE'.
        * Default is 'GET'.
@@ -114,6 +123,7 @@ license that can be found in the LICENSE file.
        * @default ''
        */
       method: '',
+
       /**
        * HTTP request headers to send.
        *
@@ -130,6 +140,7 @@ license that can be found in the LICENSE file.
        * @default null
        */
       headers: null,
+
       /**
        * Optional raw body content to send when method === "POST".
        *
@@ -144,6 +155,7 @@ license that can be found in the LICENSE file.
        * @default null
        */
       body: null,
+
       /**
        * Content type to use when sending data.
        *
@@ -152,9 +164,11 @@ license that can be found in the LICENSE file.
        * @default 'application/x-www-form-urlencoded'
        */
       contentType: 'application/x-www-form-urlencoded',
+
       ready: function() {
         this.xhr = document.createElement('core-xhr');
       },
+
       receive: function(response, xhr) {
         if (this.isSuccess(xhr)) {
           this.processResponse(xhr);
@@ -163,31 +177,39 @@ license that can be found in the LICENSE file.
         }
         this.complete(xhr);
       },
+
       isSuccess: function(xhr) {
         var status = xhr.status || 0;
         return !status || (status >= 200 && status < 300);
       },
+
       processResponse: function(xhr) {
         var response = this.evalResponse(xhr);
         this.response = response;
         this.fire('core-response', {response: response, xhr: xhr});
       },
+
       error: function(xhr) {
         var response = xhr.status + ': ' + xhr.responseText;
         this.fire('core-error', {response: response, xhr: xhr});
       },
+
       complete: function(xhr) {
         this.fire('core-complete', {response: xhr.status, xhr: xhr});
       },
+
       evalResponse: function(xhr) {
         return this[(this.handleAs || 'text') + 'Handler'](xhr);
       },
+
       xmlHandler: function(xhr) {
         return xhr.responseXML;
       },
+
       textHandler: function(xhr) {
         return xhr.responseText;
       },
+
       jsonHandler: function(xhr) {
         var r = xhr.responseText;
         try {
@@ -196,6 +218,7 @@ license that can be found in the LICENSE file.
           return r;
         }
       },
+
       urlChanged: function() {
         if (!this.handleAs) {
           var ext = String(this.url).split('.').pop();
@@ -207,12 +230,15 @@ license that can be found in the LICENSE file.
         }
         this.autoGo();
       },
+
       paramsChanged: function() {
         this.autoGo();
       },
+
       autoChanged: function() {
         this.autoGo();
       },
+
       // TODO(sorvell): multiple side-effects could call autoGo 
       // during one micro-task, use a job to have only one action 
       // occur
@@ -221,6 +247,7 @@ license that can be found in the LICENSE file.
           this.goJob = this.job(this.goJob, this.go, 0);
         }
       },
+
       /**
        * Performs an Ajax request to the specified URL.
        *
@@ -248,6 +275,9 @@ license that can be found in the LICENSE file.
         args.method = this.method;
         return args.url && this.xhr.request(args);
       }
+      
     });
+
   </script>
+
 </polymer-element>

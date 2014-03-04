@@ -18,18 +18,25 @@ license that can be found in the LICENSE file.
  * @element core-xhr
  */
 -->
+
 <link rel="import" href="../polymer/polymer.html">
 
 <polymer-element name="core-xhr">
+
   <template>
+
     <style>
       :host {
         display: none;
       }
     </style>
+
   </template>
+
   <script>
+
     Polymer('core-xhr', {
+
       makeReadyStateHandler: function(xhr, callback) {
         xhr.onreadystatechange = function() {
           if (xhr.readyState == 4) {
@@ -37,6 +44,7 @@ license that can be found in the LICENSE file.
           }
         };
       },
+
       setRequestHeaders: function(xhr, headers) {
         if (headers) {
           for (var name in headers) {
@@ -44,6 +52,7 @@ license that can be found in the LICENSE file.
           }
         }
       },
+
       toQueryString: function(params) {
         var r = [];
         for (var n in params) {
@@ -53,6 +62,7 @@ license that can be found in the LICENSE file.
         }
         return r.join('&');
       },
+
       /**
        * Sends a HTTP request to the server and returns the XHR object.
        *
@@ -90,6 +100,9 @@ license that can be found in the LICENSE file.
         }
         return xhr;
       }
+
     });
+
   </script>
+  
 </polymer-element>

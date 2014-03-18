@@ -281,9 +281,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (this.contentType) {
           args.headers['content-type'] = this.contentType;
         }
-        if (this.withCredentials) {
-          args.withCredentials = true;
-        }
+        
+        args.withCredentials = this.withCredentials;
         args.callback = this.receive.bind(this);
         args.url = this.url;
         args.method = this.method;

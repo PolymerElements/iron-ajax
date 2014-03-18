@@ -79,6 +79,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        *    @param {Object} inOptions.body The content for the request body for POST method.
        *    @param {Object} inOptions.headers HTTP request headers.
        *    @param {String} inOptions.responseType The response type. Default is 'text'.
+       *    @param {boolean} inOptions.withCredentials Whether or not to send credentials on the request. Default is false.
        *    @param {Object} inOptions.callback Called when request is completed.
        * @returns {Object} XHR object.
        */
@@ -94,6 +95,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         xhr.open(method, url, async);
         if (options.responseType) {
           xhr.responseType = options.responseType;
+        }
+        if (options.withCredentials) {
+          xhr.withCredentials = true;
         }
         this.makeReadyStateHandler(xhr, options.callback);
         this.setRequestHeaders(xhr, options.headers);

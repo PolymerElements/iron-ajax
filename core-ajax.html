@@ -10,24 +10,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 /**
  * @group Polymer Core Elements
  *
- * The `core-ajax` element performs `XMLHttpRequest`s.
- * 
- * You can trigger a request explicitly by calling `go` on the
- * element. 
+ * The `core-ajax` element exposes `XMLHttpRequest` functionality.
+ *
+ *     <core-ajax 
+ *         auto 
+ *         url="http://gdata.youtube.com/feeds/api/videos/" 
+ *         params='{"alt":"json", "q":"chrome"}'
+ *         handleAs="json"
+ *         on-core-response="{{handleResponse}}"></core-ajax>
  * 
  * With `auto` set to `true`, the element performs a request whenever
  * its `url` or `params` properties are changed.
- * 
  *
- * Example:
- *
- *     <core-ajax auto url="http://gdata.youtube.com/feeds/api/videos/" 
- *         params='{"alt":"json", "q":"chrome"}'
- *         handleAs="json"
- *         on-core-response="{{handleResponse}}">
- *     </core-ajax>
- * 
  * Note: The `params` attribute must be double quoted JSON.
+ *
+ * You can trigger a request explicitly by calling `go` on the
+ * element.
  *
  * @element core-ajax
  * @status beta
@@ -132,11 +130,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        *
        * Example:
        *
-       *     <core-ajax auto url="http://somesite.com"
+       *     <core-ajax 
+       *         auto
+       *         url="http://somesite.com"
        *         headers='{"X-Requested-With": "XMLHttpRequest"}'
        *         handleAs="json"
-       *         on-core-response="{{handleResponse}}">
-       *     </core-ajax>
+       *         on-core-response="{{handleResponse}}"></core-ajax>
        *  
        * @attribute headers
        * @type Object

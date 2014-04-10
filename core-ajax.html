@@ -77,6 +77,10 @@ element.
        *    `xml`: uses `XHR.responseXML`.
        *    
        *    `json`: uses `XHR.responseText` parsed as JSON.
+       *
+       *    `arraybuffer`: uses `XHR.response`.
+       *
+       *    `blob`: uses `XHR.response`.
        *  
        * @attribute handleAs
        * @type string
@@ -226,6 +230,14 @@ element.
         }
       },
 
+      blobHandler: function(xhr) {
+        return xhr.response;
+      },
+
+      arraybufferHandler: function(xhr) {
+        return xhr.response;
+      },
+
       urlChanged: function() {
         if (!this.handleAs) {
           var ext = String(this.url).split('.').pop();
@@ -276,6 +288,9 @@ element.
         }
         if (this.contentType) {
           args.headers['content-type'] = this.contentType;
+        }
+        if (this.handleAs === 'arraybuffer' || this.handleAs === 'blob') {
+          args.responseType = this.handleAs;
         }
         
         args.withCredentials = this.withCredentials;

@@ -81,6 +81,8 @@ element.
        *    `arraybuffer`: uses `XHR.response`.
        *
        *    `blob`: uses `XHR.response`.
+       *
+       *    `document`: uses `XHR.response`.
        *  
        * @attribute handleAs
        * @type string
@@ -230,6 +232,10 @@ element.
         }
       },
 
+      documentHandler: function(xhr) {
+        return xhr.response;
+      },
+
       blobHandler: function(xhr) {
         return xhr.response;
       },
@@ -289,7 +295,8 @@ element.
         if (this.contentType) {
           args.headers['content-type'] = this.contentType;
         }
-        if (this.handleAs === 'arraybuffer' || this.handleAs === 'blob') {
+        if (this.handleAs === 'arraybuffer' || this.handleAs === 'blob' ||
+            this.handleAs === 'document') {
           args.responseType = this.handleAs;
         }
         

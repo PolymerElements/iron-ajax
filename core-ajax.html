@@ -277,10 +277,8 @@ element.
        */
       go: function() {
         var args = this.xhrArgs || {};
-        // TODO(sjmiles): we may want to default to POST if body is set
-        if (this.bodyMethods[this.method.toUpperCase()]) {
-          args.body = this.body || args.body;
-        }
+        // TODO(sjmiles): we may want XHR to default to POST if body is set
+        args.body = this.body || args.body;
         args.params = this.params || args.params;
         if (args.params && typeof(args.params) == 'string') {
           args.params = JSON.parse(args.params);
@@ -301,12 +299,6 @@ element.
         args.url = this.url;
         args.method = this.method;
         return args.url && this.xhr.request(args);
-      },
-    
-      bodyMethods: {
-        POST: 1,
-        PUT: 1,
-        DELETE: 1
       }
 
     });

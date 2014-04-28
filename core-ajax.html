@@ -31,11 +31,8 @@ element.
 @status beta
 @homepage github.io
 -->
-
 <link rel="import" href="core-xhr.html">
-
 <polymer-element name="core-ajax" attributes="url handleAs auto params response method headers body contentType withCredentials">
-
   <script>
 
     Polymer('core-ajax', {
@@ -280,8 +277,8 @@ element.
        */
       go: function() {
         var args = this.xhrArgs || {};
-        // TODO(sjmiles): alternatively, we could force POST if body is set
-        if (this.method === 'POST') {
+        // TODO(sjmiles): we may want to default to POST if body is set
+        if (this.bodyMethods[this.method.toUpperCase()]) {
           args.body = this.body || args.body;
         }
         args.params = this.params || args.params;
@@ -299,16 +296,20 @@ element.
             this.handleAs === 'document') {
           args.responseType = this.handleAs;
         }
-        
         args.withCredentials = this.withCredentials;
         args.callback = this.receive.bind(this);
         args.url = this.url;
         args.method = this.method;
         return args.url && this.xhr.request(args);
-      }
+      },
+    
+    bodyMethods: {
+      POST: 1,
+      PUT: 1,
+      DELETE: 1
+    }
 
     });
 
   </script>
-
 </polymer-element>

@@ -238,6 +238,9 @@ element.
       try {
         return JSON.parse(r);
       } catch (x) {
+        console.warn('core-ajax caught an exception trying to parse reponse as JSON:');
+        console.warn('url:', this.url);
+        console.warn(x);
         return r;
       }
     },

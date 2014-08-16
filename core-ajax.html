@@ -307,7 +307,7 @@ element.
         return header.toLowerCase() === 'content-type';
       });
       if (!hasContentType && this.contentType) {
-        args.headers['content-type'] = this.contentType;
+        args.headers['Content-Type'] = this.contentType;
       }
       if (this.handleAs === 'arraybuffer' || this.handleAs === 'blob' ||
           this.handleAs === 'document') {

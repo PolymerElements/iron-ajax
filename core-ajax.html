@@ -303,7 +303,10 @@ element.
       if (args.headers && typeof(args.headers) == 'string') {
         args.headers = JSON.parse(args.headers);
       }
-      if (this.contentType) {
+      var hasContentType = Object.keys(args.headers).some(function (header) {
+        return header.toLowerCase() === 'content-type';
+      });
+      if (!hasContentType && this.contentType) {
         args.headers['content-type'] = this.contentType;
       }
       if (this.handleAs === 'arraybuffer' || this.handleAs === 'blob' ||

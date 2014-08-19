@@ -1,0 +1,14 @@
+<x-meta id="core-ajax" label="Ajax" group="Core">
+
+  <property name="handleAs" kind="select" options="json,text,xml,arraybuffer,blob,document"></property>
+  <property name="method" kind="select" options="GET,POST,PUT,DELETE"></property>
+
+  <template>
+    <core-ajax handleAs="json" method="GET"></core-ajax>
+  </template>
+
+  <template id="imports">
+    <link rel="import" href="core-ajax.html">
+  </template>
+
+</x-meta>

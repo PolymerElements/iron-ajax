@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Core-ajax handling race condition</title>
+</head>
+<body>
+  <script src="../platform/platform.js" debug></script>
+  <link rel="import" href="core-ajax.html">
+  <polymer-element name="race-condition">
+    <template>
+      <style>section {margin-top: 20px;}</style>
+      <core-ajax
+          id='ajax'
+          url="http://httpbin.org/delay/{{delay}}"
+          handleas="json" auto
+          response="{{response}}"
+          on-core-response="{{handleResponse}}"></core-ajax>
+      <div>Response url: {{response.url}}</div>
+      <div>Result: {{testResult}}</div>
+
+      <section>
+        <div>Requests</div>
+        <ul>
+          <template repeat='{{request in requests}}'>
+            <li>
+              {{request.delay}} second delay, Status: {{request.statusText}}
+            </li>
+          </template>
+        </ul>
+      </section>
+    </template>
+    <script>
+      Polymer({
+        delay: 1,
+        response: null,
+        testResult: 'pending...',
+        passed: false,
+        requests: [],
+        observe: {
+          '$.ajax.activeRequest': 'requestChanged'
+        },
+        domReady: function() {
+          setTimeout(function() {
+            if (this.response != null) {
+              console.error('HTTP request returned too quick!')
+              this.testResult = 'indeterminate';
+              return;
+            }
+            this.delay = 3;
+          }.bind(this), 100);
+        },
+        responseChanged: function() {
+          if (this.response.url != this.$.ajax.url) {
+            this.testResult = 'FAIL';
+            console.error('Race condition in response attribute. Expected '
+                + this.$.ajax.url + ' got ' + this.response.url);
+            return;
+          }
+          this.passed = true;
+        },
+        passedChanged: function() {
+          if (this.passed && this.testResult == 'pending...') {
+            this.testResult = 'PASS';
+          }
+        },
+        requestChanged: function(o, n) {
+          this.requests.push({
+            'statusText': 'pending',
+            xhr: n,
+            delay: this.delay
+          });
+        },
+        handleResponse: function(resp) {
+          var xhr = resp.detail.xhr;
+          for (var i = 0; i < this.requests.length; i++) {
+            if (this.requests[i].xhr === xhr) {
+              this.requests[i].statusText = xhr.statusText;
+            }
+          }
+        },
+      });
+    </script>
+  </polymer-element>
+
+  <race-condition></race-condition>
+</body>
+</html>

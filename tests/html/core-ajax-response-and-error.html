@@ -1,12 +1,25 @@
-<!DOCTYPE html>
+<!doctype html>
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>Core-ajax handling race condition</title>
+  <title>core-ajax-response-and-error</title>
+
+  <script src="../../../platform/platform.js"></script>
+  <script src="../../../polymer-test-tools/chai/chai.js"></script>
+  <script src="../../../polymer-test-tools/htmltest.js"></script>
+
+  <link rel="import" href="../../core-ajax.html">
+
 </head>
 <body>
-  <script src="../platform/platform.js" debug></script>
-  <link rel="import" href="core-ajax.html">
+
   <polymer-element name="race-condition">
     <template>
       <style>section {margin-top: 20px;}</style>
@@ -44,17 +57,23 @@
           setTimeout(function() {
             if (this.response != null) {
               console.error('HTTP request returned too quick!')
+              chai.assert.fail(
+                  '', '',  'Indeterminate, initial request returned too quick');
               this.testResult = 'indeterminate';
               return;
             }
-            this.delay = 3;
+            this.delay = 2;
           }.bind(this), 100);
+          // This will fail the test if it neither passes nor fails in time.
+          this.finalTimeout = setTimeout(function() {
+            chai.assert.fail('', '', 'Test timed out.');
+          }, 7000);
         },
         responseChanged: function() {
           if (this.response.url != this.$.ajax.url) {
             this.testResult = 'FAIL';
-            console.error('Race condition in response attribute. Expected '
-                + this.$.ajax.url + ' got ' + this.response.url);
+            chai.assert.fail(this.$.ajax.url, this.response.url,
+                             'Race condition in response attribute');
             return;
           }
           this.passed = true;
@@ -62,6 +81,8 @@
         passedChanged: function() {
           if (this.passed && this.testResult == 'pending...') {
             this.testResult = 'PASS';
+            clearTimeout(this.finalTimeout);
+            done();
           }
         },
         requestChanged: function(o, n) {

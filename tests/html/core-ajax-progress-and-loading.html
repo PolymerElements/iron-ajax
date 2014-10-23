@@ -16,6 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script src="../../../polymer-test-tools/htmltest.js"></script>
 
   <link rel="import" href="../../core-ajax.html">
+  <link rel="import" href="../../../core-range/core-range.html">
 
 </head>
 <body>
@@ -23,12 +24,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <polymer-element name="race-condition">
     <template>
       <!-- TODO: change this from /headers to /drip if we can get httpbin to
-                 send a Content-Length with their /drip response. -->
+                 send a Content-Length with their /drip response.
+                 The delay is needed so that we can make assertions about
+                 the intermediate state in browsers that are slow to
+                 notice attribute changes.
+
+                 https://github.com/kennethreitz/httpbin/pull/160
+                 -->
       <core-ajax
-          auto url="http://httpbin.org/headers"
-          params="{{ {numbytes: numbytes, duration:1} }}"
+          auto url="http://httpbin.org/delay/1"
           loading="{{loading}}" progress="{{progress}}"
-          on-core-response='{{responseReceived}}'></core-ajax>
+          on-core-response="{{responseReceived}}"></core-ajax>
+      <core-range
+            id="range"
+            value="{{progress.loaded}}"
+            min="0"
+            max="{{progress.total}}"
+            ratio="{{ratio}}">
+      </core-range>
     </template>
     <script>
       Polymer({
@@ -53,23 +66,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           // Shortly after the response is received we should settle into
           // the final consistent state for the element.
           setTimeout(function() {
-            chai.assert.equal(this.loading, false);
-            chai.assert.equal(this.loadingWasTrue, true);
+            chai.assert.equal(this.loading, false,
+                              'Should no longer be loading');
+            chai.assert.equal(
+                this.loadingWasTrue, true,
+                'For a little while, we should have been loading.');
             if (this.progress && this.progress.lengthComputable) {
               chai.assert.equal(this.progress.total, this.progress.loaded);
             }
             this.assertConsistent();
             clearTimeout(this.finalTimeout);
             done();
-          }.bind(this), 100);
+          }.bind(this), 300);
         },
         assertConsistent: function() {
-          debugger;
           if (this.progress && this.progress.lengthComputable) {
             chai.assert.isNumber(this.progress.total);
             chai.assert.isNumber(this.progress.loaded);
+            chai.assert.isNumber(this.ratio);
             chai.assert(this.progress.loaded >= 0,
                         'Bytes loaded should not be negative.');
+            if (this.progress.loaded > 0) {
+              this.$.range.update();
+              chai.assert(this.ratio > 0,
+                          'If bytes loaded is >0, % loaded must be >0.');
+            }
             chai.assert(this.progress.loaded <= this.progress.total,
                         'Bytes loaded should be less than or equal the total.');
             if (this.previousLoaded !== null) {
@@ -86,9 +107,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             this.loadingFinished = true;
           }
           if (this.loadingFinished) {
-              chai.assert.equal(
-                  this.loading, false,
-                  'Once loaded, the request should stay that way');
+            chai.assert.equal(
+                this.loading, false,
+                'Once loaded, the request should stay that way');
           }
         }
       });

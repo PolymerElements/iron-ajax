@@ -217,6 +217,10 @@ element.
      */
     xhrArgs: null,
 
+    created: function() {
+      this.progress = {};
+    },
+
     ready: function() {
       this.xhr = document.createElement('core-xhr');
     },

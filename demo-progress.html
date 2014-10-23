@@ -11,7 +11,7 @@
   <polymer-element name="progress-test">
     <template>
       <core-ajax
-          id='ajax' auto
+          id="ajax" auto
           url="http://httpbin.org/drip"
           params="{{ {numbytes: numbytes, duration:5} }}"
           response="{{response}}"
@@ -23,17 +23,19 @@
         Ordinarily you'd gate on progress.lengthComputable, but we know the
         length in this case (and httpbin sadly doesn't return a
         Content-Length header for this requesthere).
+
+        https://github.com/kennethreitz/httpbin/pull/160
        -->
       <div>
-        <button on-click='{{restart}}'>Restart</button>
-        <template if='{{loading}}'>
+        <button on-click="{{restart}}">Restart</button>
+        <template if="{{loading}}">
           Loading...
         </template>
-        <template if='{{!loading}}'>
+        <template if="{{!loading}}">
           Loaded!
         </template>
       </div>
-      <template if='{{loading && progress.loaded}}'>
+      <template if="{{loading && progress.loaded}}">
         <paper-progress
             value="{{progress.loaded}}"
             min="0"

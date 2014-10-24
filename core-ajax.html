@@ -259,6 +259,10 @@ element.
       if (xhr !== this.activeRequest) {
         return;
       }
+      // We create a proxy object here because these fields
+      // on the progress event are readonly properties, which
+      // causes problems in common use cases (e.g. binding to
+      // <paper-progress> attributes).
       var progressProxy = {
         lengthComputable: progress.lengthComputable,
         loaded: progress.loaded,

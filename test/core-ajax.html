@@ -11,11 +11,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <head>
   <title>core-ajax</title>
 
-  <script src="../../../webcomponentsjs/webcomponents.js"></script>
-  <script src="../../../polymer-test-tools/chai/chai.js"></script>
-  <script src="../../../polymer-test-tools/htmltest.js"></script>
+  <script src="../../webcomponentsjs/webcomponents.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
 
-  <link rel="import" href="../../core-ajax.html">
+  <link rel="import" href="../core-ajax.html">
 
 </head>
 <body>
@@ -27,8 +26,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     auto></core-ajax>
 
   <script>
-
-    document.addEventListener('polymer-ready', function() {
+    test('youtube-ajax', function(done) {
       var assert = chai.assert;
       var ajax = document.querySelector('core-ajax');
       ajax.addEventListener("core-response", function(event) {
@@ -36,7 +34,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         done();
       });
     });
-
   </script>
 
 </body>

@@ -9,113 +9,103 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 <html>
 <head>
-  <title>core-ajax-response-and-error</title>
+  <title>core-ajax</title>
 
-  <script src="../../../webcomponentsjs/webcomponents.js"></script>
-  <script src="../../../polymer-test-tools/chai/chai.js"></script>
-  <script src="../../../polymer-test-tools/htmltest.js"></script>
+  <script src="../../webcomponentsjs/webcomponents.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
 
-  <link rel="import" href="../../core-ajax.html">
-  <link rel="import" href="../../../core-range/core-range.html">
+
+
+  <link rel="import" href="../core-ajax.html">
 
 </head>
 <body>
 
-  <polymer-element name="race-condition">
-    <template>
-      <!-- TODO: change this from /headers to /drip if we can get httpbin to
-                 send a Content-Length with their /drip response.
-                 The delay is needed so that we can make assertions about
-                 the intermediate state in browsers that are slow to
-                 notice attribute changes.
+  <core-ajax
+    handleAs="json"
+    auto></core-ajax>
 
-                 https://github.com/kennethreitz/httpbin/pull/160
-                 -->
-      <core-ajax
-          auto url="http://httpbin.org/delay/1"
-          loading="{{loading}}" progress="{{progress}}"
-          on-core-response="{{responseReceived}}"></core-ajax>
-      <core-range
-            id="range"
-            value="{{progress.loaded}}"
-            min="0"
-            max="{{progress.total}}"
-            ratio="{{ratio}}">
-      </core-range>
-    </template>
-    <script>
-      Polymer({
-        numbytes: 1000,
-        loading: null,
-        loadingWasTrue: false,
-        loadingFinished: false,
-        previousLoaded: null,
-        domReady: function() {
-          // This will fail the test if it neither passes nor fails in time.
-          this.finalTimeout = setTimeout(function() {
-            chai.assert.fail('', '', 'Test timed out.');
-          }, 3000);
+<!--
+    Test consistency of core-ajax's loading properties.
+  -->
+  <script>
+    test('progress', function(done) {
+      var ajax = document.querySelector("core-ajax");
+      var xhr = sinon.useFakeXMLHttpRequest();
+      var headers = {
+        "Content-Type": "text/json"
+      };
+      var body = '{"content": "plentiful"}'
+      var requests = this.requests = [];
+      xhr.onCreate = function (xhr) {
+          requests.push(xhr);
+          // Polymer inspects the xhr object for the precense of onprogress to determine
+          // whether to attach an event listener.
+          xhr['onprogress'] = null;
+      };
+      var animationFrameFlush = function(callback) {
+        requestAnimationFrame(function(){
+          flush(callback);
+        })
+      };
+      var progressEvent = function(lengthComputable, loaded, total) {
+        var progress = new ProgressEvent('progress', {
+          lengthComputable: lengthComputable,
+          loaded: loaded,
+          total: total
+        });
+        return progress;
+      }
+
+      // Fake a file download by sending multiple progress events.
+      async.series([
+        function(cb) {
+          ajax.url="http://example.org/downloadLargeFile"
+          cb();
         },
-        loadingChanged: function() {
-          this.assertConsistent();
+        animationFrameFlush,
+        function(cb) {
+          requests[0].dispatchEvent(progressEvent(true, 10, 100));
+          cb();
         },
-        progressChanged: function() {
-          this.assertConsistent();
+        animationFrameFlush,
+        function(cb) {
+          assert(ajax.loading === true,
+              "Request partially complete, but loading property was false.");
+          var progress = ajax.progress;
+          assert(progress.lengthComputable, "Progress should be computable");
+          assert(progress.loaded == 10, "Expected 10 bytes loaded, got " + progress.loaded);
+          assert(progress.total == 100, "Expected 100 bytes total, got " + progress.total);
+          cb();
         },
-        responseReceived: function() {
-          // Shortly after the response is received we should settle into
-          // the final consistent state for the element.
-          setTimeout(function() {
-            chai.assert.equal(this.loading, false,
-                              'Should no longer be loading');
-            chai.assert.equal(
-                this.loadingWasTrue, true,
-                'For a little while, we should have been loading.');
-            if (this.progress && this.progress.lengthComputable) {
-              chai.assert.equal(this.progress.total, this.progress.loaded);
-            }
-            this.assertConsistent();
-            clearTimeout(this.finalTimeout);
-            done();
-          }.bind(this), 300);
+        animationFrameFlush,
+        function(cb) {
+          requests[0].dispatchEvent(progressEvent(true, 100, 100));
+          cb();
         },
-        assertConsistent: function() {
-          if (this.progress && this.progress.lengthComputable) {
-            chai.assert.isNumber(this.progress.total);
-            chai.assert.isNumber(this.progress.loaded);
-            chai.assert.isNumber(this.ratio);
-            chai.assert(this.progress.loaded >= 0,
-                        'Bytes loaded should not be negative.');
-            if (this.progress.loaded > 0) {
-              this.$.range.update();
-              chai.assert(this.ratio > 0,
-                          'If bytes loaded is >0, % loaded must be >0.');
-            }
-            chai.assert(this.progress.loaded <= this.progress.total,
-                        'Bytes loaded should be less than or equal the total.');
-            if (this.previousLoaded !== null) {
-              chai.assert(this.progress.loaded >= this.previousLoaded,
-                          'Bytes loaded should increase monotonically.');
-            }
-            this.previousLoaded = this.progress.loaded;
-            console.log(this.progress.loaded + ' of ' + this.progress.total);
-          }
-          if (this.loading === true) {
-            this.loadingWasTrue = true;
-          }
-          if (this.loadingWasTrue && this.loading === false) {
-            this.loadingFinished = true;
-          }
-          if (this.loadingFinished) {
-            chai.assert.equal(
-                this.loading, false,
-                'Once loaded, the request should stay that way');
-          }
+        animationFrameFlush,
+        function(cb) {
+          assert(ajax.loading === true,
+              "Request partially complete, but loading property was false.");
+          var progress = ajax.progress;
+          assert(progress.lengthComputable, "Progress should be computable");
+          assert(progress.loaded == 100, "Expected 10 bytes loaded, got " + progress.loaded);
+          assert(progress.total == 100, "Expected 100 bytes total, got " + progress.total);
+          cb();
+        },
+        function(cb) {
+          requests[0].respond(200, headers, body);
+          cb();
+        },
+        animationFrameFlush,
+        function(cb) {
+          assert(ajax.loading === false,
+              "Request complete, but loading property was true.");
+          assert(ajax.response.content === "plentiful", "response not parsed");
+          cb();
         }
-      });
-    </script>
-  </polymer-element>
-
-  <race-condition></race-condition>
+      ], done);
+    });
+</script>
 </body>
 </html>

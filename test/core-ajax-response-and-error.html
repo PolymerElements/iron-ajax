@@ -14,7 +14,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script src="../../webcomponentsjs/webcomponents.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
 
-  <!--
+
+
+  <link rel="import" href="../core-ajax.html">
+
+</head>
+<body>
+
+  <core-ajax
+    id="ajax"
+    handleAs="json"
+    auto></core-ajax>
+
+<!--
     Test that when core-ajax fires multiple times as requests are updated,
     only the response from the most recent request is used to update the response
     object.
@@ -23,47 +35,56 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     test('race-condition', function(done) {
       var ajax = document.querySelector("core-ajax");
       var xhr = sinon.useFakeXMLHttpRequest();
-      xhr.onCreate = function (xhr) {
-        var headers = {
-          "Content-Type": "text/html"
-        }
-        var body = '{"url": "' + xhr.url + '"}';
-        if (xhr.url.match('request1')) {
-          window.setTimeout(function(){
-            xhr.respond(200, headers, body);
-            console.log('response 1 received');
-          }, 200);
-        } else if (xhr.url.match('request2')) {
-          window.setTimeout(function(){
-            xhr.respond(200, headers, body);
-            console.log('response 2 received');
-          }, 100);
-        }
+      var headers = {
+        "Content-Type": "text/json"
       };
-      // Make a request that will return in .2 seconds.
-      ajax.url="http://example.org/request1";
-      // Make a request that will return in .1 seconds.
-      ajax.url="http://example.org/request2";
-      // Wait for the requests to resolve, then check that the later return
-      // of request1 doesn't override.
-      setTimeout(function(){
-        assert(ajax.response.match('request1'),
-          "Race condition detected. An earlier request's delayed response " +
+      var body = function(url) {
+        return '{"url": "' + url + '"}';
+      };
+      var requests = this.requests = [];
+      xhr.onCreate = function (xhr) {
+          requests.push(xhr);
+      };
+      var animationFrameFlush = function(callback) {
+        requestAnimationFrame(function(){
+          flush(callback);
+        })
+      };
+
+      // Make request1, then request2. request2 returns first, followed by request1.
+      async.series([
+        function(cb) {
+          ajax.url="http://example.org/request1"
+          cb();
+        },
+        animationFrameFlush,
+        function(cb) {
+          ajax.url="http://example.org/request2"
+          cb();
+        },
+        animationFrameFlush,
+        function(cb) {
+          debugger;
+          requests[0].respond(200, headers, body("http://example.org/request2"));
+          cb();
+        },
+        flush,
+        function(cb) {
+          debugger;
+          requests[1].respond(200, headers, body("http://example.org/request1"));
+          cb();
+        },
+        flush,
+        function(cb) {
+          debugger
+          assert(ajax.response.url.match('request1'),
+              "Race condition detected. An earlier request's delayed response " +
               "caused the more recent request's response to be overwritten.");
-      }, 300);
-      console.log("test done");
-      done();
+          done();
+          cb();
+        }
+      ], function(){});
     });
-  </script>
-
-  <link rel="import" href="../core-ajax.html">
-
-</head>
-<body>
-
-  <core-ajax
-    handleAs="json"
-    auto></core-ajax>
-
+</script>
 </body>
 </html>

@@ -40,7 +40,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       var body = function(url) {
         return '{"url": "' + url + '"}';
       };
-      var requests = this.requests = [];
+      var requests = [];
       xhr.onCreate = function (xhr) {
           requests.push(xhr);
       };

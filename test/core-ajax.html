@@ -99,7 +99,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             ], done);
         });
         test('XML should be returned with queryable structure', function(){
-          debugger;
           var q = ajax.response.querySelector("note body q");
           assert.equal(q.childNodes[0].textContent, "Feed me!");
           var to = ajax.response.querySelector("to");

@@ -56,26 +56,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           ajax.url="http://example.org/request1"
           cb();
         },
+        flush,
         animationFrameFlush,
         function(cb) {
           ajax.url="http://example.org/request2"
           cb();
         },
+        flush,
         animationFrameFlush,
         function(cb) {
-          debugger;
           requests[0].respond(200, headers, body("http://example.org/request2"));
           cb();
         },
         flush,
         function(cb) {
-          debugger;
           requests[1].respond(200, headers, body("http://example.org/request1"));
           cb();
         },
         flush,
         function(cb) {
-          debugger
           assert(ajax.response.url.match('request1'),
               "Race condition detected. An earlier request's delayed response " +
               "caused the more recent request's response to be overwritten.");

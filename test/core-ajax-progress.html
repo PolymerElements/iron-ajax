@@ -63,11 +63,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           ajax.url="http://example.org/downloadLargeFile"
           cb();
         },
+        flush,
         animationFrameFlush,
         function(cb) {
           requests[0].dispatchEvent(progressEvent(true, 10, 100));
           cb();
         },
+        flush,
         animationFrameFlush,
         function(cb) {
           assert(ajax.loading === true,

@@ -18,24 +18,46 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 </head>
 <body>
-<!--
-  TODO(ajo): Mock this response out.
--->
-  <core-ajax
-    url="http://gdata.youtube.com/feeds/api/videos/"
-    params='{"alt":"json", "q":"chrome"}'
-    handleAs="json"
-    auto></core-ajax>
+  <core-ajax></core-ajax>
 
   <script>
-    test('youtube-ajax', function(done) {
-      var assert = chai.assert;
-      var ajax = document.querySelector('core-ajax');
-      ajax.addEventListener("core-response", function(event) {
-        assert.isTrue(event.detail.response.feed.entry.length > 0);
-        done();
-      });
+  suite('core-ajax', function() {
+    var xhr, requests, ajax;
+    suiteSetup(function() {
+      xhr = sinon.useFakeXMLHttpRequest();
+      ajax = document.querySelector("core-ajax");
     });
+    setup(function() {
+      requests = [];
+      xhr.onCreate = function (xhr) {
+        requests.push(xhr);
+      };
+      // Reset the core-ajax element before each test.
+      ajax.auto = false;
+      ajax.url = '';
+      ajax.params = '';
+      ajax.handleAs = 'text';
+      ajax.body = '';
+    });
+    suite('handleAs', function() {
+      suite('text', function(){});
+      suite('xml', function(){});
+      suite('json', function(){});
+      suite('arraybuffer', function(){});
+      suite('blob', function(){});
+      suite('document', function(){});
+    });
+    suite('auto', function() {
+      test('url', function(){});
+      test('params', function(){});
+      test('body', function(){});
+    });
+    suite('events', function(){
+      suite('core-response', function(){});
+      suite('core-error', function(){});
+      suite('core-complete', function(){});
+    });
+  }
   </script>
 
 </body>

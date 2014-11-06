@@ -309,7 +309,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         test('core-complete should be fired on success', function(done){
           window.addEventListener('core-complete', function(response, xhr){
             responded = true;
-            done();
           });
           requests[0].respond(200, headers, body);
           assert.isTrue(responded);

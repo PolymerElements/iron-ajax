@@ -44,11 +44,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       xhr.onCreate = function (xhr) {
           requests.push(xhr);
       };
-      var animationFrameFlush = function(callback) {
-        requestAnimationFrame(function(){
-          flush(callback);
-        })
-      };
 
       // Make request1, then request2. request2 returns first, followed by request1.
       async.series([
@@ -56,13 +51,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           ajax.url="http://example.org/request1"
           cb();
         },
-        flush,
         animationFrameFlush,
         function(cb) {
           ajax.url="http://example.org/request2"
           cb();
         },
-        flush,
         animationFrameFlush,
         function(cb) {
           requests[0].respond(200, headers, body("http://example.org/request2"));

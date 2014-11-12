@@ -52,12 +52,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               ajax.auto = true;
               cb();
             },
-            flush,
-            function(cb) {
-              requestAnimationFrame(function(){
-                cb();
-              });
-            },
+            animationFrameFlush,
             function(cb){
               requests[0].respond(200, headers, "test text");
               cb();
@@ -80,12 +75,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               ajax.auto = true;
               cb();
             },
-            flush,
-            function(cb) {
-              requestAnimationFrame(function(){
-                cb();
-              });
-            },
+            animationFrameFlush,
             function(cb){
               requests[0].respond(200, headers,
                           "<note>" +
@@ -116,12 +106,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               ajax.auto = true;
               cb();
             },
-            flush,
-            function(cb) {
-              requestAnimationFrame(function(){
-                cb();
-              });
-            },
+            animationFrameFlush,
             function(cb){
               requests[0].respond(200, headers,
                           '{"object" : {"list" : [2, 3, {"key": "value"}]}}');
@@ -147,12 +132,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               ajax.auto = true;
               cb();
             },
-            flush,
-            function(cb) {
-              requestAnimationFrame(function(){
-                cb();
-              });
-            },
+            animationFrameFlush,
             function(cb){
               var buf = new ArrayBuffer(8*4);
               var resp = new Int32Array(buf);
@@ -185,12 +165,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             ajax.url = "http://example.com/auto";
             cb();
           },
-          flush,
-          function(cb) {
-            requestAnimationFrame(function(){
-              cb();
-            });
-          },
+          animationFrameFlush,
           function(cb){
             assert.equal(requests.length, 1);
             cb();
@@ -203,12 +178,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             ajax.params = {param: "value"};
             cb();
           },
-          flush,
-          function(cb) {
-            requestAnimationFrame(function(){
-              cb();
-            });
-          },
+          animationFrameFlush,
           function(cb){
             assert.equal(requests.length, 1);
             cb();
@@ -222,12 +192,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             ajax.body = "bodystuff";
             cb();
           },
-          flush,
-          function(cb) {
-            requestAnimationFrame(function(){
-              cb();
-            });
-          },
+          animationFrameFlush,
           function(cb){
             assert.equal(requests.length, 1);
             cb();
@@ -247,24 +212,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             ajax.auto = false;
             cb();
           },
-          flush,
-          function(cb) {
-            requestAnimationFrame(function(){
-              cb();
-            });
-          },
+          animationFrameFlush,
           function(cb){;
             ajax.handleAs = 'text';
             ajax.url = "http://example.com/text"
             ajax.auto = true;
             cb();
           },
-          flush,
-          function(cb) {
-            requestAnimationFrame(function(){
-              cb();
-            });
-          }
+          animationFrameFlush,
           ], done);
         responded = false;
       });

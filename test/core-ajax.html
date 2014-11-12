@@ -192,12 +192,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             ajax.body = "bodystuff";
             cb();
           },
-          flush,
-          function(cb) {
-            requestAnimationFrame(function(){
-              cb();
-            });
-          },
+          animationFrameFlush,
           function(cb){
             assert.equal(requests.length, 1);
             cb();

@@ -43,11 +43,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           // whether to attach an event listener.
           xhr['onprogress'] = null;
       };
-      var animationFrameFlush = function(callback) {
-        requestAnimationFrame(function(){
-          flush(callback);
-        })
-      };
       var progressEvent = function(lengthComputable, loaded, total) {
         var progress = new ProgressEvent('progress', {
           lengthComputable: lengthComputable,

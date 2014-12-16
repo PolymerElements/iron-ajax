@@ -403,6 +403,20 @@ element.
         }
       }
       return this.activeRequest;
+    },
+
+    /**
+     * Aborts the current active request if there is one and resets internal
+     * state appropriately.
+     *
+     * @method abort
+     */
+    abort: function() {
+      if (!this.activeRequest) return;
+      this.activeRequest.abort();
+      this.activeRequest = null;
+      this.progress = {};
+      this.loading = false;
     }
 
   });

@@ -234,6 +234,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }).catch(done);
         });
       });
+
+      suite('when the response type is `json`', function () {
+        setup(function () {
+          server.restore();
+        });
+
+        test('finds the JSON on any platform', function (done) {
+          ajax.url = '../bower.json';
+          request = ajax.generateRequest();
+          request.completes.then(function () {
+            expect(ajax.lastresponse).to.be.instanceOf(Object);
+            done();
+          }).catch(function (e) {
+            done(e);
+          });
+        });
+      });
     });
   </script>
 

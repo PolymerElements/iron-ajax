@@ -84,6 +84,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(request.response).to.be.an('object');
           expect(request.response.success).to.be.equal(true);
         });
+
+        test('will be asynchronous by default', function () {
+          expect(ajax.toRequestOptions().async).to.be.eql(true);
+        });
       });
 
       suite('when properties are changed', function () {
@@ -179,6 +183,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             ajax.handleas = 'text';
             request = ajax.generateRequest();
+            server.respond();
 
             return request.completes;
 

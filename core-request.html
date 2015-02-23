@@ -141,17 +141,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }.bind(this));
 
       xhr.open(
-        options.method,
+        options.method || 'GET',
         options.url,
-        options.async
+        options.async !== false
       );
 
-      Object.keys(options.headers).forEach(function (requestHeader) {
-        xhr.setRequestHeader(
-          requestHeader,
-          options.headers[requestHeader]
-        );
-      }, this);
+      if (options.headers) {
+        Object.keys(options.headers).forEach(function (requestHeader) {
+          xhr.setRequestHeader(
+            requestHeader,
+            options.headers[requestHeader]
+          );
+        }, this);
+      }
 
       xhr.responseType = options.handleAs;
       xhr.withCredentials = options.withCredentials;

@@ -49,9 +49,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         request = fixture('TrivialRequest');
         requestOptions = {
-          url: '/responds_to_get_with_json',
-          method: 'GET',
-          headers: {}
+          url: '/responds_to_get_with_json'
         };
       });
 
@@ -60,12 +58,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       });
 
       suite('basic usage', function () {
-        test('creates network requests', function () {
+        test('creates network requests, requiring only `url`', function () {
           request.send(requestOptions);
 
           server.respond();
 
           expect(request.response).to.be.ok;
+        });
+
+        test('sets async to true by default', function () {
+          request.send(requestOptions);
+          expect(request.xhr.async).to.be.eql(true);
         });
 
         test('can be aborted', function (done) {

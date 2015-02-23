@@ -5,7 +5,8 @@
     "polymer": "Polymer/polymer#0.8-preview"
   },
   "devDependencies": {
+    "test-fixture": "polymer/test-fixture",
     "web-component-tester": "~2.2.3",
-    "simple-fixture": "polymer/test-fixture"
+    "webcomponentsjs": "~0.5.5"
   }
 }

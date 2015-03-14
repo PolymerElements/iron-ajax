@@ -34,8 +34,7 @@ element.
 -->
 
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="core-request.html">
-<dom-element id="core-ajax"></dom-element>
+<link rel="import" href="./core-request.html">
 <script>
   Polymer({
     is: 'core-ajax',
@@ -58,7 +57,7 @@ element.
      * @event error
      */
 
-    published: {
+    properties: {
       /**
        * The URL target of the request.
        *
@@ -66,7 +65,10 @@ element.
        * @type string
        * @default ''
        */
-      url: String,
+      url: {
+        type: String,
+        value: ''
+      },
 
       /**
        * An object that contains query parameters to be appended to the
@@ -76,7 +78,12 @@ element.
        * @type Object
        * @default {}
        */
-      params: Object,
+      params: {
+        type: Object,
+        value: function() {
+          return {};
+        }
+      },
 
       /**
        * The HTTP method to use such as 'GET', 'POST', 'PUT', or 'DELETE'.
@@ -86,7 +93,10 @@ element.
        * @type string
        * @default 'GET'
        */
-      method: String,
+      method: {
+        type: String,
+        value: 'GET'
+      },
 
       /**
        * HTTP request headers to send.
@@ -104,7 +114,12 @@ element.
        * @type Object
        * @default {}
        */
-      headers: Object,
+      headers: {
+        type: Object,
+        value: function() {
+          return {};
+        }
+      },
 
       /**
        * Content type to use when sending data. If the contenttype is set
@@ -115,7 +130,10 @@ element.
        * @type string
        * @default 'application/x-www-form-urlencoded'
        */
-      contenttype: String,
+      contentType: {
+        type: String,
+        value: 'application/x-www-form-urlencoded'
+      },
 
       /**
        * Optional raw body content to send when method === "POST".
@@ -128,9 +146,12 @@ element.
        *
        * @attribute body
        * @type Object
-       * @default undefined
+       * @default ''
        */
-      body: String,
+      body: {
+        type: String,
+        value: ''
+      },
 
       /**
        * Toggle whether XHR is synchronous or asynchronous. Don't change this
@@ -140,7 +161,10 @@ element.
        * @type boolean
        * @default false
        */
-      sync: Boolean,
+      sync: {
+        type: Boolean,
+        value: false
+      },
 
       /**
        * Specifies what data to store in the `response` property, and
@@ -164,16 +188,22 @@ element.
        * @type string
        * @default 'json'
        */
-      handleas: String,
+      handleAs: {
+        type: String,
+        value: 'json'
+      },
 
       /**
-       * Set the withcredentials flag on the request.
+       * Set the withCredentials flag on the request.
        *
-       * @attribute withcredentials
+       * @attribute withCredentials
        * @type boolean
        * @default false
        */
-      withcredentials: Boolean,
+      withCredentials: {
+        type: Boolean,
+        value: false
+      },
 
       /**
        * If true, automatically performs an Ajax request when either `url` or
@@ -183,7 +213,10 @@ element.
        * @type boolean
        * @default false
        */
-      auto: Boolean,
+      auto: {
+        type: Boolean,
+        value: false
+      },
 
       /**
        * If true, error messages will automatically be logged to the console.
@@ -192,7 +225,10 @@ element.
        * @type boolean
        * @default false
        */
-      verbose: Boolean,
+      verbose: {
+        type: Boolean,
+        value: false
+      },
 
       /**
        * Will be set to true if there is at least one in-flight request
@@ -204,7 +240,8 @@ element.
        */
       loading: {
         type: Boolean,
-        notify: true
+        notify: true,
+        readOnly: true
       },
 
       /**
@@ -214,9 +251,13 @@ element.
        * @type core-request
        * @default null
        */
-      lastrequest: {
+      lastRequest: {
         type: Object,
-        notify: true
+        notify: true,
+        readOnly: true,
+        value: function() {
+          this._setLastRequest(null);
+        }
       },
 
       /**
@@ -229,9 +270,13 @@ element.
        * @type *
        * @default null
        */
-      lastresponse: {
+      lastResponse: {
         type: Object,
-        notify: true
+        notify: true,
+        readOnly: true,
+        value: function() {
+          this._setLastResponse(null);
+        }
       },
 
       /**
@@ -242,9 +287,13 @@ element.
        * @type Error
        * @default null
        */
-      lasterror: {
+      lastError: {
         type: Object,
-        notify: true
+        notify: true,
+        readOnly: true,
+        value: function() {
+          this._setLastError(null);
+        }
       },
 
       /**
@@ -255,46 +304,27 @@ element.
        * @type Array
        * @default []
        */
-      activerequests: {
+      activeRequests: {
         type: Array,
-        notify: true
+        notify: true,
+        readOnly: true,
+        value: function() {
+          this._setActiveRequests([]);
+        }
       }
     },
 
-    configure: function () {
+    observers: {
+      'url method headers contentType body sync handleAs withCredentials':
+        'requestOptionsChanged'
+    },
+
+    configure: function() {
       return {
-        url: '',
-        params: {},
-        method: 'GET',
-        headers: {},
-        contenttype: 'application/x-www-form-urlencoded',
-        body: undefined,
-        sync: false,
-        handleas: 'json',
-        withcredentials: false,
-        auto: false,
-        verbose: false,
-        lastrequest: null,
-        lastresponse: null,
-        lasterror: null,
-        activerequests: []
+        boundHandleResponse: this.handleResponse.bind(this),
+        boundHandleError: this.handleError.bind(this),
+        boundDiscardRequest: this.discardRequest.bind(this)
       };
-    },
-
-    bind: {
-      url: 'requestOptionsChanged',
-      method: 'requestOptionsChanged',
-      headers: 'requestOptionsChanged',
-      contenttype: 'requestOptionsChanged',
-      body: 'requestOptionsChanged',
-      sync: 'requestOptionsChanged',
-      handleas: 'requestOptionsChanged',
-      withcredentials: 'requestOptionsChanged'
-    },
-
-    ready: function () {
-      this._afterReady = true;
-      this.requestOptionsChanged();
     },
 
     get queryString () {
@@ -316,7 +346,7 @@ element.
       return queryParts.join('&');
     },
 
-    get requestUrl () {
+    get requestUrl() {
       var queryString = this.queryString;
 
       if (queryString) {
@@ -326,35 +356,31 @@ element.
       return this.url;
     },
 
-    get requestHeaders () {
+    get requestHeaders() {
       var headers = Object.create(this.headers || {});
 
       if (!('content-type' in headers)) {
-        headers['content-type'] = this.contenttype;
+        headers['content-type'] = this.contentType;
       }
 
       return headers;
     },
 
-    toRequestOptions: function () {
+    toRequestOptions: function() {
       return {
         url: this.requestUrl,
         method: this.method,
         headers: this.requestHeaders,
         body: this.body,
         async: !this.sync,
-        handleAs: this.handleas,
-        withCredentials: this.withcredentials
+        handleAs: this.handleAs,
+        withCredentials: this.withCredentials
       };
     },
 
-    requestOptionsChanged: function () {
-      if (!this._afterReady) {
-        return;
-      }
-
+    requestOptionsChanged: function() {
       if (this.auto) {
-        this.debounce('autoGenerateRequest', this.generateRequest);
+        this.generateRequest();
       }
     },
 
@@ -363,22 +389,23 @@ element.
      *
      * @method generateRequest
      */
-    generateRequest: function () {
+    generateRequest: function() {
       var request = document.createElement('core-request');
       var requestOptions = this.toRequestOptions();
 
-      this.activerequests.push(request);
+      this.activeRequests.push(request);
 
       request.completes.then(
-        this.handleResponse.bind(this),
-        this.handleError.bind(this)
+        this.boundHandleResponse
+      ).catch(
+        this.boundHandleError
       ).then(
-        this.discardRequest.bind(this, request)
+        this.boundDiscardRequest
       );
 
       request.send(requestOptions);
 
-      this.lastrequest = request;
+      this._setLastRequest(request);
 
       this.fire('request', {
         xhr: request.xhr,
@@ -388,25 +415,25 @@ element.
       return request;
     },
 
-    handleResponse: function (response) {
-      this.lastresponse = response;
+    handleResponse: function(response) {
+      this._setLastResponse(response);
       this.fire('response', response);
     },
 
-    handleError: function (error) {
+    handleError: function(error) {
       if (this.verbose) {
         console.error(error);
       }
 
-      this.lasterror = error;
+      this._setLastError(error);
       this.fire('error', error);
     },
 
-    discardRequest: function (request) {
-      var requestIndex = this.activerequests.indexOf(request);
+    discardRequest: function(request) {
+      var requestIndex = this.activeRequests.indexOf(request);
 
       if (requestIndex > 0) {
-        this.activerequests.splice(requestIndex, 1);
+        this.activeRequests.splice(requestIndex, 1);
       }
     }
   });

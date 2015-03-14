@@ -21,12 +21,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../polymer/polymer.html">
-<dom-module id="core-request"></dom-module>
 <script>
   Polymer({
     is: 'core-request',
 
-    published: {
+    properties: {
 
       /**
        * A reference to the XMLHttpRequest instance used to generate the
@@ -38,7 +37,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        */
       xhr: {
         type: Object,
-        readOnly: true
+        notify: true,
+        readOnly: true,
+        value: function() {
+          this._setXhr(new XMLHttpRequest());
+        }
       },
 
       /**
@@ -51,7 +54,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        */
       response: {
         type: Object,
-        notify: true
+        notify: true,
+        readOnly: true,
+        value: function() {
+          this._setResponse(null);
+        }
       },
 
       /**
@@ -64,7 +71,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        */
       completes: {
         type: Promise,
-        readOnly: true
+        readOnly: true,
+        notify: true,
+        value: function() {
+          var completes = new Promise(function (resolve, reject) {
+            this.resolveCompletes = resolve;
+            this.rejectCompletes = reject;
+          }.bind(this));
+
+          this._setCompletes(completes);
+        }
       },
 
       /**
@@ -77,23 +93,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        */
       progress: {
         type: Object,
-        notify: true
+        notify: true,
+        readOnly: true,
+        value: function() {
+          this._setProgress({});
+        }
+      },
+
+      /**
+       * Aborted will be true if an abort of the request is attempted.
+       *
+       * @attribute aborted
+       * @type boolean
+       * @default false
+       */
+      aborted: {
+        type: Boolean,
+        notify: true,
+        readOnly: true,
+        value: function() {
+          this._setAborted(false);
+        }
       }
-    },
-
-    configure: function () {
-      var completes = new Promise(function (resolve, reject) {
-        this.resolveCompletes = resolve;
-        this.rejectCompletes = reject;
-      }.bind(this));
-
-      return {
-        xhr: new XMLHttpRequest(),
-        completes: completes,
-        response: null,
-        progress: {},
-        aborted: false
-      };
     },
 
     /**
@@ -119,17 +140,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       xhr.addEventListener('readystatechange', function () {
         if (xhr.readyState === 4 && !this.aborted) {
-          this.response = this.parseResponse();
+          this._setResponse(this.parseResponse());
           this.resolveCompletes(this.response);
         }
       }.bind(this));
 
       xhr.addEventListener('progress', function (progress) {
-        this.progress = {
+        this._setProgress({
           lengthComputable: progress.lengthComputable,
           loaded: progress.loaded,
           total: progress.total
-        };
+        });
       }.bind(this))
 
       xhr.addEventListener('error', function (error) {
@@ -181,7 +202,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               }
 
               // Otherwise, attempt to parse `xhr.responseText` as JSON.
-              return JSON.parse(xhr.responseText);
+              if (xhr.responseText) {
+                return JSON.parse(xhr.responseText);
+              }
             }
 
             return xhr.response;
@@ -201,7 +224,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     },
 
     abort: function () {
-      this.aborted = true;
+      this._setAborted(true);
       this.xhr.abort();
     }
   });

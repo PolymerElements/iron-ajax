@@ -2,11 +2,12 @@
   "name": "core-ajax",
   "private": true,
   "dependencies": {
-    "polymer": "Polymer/polymer#0.8-preview"
+    "polymer": "Polymer/polymer#0.8-preview",
+    "promise-polyfill": "polymerlabs/promise-polyfill#master"
   },
   "devDependencies": {
-    "test-fixture": "polymer/test-fixture",
+    "test-fixture": "polymer/test-fixture#~0.2.0",
     "web-component-tester": "~2.2.3",
-    "webcomponentsjs": "~0.5.5"
+    "webcomponentsjs": "webcomponents/webcomponentsjs#~0.6.0"
   }
 }

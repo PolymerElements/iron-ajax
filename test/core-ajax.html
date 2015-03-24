@@ -124,8 +124,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
         });
 
-        test('holds all requests in the `activerequests` Array', function () {
-          expect(requests).to.deep.eql(ajax.activerequests);
+        test('holds all requests in the `activeRequests` Array', function () {
+          expect(requests).to.deep.eql(ajax.activeRequests);
         });
       });
 
@@ -149,7 +149,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           ajax.addEventListener('response', function () {
             try {
-              expect(ajax.activerequests.length).to.be.eql(1);
+              expect(ajax.activeRequests.length).to.be.eql(1);
               done();
             } catch (e) {
               done(e);
@@ -170,7 +170,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         test('is accessible as a readonly property', function (done) {
           request.completes.then(function (response) {
-            expect(ajax.lastresponse).to.be.equal(response);
+            expect(ajax.lastResponse).to.be.equal(response);
             done();
           }).catch(done);
         });
@@ -179,9 +179,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           request.completes.then(function (response) {
 
             expect(response).to.be.an('object');
-            expect(ajax.lastresponse).to.be.equal(response);
+            expect(ajax.lastResponse).to.be.equal(response);
 
-            ajax.handleas = 'text';
+            ajax.handleAs = 'text';
             request = ajax.generateRequest();
             server.respond();
 
@@ -190,7 +190,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }).then(function (response) {
 
             expect(response).to.be.a('string');
-            expect(ajax.lastresponse).to.be.equal(response);
+            expect(ajax.lastResponse).to.be.equal(response);
 
             done();
 
@@ -228,7 +228,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           server.respond();
 
-          ajax.lastrequest.completes.then(function () {
+          ajax.lastRequest.completes.then(function () {
             expect(responseHandler.callCount).to.be.equal(2);
             done();
           }).catch(done);
@@ -244,7 +244,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           ajax.url = '../bower.json';
           request = ajax.generateRequest();
           request.completes.then(function () {
-            expect(ajax.lastresponse).to.be.instanceOf(Object);
+            expect(ajax.lastResponse).to.be.instanceOf(Object);
             done();
           }).catch(function (e) {
             done(e);

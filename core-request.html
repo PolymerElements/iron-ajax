@@ -177,7 +177,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }, this);
       }
 
-      xhr.responseType = options.handleAs;
+      // In IE, `xhr.responseType` is an empty string when the response
+      // returns. Hence, caching it as `xhr._responseType`.
+      xhr.responseType = xhr._responseType = options.handleAs;
       xhr.withCredentials = options.withCredentials;
 
       xhr.send(options.body);
@@ -187,13 +189,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     parseResponse: function () {
       var xhr = this.xhr;
+      var responseType = this.xhr.responseType ||
+        this.xhr._responseType;
+      // If we don't have a natural `xhr.responseType`, we prefer parsing
+      // `xhr.responseText` over returning `xhr.response`..
+      var preferResponseText = !this.xhr.responseType;
+
+      if (window.pauseCode) {
+        debugger;
+      }
 
       try {
-        switch (xhr.responseType) {
+        switch (responseType) {
           case 'json':
             // If xhr.response is undefined, responseType `json` may
             // not be supported.
-            if (xhr.response === undefined) {
+            if (preferResponseText || xhr.response === undefined) {
               // If accessing `xhr.responseText` throws, responseType `json`
               // is supported and the result is rightly `undefined`.
               try {

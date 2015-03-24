@@ -3,7 +3,7 @@
   "private": true,
   "dependencies": {
     "polymer": "Polymer/polymer#0.8-preview",
-    "promise-polyfill": "polymerlabs/promise-polyfill#~2.0.0"
+    "promise-polyfill": "polymerlabs/promise-polyfill#master"
   },
   "devDependencies": {
     "test-fixture": "polymer/test-fixture",

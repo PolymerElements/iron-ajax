@@ -34,7 +34,7 @@ element.
 -->
 
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="./core-request.html">
+<link rel="import" href="core-request.html">
 <script>
   Polymer({
     is: 'core-ajax',
@@ -321,9 +321,9 @@ element.
 
     configure: function() {
       return {
-        boundHandleResponse: this.handleResponse.bind(this),
-        boundHandleError: this.handleError.bind(this),
-        boundDiscardRequest: this.discardRequest.bind(this)
+        _boundHandleResponse: this.handleResponse.bind(this),
+        _boundHandleError: this.handleError.bind(this),
+        _boundDiscardRequest: this.discardRequest.bind(this)
       };
     },
 
@@ -396,11 +396,11 @@ element.
       this.activeRequests.push(request);
 
       request.completes.then(
-        this.boundHandleResponse
+        this._boundHandleResponse
       ).catch(
-        this.boundHandleError
+        this._boundHandleError
       ).then(
-        this.boundDiscardRequest
+        this._boundDiscardRequest
       );
 
       request.send(requestOptions);

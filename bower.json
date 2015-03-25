@@ -8,6 +8,9 @@
   "devDependencies": {
     "test-fixture": "polymer/test-fixture#~0.2.0",
     "web-component-tester": "~2.2.3",
-    "webcomponentsjs": "webcomponents/webcomponentsjs#~0.6.0"
+    "webcomponentsjs": "webcomponents/webcomponentsjs#~0.6.0",
+    "core-image": "polymer/core-image#0.8-preview",
+    "layout": "polymer/layout",
+    "font-roboto": "polymer/font-roboto#~0.5.5"
   }
 }

@@ -1,16 +1,15 @@
 {
-  "name": "core-ajax",
+  "name": "iron-ajax",
   "private": true,
   "dependencies": {
-    "polymer": "Polymer/polymer#0.8-preview",
+    "polymer": "polymer/polymer#v0.8.0-rc.4",
     "promise-polyfill": "polymerlabs/promise-polyfill#master"
   },
   "devDependencies": {
-    "test-fixture": "polymer/test-fixture#~0.2.0",
-    "web-component-tester": "~2.2.3",
+    "iron-image": "polymerelements/iron-image#^0.8.0",
+    "paper-styles": "polymerelements/paper-styles#^0.8.0",
+    "test-fixture": "polymerelements/test-fixture#^0.8.0",
     "webcomponentsjs": "webcomponents/webcomponentsjs#~0.6.0",
-    "core-image": "polymer/core-image#0.8-preview",
-    "layout": "polymer/layout",
-    "font-roboto": "polymer/font-roboto#~0.5.5"
+    "web-component-tester": "~2.2.3"
   }
 }

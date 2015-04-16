@@ -1,6 +1,6 @@
 <!doctype html>
 <!--
-Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
 The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
 The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
@@ -9,7 +9,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 <html>
 <head>
-  <title>core-ajax</title>
+  <title>iron-ajax</title>
 
   <script src="../../webcomponentsjs/webcomponents.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
@@ -17,27 +17,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <link rel="import" href="../../polymer/polymer.html">
   <link rel="import" href="../../test-fixture/test-fixture.html">
-  <link rel="import" href="../core-ajax.html">
+  <link rel="import" href="../iron-ajax.html">
 </head>
 <body>
   <test-fixture id="TrivialGet">
     <template>
-      <core-ajax url="/responds_to_get_with_json"></core-ajax>
+      <iron-ajax url="/responds_to_get_with_json"></iron-ajax>
     </template>
   </test-fixture>
   <test-fixture id="AutoGet">
     <template>
-      <core-ajax auto url="/responds_to_get_with_json"></core-ajax>
+      <iron-ajax auto url="/responds_to_get_with_json"></iron-ajax>
     </template>
   </test-fixture>
   <test-fixture id="TrivialPost">
     <template>
-      <core-ajax method="POST"
-                 url="/responds_to_post_with_json"></core-ajax>
+      <iron-ajax method="POST"
+                 url="/responds_to_post_with_json"></iron-ajax>
     </template>
   </test-fixture>
   <script>
-    suite('<core-ajax>', function () {
+    suite('<iron-ajax>', function () {
       var jsonResponseHeaders = {
         'Content-Type': 'application/json'
       };
@@ -106,10 +106,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       });
 
       suite('when generating a request', function () {
-        test('yields a core-request instance', function () {
-          var CoreRequest = document.createElement('core-request').constructor;
+        test('yields a iron-request instance', function () {
+          var IronRequest = document.createElement('iron-request').constructor;
 
-          expect(ajax.generateRequest()).to.be.instanceOf(CoreRequest);
+          expect(ajax.generateRequest()).to.be.instanceOf(IronRequest);
         });
       });
 

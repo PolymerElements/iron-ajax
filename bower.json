@@ -2,7 +2,7 @@
   "name": "iron-ajax",
   "private": true,
   "dependencies": {
-    "polymer": "polymer/polymer#v0.8.0-rc.5",
+    "polymer": "polymer/polymer#v0.8.0-rc.6",
     "promise-polyfill": "polymerlabs/promise-polyfill#master"
   },
   "devDependencies": {

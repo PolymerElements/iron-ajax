@@ -238,6 +238,27 @@ element.
         value: function() {
           this._setActiveRequests([]);
         }
+      },
+
+      _boundHandleResponse: {
+        type: Function,
+        value: function() {
+          return this.handleResponse.bind(this);
+        }
+      },
+
+      _boundHandleError: {
+        type: Function,
+        value: function() {
+          return this.handleError.bind(this);
+        }
+      },
+
+      _boundDiscardRequest: {
+        type: Function,
+        value: function() {
+          return this.discardRequest.bind(this);
+        }
       }
     },
 
@@ -245,14 +266,6 @@ element.
       'requestOptionsChanged(url, method, headers,' +
         'contentType, body, sync, handleAs, withCredentials, auto)'
     ],
-
-    configure: function() {
-      return {
-        _boundHandleResponse: this.handleResponse.bind(this),
-        _boundHandleError: this.handleError.bind(this),
-        _boundDiscardRequest: this.discardRequest.bind(this)
-      };
-    },
 
     get queryString () {
       var queryParts = [];

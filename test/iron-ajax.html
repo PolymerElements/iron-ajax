@@ -99,6 +99,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(options.headers['custom-header']).to.be.an('string');
           expect(options.headers.hasOwnProperty('custom-header')).to.be.equal(true);
         });
+
+        test('non-objects in headers are not applied', function () {
+          ajax.headers = 'invalid';
+          var options = ajax.toRequestOptions();
+
+          expect(Object.keys(options.headers).length).to.be.equal(1);
+        });
       });
 
       suite('when properties are changed', function () {

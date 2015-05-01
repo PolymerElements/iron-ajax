@@ -291,10 +291,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     },
 
     get requestHeaders() {
-      var headers = Object.create(this.headers || {});
+      var headers = {
+            'content-type': this.contentType
+          },
+          header;
 
-      if (!('content-type' in headers)) {
-        headers['content-type'] = this.contentType;
+      if(this.headers instanceof Object) {
+        for(header in this.headers) {
+          headers[header] = this.headers[header].toString();
+        }
       }
 
       return headers;

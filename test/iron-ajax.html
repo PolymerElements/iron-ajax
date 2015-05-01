@@ -89,6 +89,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(ajax.toRequestOptions().async).to.be.eql(true);
         });
       });
+      
+      suite('when setting custom headers', function () {
+        test('are present in the request headers', function () {
+          ajax.headers['custom-header'] = 'valid';
+          var options = ajax.toRequestOptions();
+
+          expect(options.headers).to.be.ok;
+          expect(options.headers['custom-header']).to.be.an('string');
+          expect(options.headers.hasOwnProperty('custom-header')).to.be.equal(true);
+        });
+      });
 
       suite('when properties are changed', function () {
         test('generates simple-request elements that reflect the change', function () {

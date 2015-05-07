@@ -1,9 +1,10 @@
 {
   "name": "iron-ajax",
+  "version": "0.8.3",
   "private": true,
   "dependencies": {
     "polymer": "polymer/polymer#v0.8.0-rc.7",
-    "promise-polyfill": "polymerlabs/promise-polyfill#master"
+    "promise-polyfill": "polymerlabs/promise-polyfill#^0.8.0"
   },
   "devDependencies": {
     "iron-image": "polymerelements/iron-image#^0.8.0",

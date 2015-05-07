@@ -6,22 +6,22 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
-<!--
-/**
- * @group Iron Elements
- *
- * iron-request can be used to perform XMLHttpRequests.
- *
- *     <iron-request id="xhr"></iron-request>
- *     ...
- *     this.$.xhr.send({url: url, params: params});
- *
- * @element iron-request
- */
--->
 
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../promise-polyfill/promise-polyfill-lite.html">
+
+<!--
+@group Iron Elements
+
+iron-request can be used to perform XMLHttpRequests.
+
+    <iron-request id="xhr"></iron-request>
+    ...
+    this.$.xhr.send({url: url, params: params});
+
+@element iron-request
+-->
+
 <script>
   Polymer({
     is: 'iron-request',

@@ -18,7 +18,7 @@ The `iron-ajax` element exposes network request functionality.
         url="http://gdata.youtube.com/feeds/api/videos/"
         params='{"alt":"json", "q":"chrome"}'
         handle-as="json"
-        on-response="{{handleResponse}}"></iron-ajax>
+        on-response="handleResponse"></iron-ajax>
 
 With `auto` set to `true`, the element performs a request whenever
 its `url`, `params` or `body` properties are changed. Automatically generated
@@ -357,16 +357,16 @@ element.
       this._setLastRequest(request);
 
       this.fire('request', {
-        xhr: request.xhr,
+        request: request,
         options: requestOptions
       });
 
       return request;
     },
 
-    handleResponse: function(response) {
-      this._setLastResponse(response);
-      this.fire('response', response);
+    handleResponse: function(request) {
+      this._setLastResponse(request.response);
+      this.fire('response', request);
     },
 
     handleError: function(error) {

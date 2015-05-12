@@ -119,6 +119,23 @@ iron-request can be used to perform XMLHttpRequests.
     },
 
     /**
+     * Succeeded is true if the request succeeded. The request succeeded if the
+     * status code is greater-than-or-equal-to 200, and less-than 300. Also,
+     * the status code 0 is accepted as a success even though the outcome may
+     * be ambiguous.
+     *
+     * @return boolean
+     */
+    get succeeded() {
+      var status = this.xhr.status || 0;
+
+      // Note: if we are using the file:// protocol, the status code will be 0
+      // for all outcomes (successful or otherwise).
+      return status === 0 ||
+        (status >= 200 && status < 300);
+    },
+
+    /**
      * Sends an HTTP request to the server and returns the XHR object.
      *
      * @method request
@@ -141,8 +158,14 @@ iron-request can be used to perform XMLHttpRequests.
 
       xhr.addEventListener('readystatechange', function () {
         if (xhr.readyState === 4 && !this.aborted) {
+
+          if (!this.succeeded) {
+            this.rejectCompletes(new Error('The request failed with status code: ' + this.xhr.status));
+            return;
+          }
+
           this._setResponse(this.parseResponse());
-          this.resolveCompletes(this.response);
+          this.resolveCompletes(this);
         }
       }.bind(this));
 

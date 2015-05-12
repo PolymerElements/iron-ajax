@@ -28,7 +28,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script>
     suite('<iron-request>', function () {
       var jsonResponseHeaders;
-      var requestOptions;
+      var successfulRequestOptions;
       var request;
       var server;
 
@@ -37,18 +37,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           'Content-Type': 'application/json'
         };
         server = sinon.fakeServer.create();
-        server.respondWith(
-          'GET',
-          '/responds_to_get_with_json',
-          [
-            200,
-            jsonResponseHeaders,
-            '{"success":true}'
-          ]
-        );
+        server.respondWith('GET', '/responds_to_get_with_json', [
+          200,
+          jsonResponseHeaders,
+          '{"success":true}'
+        ]);
+
+        server.respondWith('GET', '/responds_to_get_with_500', [
+          500,
+          {},
+          ''
+        ]);
+
+        server.respondWith('GET', '/responds_to_get_with_100', [
+          100,
+          {},
+          ''
+        ]);
+
+        server.respondWith('GET', '/responds_to_get_with_0', [
+          0,
+          jsonResponseHeaders,
+          '{"success":true}'
+        ]);
+
 
         request = fixture('TrivialRequest');
-        requestOptions = {
+        successfulRequestOptions = {
           url: '/responds_to_get_with_json'
         };
       });
@@ -59,7 +74,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       suite('basic usage', function () {
         test('creates network requests, requiring only `url`', function () {
-          request.send(requestOptions);
+          request.send(successfulRequestOptions);
 
           server.respond();
 
@@ -67,12 +82,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
 
         test('sets async to true by default', function () {
-          request.send(requestOptions);
+          request.send(successfulRequestOptions);
           expect(request.xhr.async).to.be.eql(true);
         });
 
         test('can be aborted', function (done) {
-          request.send(requestOptions);
+          request.send(successfulRequestOptions);
 
           request.abort();
 
@@ -84,6 +99,41 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             expect(request.response).to.not.be.ok;
             done();
           });
+        });
+      });
+
+      suite('special cases', function() {
+        test('treats status code 0 as success, though the outcome is ambiguous', function() {
+          // Note: file:// status code will probably be 0 no matter what happened.
+          request.send({
+            url: '/responds_to_get_with_0'
+          });
+
+          server.respond();
+
+          expect(request.succeeded).to.be.equal(true);
+        });
+      });
+
+      suite('errors', function() {
+        test('treats status codes between 1 and 199 as errors', function() {
+          request.send({
+            url: '/responds_to_get_with_100'
+          });
+
+          server.respond();
+
+          expect(request.succeeded).to.be.equal(false);
+        });
+
+        test('treats status codes between 300 and ∞ as errors', function() {
+          request.send({
+            url: '/responds_to_get_with_500'
+          });
+
+          server.respond();
+
+          expect(request.succeeded).to.be.equal(false);
         });
       });
     });

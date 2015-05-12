@@ -49,7 +49,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         server = sinon.fakeServer.create();
         server.respondWith(
           'GET',
-          '/responds_to_get_with_json',
+          /\/responds_to_get_with_json.*/,
           [
             200,
             jsonResponseHeaders,
@@ -198,17 +198,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
 
         test('is accessible as a readonly property', function(done) {
-          request.completes.then(function(response) {
-            expect(ajax.lastResponse).to.be.equal(response);
+          request.completes.then(function (request) {
+            expect(ajax.lastResponse).to.be.equal(request.response);
             done();
           }).catch(done);
         });
 
-        test('updates with each new response', function(done) {
-          request.completes.then(function(response) {
 
-            expect(response).to.be.an('object');
-            expect(ajax.lastResponse).to.be.equal(response);
+        test('updates with each new response', function(done) {
+          request.completes.then(function(request) {
+
+            expect(request.response).to.be.an('object');
+            expect(ajax.lastResponse).to.be.equal(request.response);
 
             ajax.handleAs = 'text';
             request = ajax.generateRequest();
@@ -216,10 +217,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             return request.completes;
 
-          }).then(function(response) {
+          }).then(function(request) {
 
-            expect(response).to.be.a('string');
-            expect(ajax.lastResponse).to.be.equal(response);
+            expect(request.response).to.be.a('string');
+            expect(ajax.lastResponse).to.be.equal(request.response);
 
             done();
 

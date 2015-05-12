@@ -37,7 +37,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
   </test-fixture>
   <script>
-    suite('<iron-ajax>', function () {
+    suite('<iron-ajax>', function() {
       var jsonResponseHeaders = {
         'Content-Type': 'application/json'
       };
@@ -45,7 +45,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       var request;
       var server;
 
-      setup(function () {
+      setup(function() {
         server = sinon.fakeServer.create();
         server.respondWith(
           'GET',
@@ -70,12 +70,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         ajax = fixture('TrivialGet');
       });
 
-      teardown(function () {
+      teardown(function() {
         server.restore();
       });
 
-      suite('when making simple GET requests for JSON', function () {
-        test('has sane defaults that love you', function () {
+      suite('when making simple GET requests for JSON', function() {
+        test('has sane defaults that love you', function() {
           request = ajax.generateRequest();
 
           server.respond();
@@ -85,13 +85,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(request.response.success).to.be.equal(true);
         });
 
-        test('will be asynchronous by default', function () {
+        test('will be asynchronous by default', function() {
           expect(ajax.toRequestOptions().async).to.be.eql(true);
         });
       });
-      
-      suite('when setting custom headers', function () {
-        test('are present in the request headers', function () {
+
+      suite('when setting custom headers', function() {
+        test('are present in the request headers', function() {
           ajax.headers['custom-header'] = 'valid';
           var options = ajax.toRequestOptions();
 
@@ -100,7 +100,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(options.headers.hasOwnProperty('custom-header')).to.be.equal(true);
         });
 
-        test('non-objects in headers are not applied', function () {
+        test('non-objects in headers are not applied', function() {
           ajax.headers = 'invalid';
           var options = ajax.toRequestOptions();
 
@@ -108,8 +108,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
       });
 
-      suite('when properties are changed', function () {
-        test('generates simple-request elements that reflect the change', function () {
+      suite('when properties are changed', function() {
+        test('generates simple-request elements that reflect the change', function() {
           request = ajax.generateRequest();
 
           expect(request.xhr.method).to.be.equal('GET');
@@ -123,18 +123,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
       });
 
-      suite('when generating a request', function () {
-        test('yields a iron-request instance', function () {
+      suite('when generating a request', function() {
+        test('yields a iron-request instance', function() {
           var IronRequest = document.createElement('iron-request').constructor;
 
           expect(ajax.generateRequest()).to.be.instanceOf(IronRequest);
         });
       });
 
-      suite('when there are multiple requests', function () {
+      suite('when there are multiple requests', function() {
         var requests;
 
-        setup(function () {
+        setup(function() {
           requests = [];
 
           for (var i = 0; i < 3; ++i) {
@@ -142,30 +142,41 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
         });
 
-        test('holds all requests in the `activeRequests` Array', function () {
+        test('holds all requests in the `activeRequests` Array', function() {
           expect(requests).to.deep.eql(ajax.activeRequests);
         });
       });
 
-      suite('when `auto` is enabled', function () {
-        setup(function () {
+      suite('when `auto` is enabled', function() {
+        setup(function() {
           ajax = fixture('AutoGet');
         });
 
-        test('automatically generates new requests', function (done) {
-          ajax.addEventListener('request', function () {
+        test('automatically generates new requests', function(done) {
+          ajax.addEventListener('request', function() {
             done();
           });
-
-          ajax.handleas = 'text';
         });
 
-        test('deduplicates multiple changes to a single request', function (done) {
-          ajax.addEventListener('request', function () {
+        test('does not send requests if url is not a string', function(done) {
+          ajax.addEventListener('request', function() {
+            done(new Error('A request was generated but url is null!'));
+          });
+
+          ajax.url = null;
+          ajax.handleAs = 'text';
+
+          Polymer.Base.async(function() {
+            done();
+          }, 1);
+        });
+
+        test('deduplicates multiple changes to a single request', function(done) {
+          ajax.addEventListener('request', function() {
             server.respond();
           });
 
-          ajax.addEventListener('response', function () {
+          ajax.addEventListener('response', function() {
             try {
               expect(ajax.activeRequests.length).to.be.eql(1);
               done();
@@ -180,21 +191,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
       });
 
-      suite('the last response', function () {
-        setup(function () {
+      suite('the last response', function() {
+        setup(function() {
           request = ajax.generateRequest();
           server.respond();
         });
 
-        test('is accessible as a readonly property', function (done) {
-          request.completes.then(function (response) {
+        test('is accessible as a readonly property', function(done) {
+          request.completes.then(function(response) {
             expect(ajax.lastResponse).to.be.equal(response);
             done();
           }).catch(done);
         });
 
-        test('updates with each new response', function (done) {
-          request.completes.then(function (response) {
+        test('updates with each new response', function(done) {
+          request.completes.then(function(response) {
 
             expect(response).to.be.an('object');
             expect(ajax.lastResponse).to.be.equal(response);
@@ -205,7 +216,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             return request.completes;
 
-          }).then(function (response) {
+          }).then(function(response) {
 
             expect(response).to.be.a('string');
             expect(ajax.lastResponse).to.be.equal(response);
@@ -216,12 +227,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
       });
 
-      suite('when making POST requests', function () {
-        setup(function () {
+      suite('when making POST requests', function() {
+        setup(function() {
           ajax = fixture('TrivialPost');
         });
 
-        test('POSTs the value of the `body` attribute', function () {
+        test('POSTs the value of the `body` attribute', function() {
           var requestBody = JSON.stringify({foo: 'bar'});
 
           ajax.body = requestBody;
@@ -232,39 +243,39 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
       });
 
-      suite('when a response handler is bound', function () {
+      suite('when a response handler is bound', function() {
         var responseHandler;
 
-        setup(function () {
+        setup(function() {
           responseHandler = sinon.spy();
           ajax.addEventListener('response', responseHandler);
         });
 
-        test('calls the handler after every response', function (done) {
+        test('calls the handler after every response', function(done) {
           ajax.generateRequest();
           ajax.generateRequest();
 
           server.respond();
 
-          ajax.lastRequest.completes.then(function () {
+          ajax.lastRequest.completes.then(function() {
             expect(responseHandler.callCount).to.be.equal(2);
             done();
           }).catch(done);
         });
       });
 
-      suite('when the response type is `json`', function () {
-        setup(function () {
+      suite('when the response type is `json`', function() {
+        setup(function() {
           server.restore();
         });
 
-        test('finds the JSON on any platform', function (done) {
+        test('finds the JSON on any platform', function(done) {
           ajax.url = '../bower.json';
           request = ajax.generateRequest();
-          request.completes.then(function () {
+          request.completes.then(function() {
             expect(ajax.lastResponse).to.be.instanceOf(Object);
             done();
-          }).catch(function (e) {
+          }).catch(function(e) {
             done(e);
           });
         });

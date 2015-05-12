@@ -296,12 +296,12 @@ element.
 
     get requestHeaders() {
       var headers = {
-            'content-type': this.contentType
-          },
-          header;
+        'content-type': this.contentType
+      };
+      var header;
 
-      if(this.headers instanceof Object) {
-        for(header in this.headers) {
+      if (this.headers instanceof Object) {
+        for (header in this.headers) {
           headers[header] = this.headers[header].toString();
         }
       }
@@ -323,6 +323,10 @@ element.
 
     requestOptionsChanged: function() {
       this.debounce('generate-request', function() {
+        if (!this.url && this.url !== '') {
+          return;
+        }
+
         if (this.auto) {
           this.generateRequest();
         }

@@ -103,7 +103,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         test('default responseType is text', function (done) {
 
-          request.send(requestOptions);
+          request.send(successfulRequestOptions);
           server.respond();
 
           request.completes.then(function() {
@@ -117,7 +117,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         test('responseType can be configured via handleAs option', function (done) {
 
-          var options = Object.create(requestOptions);
+          var options = Object.create(successfulRequestOptions);
           options.handleAs = 'json';
 
           request.send(options);

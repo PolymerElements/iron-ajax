@@ -18,7 +18,8 @@ The `iron-ajax` element exposes network request functionality.
         url="http://gdata.youtube.com/feeds/api/videos/"
         params='{"alt":"json", "q":"chrome"}'
         handle-as="json"
-        on-response="handleResponse"></iron-ajax>
+        on-response="handleResponse"
+        debounce-for="300"></iron-ajax>
 
 With `auto` set to `true`, the element performs a request whenever
 its `url`, `params` or `body` properties are changed. Automatically generated
@@ -238,6 +239,16 @@ element.
         }
       },
 
+      /**
+       * Length of time in milliseconds to debounce multiple requests.
+       */
+      debounceFor: {
+        type: Number,
+        value: 0,
+        notify: true
+      },
+
+
       _boundHandleResponse: {
         type: Function,
         value: function() {
@@ -330,7 +341,7 @@ element.
         if (this.auto) {
           this.generateRequest();
         }
-      });
+      }, this.debounceFor);
     },
 
     /**

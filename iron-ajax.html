@@ -19,7 +19,7 @@ The `iron-ajax` element exposes network request functionality.
         params='{"alt":"json", "q":"chrome"}'
         handle-as="json"
         on-response="handleResponse"
-        debounce-for="300"></iron-ajax>
+        debounce-duration="300"></iron-ajax>
 
 With `auto` set to `true`, the element performs a request whenever
 its `url`, `params` or `body` properties are changed. Automatically generated
@@ -242,12 +242,11 @@ element.
       /**
        * Length of time in milliseconds to debounce multiple requests.
        */
-      debounceFor: {
+      debounceDuration: {
         type: Number,
         value: 0,
         notify: true
       },
-
 
       _boundHandleResponse: {
         type: Function,
@@ -341,7 +340,7 @@ element.
         if (this.auto) {
           this.generateRequest();
         }
-      }, this.debounceFor);
+      }, this.debounceDuration);
     },
 
     /**

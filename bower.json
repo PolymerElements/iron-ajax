@@ -24,7 +24,6 @@
   "ignore": [],
   "dependencies": {
     "promise-polyfill": "polymerlabs/promise-polyfill#^0.9.0",
-    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0",
     "polymer": "Polymer/polymer#^0.9.0"
   },
   "devDependencies": {
@@ -33,7 +32,7 @@
     "iron-image": "polymerelements/iron-image#^0.9.0",
     "paper-styles": "polymerelements/paper-styles#^0.9.0",
     "test-fixture": "polymerelements/test-fixture#^0.9.0",
-    "webcomponentsjs": "webcomponents/webcomponentsjs#~0.6.0",
-    "web-component-tester": "~2.2.3"
+    "web-component-tester": "~2.2.3",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
   }
 }

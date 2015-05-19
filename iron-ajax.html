@@ -255,13 +255,6 @@ element.
         }
       },
 
-      _boundHandleError: {
-        type: Function,
-        value: function() {
-          return this.handleError.bind(this);
-        }
-      },
-
       _boundDiscardRequest: {
         type: Function,
         value: function() {
@@ -357,7 +350,7 @@ element.
       request.completes.then(
         this._boundHandleResponse
       ).catch(
-        this._boundHandleError
+        this.handleError.bind(this, request)
       ).then(
         this._boundDiscardRequest
       );
@@ -379,13 +372,19 @@ element.
       this.fire('response', request);
     },
 
-    handleError: function(error) {
+    handleError: function(request, error) {
       if (this.verbose) {
         console.error(error);
       }
 
-      this._setLastError(error);
-      this.fire('error', error);
+      this._setLastError({
+        request: request,
+        error: error
+      });
+      this.fire('error', {
+        request: request,
+        error: error
+      });
     },
 
     discardRequest: function(request) {

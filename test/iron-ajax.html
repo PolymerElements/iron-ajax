@@ -25,6 +25,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <iron-ajax url="/responds_to_get_with_json"></iron-ajax>
     </template>
   </test-fixture>
+  <test-fixture id="ParamsGet">
+    <template>
+      <iron-ajax url="/responds_to_get_with_json"
+                 params='{"a": "a"}'></iron-ajax>
+    </template>
+  </test-fixture>
   <test-fixture id="AutoGet">
     <template>
       <iron-ajax auto url="/responds_to_get_with_json"></iron-ajax>
@@ -172,6 +178,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         test('holds all requests in the `activeRequests` Array', function() {
           expect(requests).to.deep.eql(ajax.activeRequests);
+        });
+      });
+
+      suite('when params are changed', function() {
+        test('generates a request that reflects the change', function() {
+          ajax = fixture('ParamsGet');
+          request = ajax.generateRequest();
+
+          expect(request.xhr.url).to.be.equal('/responds_to_get_with_json?a=a');
+
+          ajax.params = {b: 'b'};
+          request = ajax.generateRequest();
+
+          expect(request.xhr.url).to.be.equal('/responds_to_get_with_json?b=b');
         });
       });
 

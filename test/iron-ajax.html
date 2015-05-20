@@ -347,6 +347,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       });
 
+      suite('when a request fails', function() {
+        test('the error event has useful details', function(done) {
+
+          ajax.url = '/responds_to_get_with_text';
+          ajax.handleAs = 'json';
+          ajax.generateRequest();
+
+          ajax.addEventListener('error', function(event) {
+            try {
+              expect(event.detail.request).to.be.okay;
+              expect(event.detail.error).to.be.okay;
+              done();
+            } catch (e) {
+              done(e);
+            }
+          });
+
+          server.respond();
+        });
+      });
+
       suite('when handleAs parameter is `json`', function() {
 
         test('response type is string', function (done) {

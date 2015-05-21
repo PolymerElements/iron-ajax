@@ -41,7 +41,7 @@ iron-request can be used to perform XMLHttpRequests.
         notify: true,
         readOnly: true,
         value: function() {
-          this._setXhr(new XMLHttpRequest());
+          return new XMLHttpRequest();
         }
       },
 
@@ -50,7 +50,7 @@ iron-request can be used to perform XMLHttpRequests.
        * resolved.
        *
        * @attribute response
-       * @type *
+       * @type Object
        * @default null
        */
       response: {
@@ -58,7 +58,7 @@ iron-request can be used to perform XMLHttpRequests.
         notify: true,
         readOnly: true,
         value: function() {
-          this._setResponse(null);
+         return null;
         }
       },
 
@@ -71,16 +71,14 @@ iron-request can be used to perform XMLHttpRequests.
        * @default `new Promise`
        */
       completes: {
-        type: Promise,
+        type: Object,
         readOnly: true,
         notify: true,
         value: function() {
-          var completes = new Promise(function (resolve, reject) {
+          return new Promise(function (resolve, reject) {
             this.resolveCompletes = resolve;
             this.rejectCompletes = reject;
           }.bind(this));
-
-          this._setCompletes(completes);
         }
       },
 
@@ -97,7 +95,7 @@ iron-request can be used to perform XMLHttpRequests.
         notify: true,
         readOnly: true,
         value: function() {
-          this._setProgress({});
+          return {};
         }
       },
 
@@ -112,9 +110,7 @@ iron-request can be used to perform XMLHttpRequests.
         type: Boolean,
         notify: true,
         readOnly: true,
-        value: function() {
-          this._setAborted(false);
-        }
+        value: false,
       }
     },
 
@@ -139,14 +135,22 @@ iron-request can be used to perform XMLHttpRequests.
      * Sends an HTTP request to the server and returns the XHR object.
      *
      * @method request
-     * @param {Object} options
-     *    @param {String} options.url The url to which the request is sent.
-     *    @param {String} options.method The HTTP method to use, default is GET.
-     *    @param {boolean} options.async By default, all requests are sent asynchronously. To send synchronous requests, set to true.
-     *    @param {Object} options.body The content for the request body for POST method.
-     *    @param {Object} options.headers HTTP request headers.
-     *    @param {String} options.handleAs The response type. Default is 'text'.
-     *    @param {boolean} options.withCredentials Whether or not to send credentials on the request. Default is false.
+     * @param {{
+     *   url: string,
+     *   method: (string|undefined),
+     *   async: (boolean|undefined),
+     *   body: (ArrayBuffer|ArrayBufferView|Blob|Document|FormData|null|string|undefined),
+     *   headers: (Object|undefined),
+     *   handleAs: (string|undefined),
+     *   withCredentials: (boolean|undefined)}} options -
+     *     url The url to which the request is sent.
+     *     method The HTTP method to use, default is GET.
+     *     async By default, all requests are sent asynchronously. To send synchronous requests,
+     *         set to true.
+     *     body The content for the request body for POST method.
+     *     headers HTTP request headers.
+     *     handleAs The response type. Default is 'text'.
+     *     withCredentials Whether or not to send credentials on the request. Default is false.
      * @return Promise
      */
     send: function (options) {
@@ -178,7 +182,7 @@ iron-request can be used to perform XMLHttpRequests.
       }.bind(this))
 
       xhr.addEventListener('error', function (error) {
-        this.rejectCompletes(error)
+        this.rejectCompletes(error);
       }.bind(this));
 
       xhr.addEventListener('abort', function () {
@@ -202,8 +206,8 @@ iron-request can be used to perform XMLHttpRequests.
 
       // In IE, `xhr.responseType` is an empty string when the response
       // returns. Hence, caching it as `xhr._responseType`.
-      xhr.responseType = xhr._responseType = options.handleAs;
-      xhr.withCredentials = options.withCredentials;
+      xhr.responseType = xhr._responseType = (options.handleAs || 'text');
+      xhr.withCredentials = !!options.withCredentials;
 
       xhr.send(options.body);
 

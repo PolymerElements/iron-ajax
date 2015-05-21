@@ -41,7 +41,7 @@ iron-request can be used to perform XMLHttpRequests.
         notify: true,
         readOnly: true,
         value: function() {
-          this._setXhr(new XMLHttpRequest());
+          return new XMLHttpRequest();
         }
       },
 
@@ -58,7 +58,7 @@ iron-request can be used to perform XMLHttpRequests.
         notify: true,
         readOnly: true,
         value: function() {
-          this._setResponse(null);
+         return null;
         }
       },
 
@@ -71,16 +71,14 @@ iron-request can be used to perform XMLHttpRequests.
        * @default `new Promise`
        */
       completes: {
-        type: Object
+        type: Object,
         readOnly: true,
         notify: true,
         value: function() {
-          var completes = new Promise(function (resolve, reject) {
+          return new Promise(function (resolve, reject) {
             this.resolveCompletes = resolve;
             this.rejectCompletes = reject;
           }.bind(this));
-
-          this._setCompletes(completes);
         }
       },
 
@@ -97,7 +95,7 @@ iron-request can be used to perform XMLHttpRequests.
         notify: true,
         readOnly: true,
         value: function() {
-          this._setProgress({});
+          return {};
         }
       },
 
@@ -112,9 +110,7 @@ iron-request can be used to perform XMLHttpRequests.
         type: Boolean,
         notify: true,
         readOnly: true,
-        value: function() {
-          this._setAborted(false);
-        }
+        value: false,
       }
     },
 

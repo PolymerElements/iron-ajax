@@ -8,8 +8,8 @@
   ],
   "keywords": [
     "web-components",
-    "web-component",
-    "polymer"
+    "polymer",
+    "data"
   ],
   "main": [
     "iron-ajax.html",

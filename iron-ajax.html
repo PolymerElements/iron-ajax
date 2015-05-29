@@ -109,7 +109,7 @@ element.
        * and a `Content-Type` header is specified in the `headers` attribute,
        * the `headers` attribute value will take precedence.
        */
-      contentType: {
+      contenttype: {
         type: String,
         value: 'application/x-www-form-urlencoded'
       },
@@ -265,7 +265,7 @@ element.
 
     observers: [
       'requestOptionsChanged(url, method, params, headers,' +
-        'contentType, body, sync, handleAs, withCredentials, auto)'
+        'contenttype, body, sync, handleAs, withCredentials, auto)'
     ],
 
     get queryString () {
@@ -299,7 +299,7 @@ element.
 
     get requestHeaders() {
       var headers = {
-        'content-type': this.contentType
+        'content-type': this.contenttype
       };
       var header;
 

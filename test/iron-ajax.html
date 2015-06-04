@@ -16,6 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script src="../../test-fixture/test-fixture-mocha.js"></script>
 
   <link rel="import" href="../../polymer/polymer.html">
+  <link rel="import" href="../../promise-polyfill/promise-polyfill-lite.html">
   <link rel="import" href="../../test-fixture/test-fixture.html">
   <link rel="import" href="../iron-ajax.html">
 </head>
@@ -58,6 +59,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       var ajax;
       var request;
       var server;
+
+      function timePasses(ms) {
+        return new Promise(function(resolve) {
+          window.setTimeout(function() {
+            resolve();
+          }, ms);
+        });
+      }
 
       setup(function() {
         server = sinon.fakeServer.create();
@@ -158,10 +167,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       });
 
       suite('when generating a request', function() {
-        test('yields a iron-request instance', function() {
+        test('yields an iron-request instance', function() {
           var IronRequest = document.createElement('iron-request').constructor;
 
           expect(ajax.generateRequest()).to.be.instanceOf(IronRequest);
+        });
+
+        test('reflects the loading state in the `loading` property', function(done) {
+          var request = ajax.generateRequest();
+
+          expect(ajax.loading).to.be.equal(true);
+
+          server.respond();
+
+          timePasses(1).then(function() {
+            expect(ajax.loading).to.be.equal(false);
+            done();
+          }).catch(function(e) {
+            done(e);
+          });
         });
       });
 
@@ -178,6 +202,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         test('holds all requests in the `activeRequests` Array', function() {
           expect(requests).to.deep.eql(ajax.activeRequests);
+        });
+
+        test('empties `activeRequests` when requests are completed', function(done) {
+          server.respond();
+          timePasses(1).then(function() {
+            expect(ajax.activeRequests.length).to.be.equal(0);
+            done();
+          }).catch(function(e) {
+            done(e);
+          });
         });
       });
 
@@ -298,9 +332,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
 
         test('only requests a single resource', function(done) {
-          ajax.requestOptionsChanged();
+          ajax._requestOptionsChanged();
           expect(server.requests[0]).to.be.equal(undefined);
-          ajax.requestOptionsChanged();
+          ajax._requestOptionsChanged();
           window.setTimeout(function() {
             expect(server.requests[0]).to.be.ok;
             done();

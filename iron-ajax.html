@@ -415,7 +415,7 @@ element.
 
     _requestOptionsChanged: function() {
       this.debounce('generate-request', function() {
-        if (!this.url && this.url !== '') {
+        if (!this.url && this.url == '') {
           return;
         }
 

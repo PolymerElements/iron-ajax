@@ -242,7 +242,7 @@ element.
         notify: true,
         readOnly: true,
         value: function() {
-          this._setActiveRequests([]);
+          return [];
         }
       },
 
@@ -335,7 +335,14 @@ element.
      * Request options suitable for generating an `iron-request` instance based
      * on the current state of the `iron-ajax` instance's properties.
      *
-     * @return {Object}
+     * @return {{
+     *   url: string,
+     *   method: (string|undefined),
+     *   async: (boolean|undefined),
+     *   body: (ArrayBuffer|ArrayBufferView|Blob|Document|FormData|null|string|undefined),
+     *   headers: (Object|undefined),
+     *   handleAs: (string|undefined),
+     *   withCredentials: (boolean|undefined)}}
      */
     toRequestOptions: function() {
       return {
@@ -352,10 +359,10 @@ element.
     /**
      * Performs an AJAX request to the specified URL.
      *
-     * @return {iron-request}
+     * @return {!IronRequestElement}
      */
     generateRequest: function() {
-      var request = document.createElement('iron-request');
+      var request = /** @type {!IronRequestElement} */ (document.createElement('iron-request'));
       var requestOptions = this.toRequestOptions();
 
       this.activeRequests.push(request);

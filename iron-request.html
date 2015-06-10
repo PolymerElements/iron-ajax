@@ -45,7 +45,7 @@ iron-request can be used to perform XMLHttpRequests.
        * resolved.
        *
        * @attribute response
-       * @type Object
+       * @type {*}
        * @default null
        */
       response: {
@@ -151,7 +151,7 @@ iron-request can be used to perform XMLHttpRequests.
       var xhr = this.xhr;
 
       if (xhr.readyState > 0) {
-        return;
+        return null;
       }
 
       xhr.addEventListener('readystatechange', function () {
@@ -213,7 +213,7 @@ iron-request can be used to perform XMLHttpRequests.
      * the value returned will be deserialized based on the `responseType`
      * set on the XHR.
      *
-     * @return {Object|Array|Document|string|undefined} The parsed response,
+     * @return {*} The parsed response,
      * or undefined if there was an empty response or parsing failed.
      */
     parseResponse: function () {

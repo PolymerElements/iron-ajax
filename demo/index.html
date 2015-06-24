@@ -29,7 +29,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <template is="dom-bind" id="app">
     <iron-ajax auto url="https://www.googleapis.com/youtube/v3/search"
-        params='{"key":"", "q":"polymer", "part":"snippet"}'
+        params='{"key":"", "part":"snippet", "q":"polymer"}'
         handle-as="json" last-response="{{ajaxResponse}}"></iron-ajax>
     <h1>Video Feed</h1>
     <section class="flex layout horizontal wrap">

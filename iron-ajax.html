@@ -191,6 +191,14 @@ element.
       },
 
       /**
+       * Set the timeout flag on the request.
+       */
+      timeout: {
+        type: Number,
+        value: 0
+      },
+
+      /**
        * If true, automatically performs an Ajax request when either `url` or
        * `params` changes.
        */
@@ -282,7 +290,7 @@ element.
 
     observers: [
       '_requestOptionsChanged(url, method, params.*, headers,' +
-        'contentType, body, sync, handleAs, withCredentials, auto)'
+        'contentType, body, sync, handleAs, withCredentials, timeout, auto)'
     ],
 
     /**
@@ -379,7 +387,8 @@ element.
         body: this.body,
         async: !this.sync,
         handleAs: this.handleAs,
-        withCredentials: this.withCredentials
+        withCredentials: this.withCredentials,
+        timeout: this.timeout
       };
     },
 

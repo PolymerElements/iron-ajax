@@ -193,6 +193,7 @@ iron-request can be used to perform XMLHttpRequests.
      *     headers HTTP request headers.
      *     handleAs The response type. Default is 'text'.
      *     withCredentials Whether or not to send credentials on the request. Default is false.
+     *   timeout: (Number|undefined)
      * @return {Promise}
      */
     send: function (options) {
@@ -260,6 +261,7 @@ iron-request can be used to perform XMLHttpRequests.
       // returns. Hence, caching it as `xhr._responseType`.
       xhr.responseType = xhr._responseType = (options.handleAs || 'text');
       xhr.withCredentials = !!options.withCredentials;
+      xhr.timeout = options.timeout;
 
 
 

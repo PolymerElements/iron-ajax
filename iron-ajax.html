@@ -208,17 +208,7 @@ element.
       },
 
       /**
-       * Will be set to true if there is at least one in-flight request
-       * associated with this iron-ajax element.
-       */
-      loading: {
-        type: Boolean,
-        notify: true,
-        readOnly: true
-      },
-
-      /**
-       * Will be set to the most recent request made by this iron-ajax element.
+       * The most recent request made by this iron-ajax element.
        */
       lastRequest: {
         type: Object,
@@ -227,10 +217,23 @@ element.
       },
 
       /**
-       * Will be set to the most recent response received by a request
-       * that originated from this iron-ajax element. The type of the response
-       * is determined by the value of `handleAs` at the time that the request
-       * was generated.
+       * True while lastRequest is in flight.
+       */
+      loading: {
+        type: Boolean,
+        notify: true,
+        readOnly: true
+      },
+
+      /**
+       * lastRequest's response.
+       *
+       * Note that lastResponse and lastError are set when lastRequest finishes,
+       * so if loading is true, then lastResponse and lastError will correspond
+       * to the result of the previous request.
+       *
+       * The type of the response is determined by the value of `handleAs` at
+       * the time that the request was generated.
        */
       lastResponse: {
         type: Object,
@@ -239,8 +242,7 @@ element.
       },
 
       /**
-       * Will be set to the most recent error that resulted from a request
-       * that originated from this iron-ajax element.
+       * lastRequest's error, if any.
        */
       lastError: {
         type: Object,
@@ -409,7 +411,11 @@ element.
     },
 
     _handleResponse: function(request) {
-      this._setLastResponse(request.response);
+      if (request === this.lastRequest) {
+        this._setLastResponse(request.response);
+        this._setLastError(null);
+        this._setLoading(false);
+      }
       this.fire('response', request, {bubbles: false});
     },
 
@@ -418,10 +424,14 @@ element.
         console.error(error);
       }
 
-      this._setLastError({
-        request: request,
-        error: error
-      });
+      if (request === this.lastRequest) {
+        this._setLastError({
+          request: request,
+          error: error
+        });
+        this._setLastResponse(null);
+        this._setLoading(false);
+      }
       this.fire('error', {
         request: request,
         error: error
@@ -433,10 +443,6 @@ element.
 
       if (requestIndex > -1) {
         this.activeRequests.splice(requestIndex, 1);
-      }
-
-      if (this.activeRequests.length === 0) {
-        this._setLoading(false);
       }
     },
 

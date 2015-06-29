@@ -460,6 +460,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       });
 
+      suite('when request body is type of FormData', function(){
+        test('reset Content-Type header', function(){
+
+          ajax.body = new FormData();
+
+          expect('Content-Type' in ajax.requestHeaders).to.not.be.ok;
+        });
+      });
+
     });
   </script>
 

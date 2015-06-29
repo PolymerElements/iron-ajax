@@ -58,6 +58,34 @@ iron-request can be used to perform XMLHttpRequests.
       },
 
       /**
+       * A reference to the status code, if the `xhr` has completely resolved.
+       *
+       * @attribute status
+       * @type short
+       * @default 0
+       */
+      status: {
+        type: Number,
+        notify: true,
+        readOnly: true,
+        value: 0
+      },
+
+      /**
+       * A reference to the status text, if the `xhr` has completely resolved.
+       *
+       * @attribute statusText
+       * @type String
+       * @default ""
+       */
+      statusText: {
+        type: String,
+        notify: true,
+        readOnly: true,
+        value: ''
+      },
+
+      /**
        * A promise that resolves when the `xhr` response comes back, or rejects
        * if there is an error before the `xhr` completes.
        *
@@ -156,6 +184,7 @@ iron-request can be used to perform XMLHttpRequests.
 
       xhr.addEventListener('readystatechange', function () {
         if (xhr.readyState === 4 && !this.aborted) {
+          this._updateStatus();
 
           if (!this.succeeded) {
             this.rejectCompletes(new Error('The request failed with status code: ' + this.xhr.status));
@@ -176,10 +205,12 @@ iron-request can be used to perform XMLHttpRequests.
       }.bind(this))
 
       xhr.addEventListener('error', function (error) {
+        this._updateStatus();
         this.rejectCompletes(error);
       }.bind(this));
 
       xhr.addEventListener('abort', function () {
+        this._updateStatus();
         this.rejectCompletes(new Error('Request aborted.'));
       }.bind(this));
 
@@ -266,6 +297,14 @@ iron-request can be used to perform XMLHttpRequests.
     abort: function () {
       this._setAborted(true);
       this.xhr.abort();
+    },
+
+    /**
+     * Updates the status code and status text.
+     */
+    _updateStatus: function() {
+      this._setStatus(this.xhr.status);
+      this._setStatusText(this.xhr.statusText);
     }
   });
 </script>

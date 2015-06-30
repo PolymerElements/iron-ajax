@@ -304,7 +304,7 @@ iron-request can be used to perform XMLHttpRequests.
      */
     _updateStatus: function() {
       this._setStatus(this.xhr.status);
-      this._setStatusText(this.xhr.statusText);
+      this._setStatusText((this.xhr.statusText === undefined) ? '' : this.xhr.statusText);
     }
   });
 </script>

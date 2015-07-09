@@ -50,6 +50,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                  debounce-duration="150"></iron-ajax>
     </template>
   </test-fixture>
+  <!-- note(rictic):
+       This makes us dependent on a third-party server, but we need to be able
+       to check what headers the browser actually sends on the wire.
+       If necessary we can spin up our own httpbin server, as the code is open
+       source.
+    -->
+  <test-fixture id="RealPost">
+    <template>
+      <iron-ajax method="POST" url="http://httpbin.org/post"></iron-ajax>
+    </template>
+  </test-fixture>
   <script>
     suite('<iron-ajax>', function () {
       var responseHeaders = {
@@ -313,6 +324,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       suite('when making POST requests', function() {
         setup(function() {
           ajax = fixture('TrivialPost');
+          realAjax = fixture('RealPost');
         });
 
         test('POSTs the value of the `body` attribute', function() {
@@ -460,6 +472,68 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       });
 
+      suite('when making a POST over the wire', function() {
+        test('FormData is handled correctly', function() {
+          server.restore();
+          var requestBody = new FormData();
+          requestBody.append('a', 'foo');
+          requestBody.append('b', 'bar');
+
+          var ajax = fixture('RealPost');
+          ajax.body = requestBody;
+          return ajax.generateRequest().completes.then(function() {
+            expect(ajax.lastResponse.headers['Content-Type']).to.match(
+                /^multipart\/form-data; boundary=.*$/);
+
+            expect(ajax.lastResponse.form.a).to.be.equal('foo');
+            expect(ajax.lastResponse.form.b).to.be.equal('bar');
+          });
+        });
+
+        test('json is handled correctly', function() {
+          server.restore();
+          var ajax = fixture('RealPost');
+          ajax.body = JSON.stringify({a: 'foo', b: 'bar'});
+          ajax.contentType = 'application/json';
+          return ajax.generateRequest().completes.then(function() {
+            expect(ajax.lastResponse.headers['Content-Type']).to.match(
+                /^application\/json(;.*)?$/);
+            expect(ajax.lastResponse.json.a).to.be.equal('foo');
+            expect(ajax.lastResponse.json.b).to.be.equal('bar');
+          });
+        });
+
+        test('urlencoded data is handled correctly', function() {
+          server.restore();
+          var ajax = fixture('RealPost');
+          ajax.body = 'a=foo&b=bar';
+          return ajax.generateRequest().completes.then(function() {
+            expect(ajax.lastResponse.headers['Content-Type']).to.match(
+                /^application\/x-www-form-urlencoded(;.*)?$/);
+
+            expect(ajax.lastResponse.form.a).to.be.equal('foo');
+            expect(ajax.lastResponse.form.b).to.be.equal('bar');
+          });
+        });
+
+        test('xml is handled correctly', function() {
+          server.restore();
+          var ajax = fixture('RealPost');
+
+          var xmlDoc = document.implementation.createDocument(
+              null, "foo", null);
+          var node = xmlDoc.createElement("bar");
+          node.setAttribute("name" , "baz");
+          xmlDoc.documentElement.appendChild(node);
+          ajax.body = xmlDoc;
+          return ajax.generateRequest().completes.then(function() {
+            expect(ajax.lastResponse.headers['Content-Type']).to.match(
+                /^application\/xml(;.*)?$/);
+            expect(ajax.lastResponse.data).to.match(
+                /<foo\s*><bar\s+name="baz"\s*\/><\/foo\s*>/);
+          });
+        });
+      });
     });
   </script>
 

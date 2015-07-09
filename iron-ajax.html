@@ -118,7 +118,7 @@ element.
        */
       contentType: {
         type: String,
-        value: 'application/x-www-form-urlencoded'
+        value: null
       },
 
       /**
@@ -127,6 +127,7 @@ element.
        * Example:
        *
        *     <iron-ajax method="POST" auto url="http://somesite.com"
+       *         content-type="application/json"
        *         body='{"foo":1, "bar":2}'>
        *     </iron-ajax>
        */
@@ -317,9 +318,14 @@ element.
      * @return {Object}
      */
     get requestHeaders() {
-      var headers = {
-        'Content-Type': this.contentType
-      };
+      var headers = {};
+      var contentType = this.contentType;
+      if (contentType == null && (typeof this.body === 'string')) {
+        contentType = 'application/x-www-form-urlencoded';
+      }
+      if (contentType) {
+        headers['Content-Type'] = contentType;
+      }
       var header;
 
       if (this.headers instanceof Object) {

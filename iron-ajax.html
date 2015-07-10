@@ -122,18 +122,46 @@ element.
       },
 
       /**
-       * Optional raw body content to send when method === "POST".
+       * Body content to send with the request, typically used with "POST"
+       * requests.
        *
-       * Example:
+       * If body is a string it will be sent up raw with the request.
        *
-       *     <iron-ajax method="POST" auto url="http://somesite.com"
-       *         content-type="application/json"
-       *         body='{"foo":1, "bar":2}'>
+       * If body is a plain object and no Content-Type is set, the object
+       * will be form encoded before sending.
+       *
+       * If Content-Type is set and iron-request knows how, the body will be
+       * encoded according to that Content-Type. Content-Types known:
+       *    * application/json
+       *    * application/x-www-form-urlencoded
+       *
+       * Otherwise the body will be sent up raw, and the browser will handle
+       * any encoding (e.g. for FormData, Blob, ArrayBuffer, etc).
+       *
+       * Examples:
+       *
+       *     <iron-ajax method="POST" auto url="http://example.com"
+       *         body='{"foo": "bar"}'>
        *     </iron-ajax>
+       * The body of the request will be `foo=bar` and the Content-Type
+       * will be `application/x-www-form-urlencoded`
+       *
+       *     <iron-ajax method="POST" auto url="http://example.com"
+       *         content-type="application/json"
+       *         body='{"foo": "bar"}'>
+       *     </iron-ajax>
+       * The body of the request will be `{"foo":"bar"}`.
+       *
+       *     <iron-ajax method="POST" auto url="http://example.com"
+       *         body='foobarbaz'>
+       *     </iron-ajax>
+       * The body will be sent up unmodified as `foobarbaz`.
+       *
+       * @type (ArrayBuffer|ArrayBufferView|Blob|Document|FormData|null|string|undefined|Object)
        */
       body: {
-        type: String,
-        value: ''
+        type: Object,
+        value: null
       },
 
       /**

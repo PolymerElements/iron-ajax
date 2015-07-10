@@ -151,14 +151,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           expect(options.headers).to.be.ok;
           expect(options.headers['custom-header']).to.be.an('string');
-          expect(options.headers.hasOwnProperty('custom-header')).to.be.equal(true);
+          expect(options.headers.hasOwnProperty('custom-header')).to.be.equal(
+              true);
         });
 
         test('non-objects in headers are not applied', function() {
           ajax.headers = 'invalid';
           var options = ajax.toRequestOptions();
 
-          expect(Object.keys(options.headers).length).to.be.equal(1);
+          expect(Object.keys(options.headers).length).to.be.equal(0);
         });
       });
 
@@ -373,6 +374,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
           );
         });
+
+        suite('the examples in the documentation work', function() {
+          test('no content-type, body attribute is an object', function() {
+            ajax.setAttribute('body', '{"foo": "bar"}');
+            ajax.generateRequest();
+
+            expect(server.requests[0]).to.be.ok;
+            expect(server.requests[0].requestBody).to.be.equal(
+                'foo=bar');
+          });
+
+          test('json content, body attribute is an object', function() {
+            ajax.setAttribute('body', '{"foo": "bar"}');
+            ajax.contentType = 'application/json';
+            ajax.generateRequest();
+
+            expect(server.requests[0]).to.be.ok;
+            expect(server.requests[0].requestBody).to.be.equal(
+                '{"foo":"bar"}');
+          });
+
+          test('form encoded content as a string', function() {
+            ajax.setAttribute('body', 'foobarbaz');
+            ajax.generateRequest();
+
+            expect(server.requests[0]).to.be.ok;
+            expect(server.requests[0].requestBody).to.be.equal(
+                'foobarbaz');
+          });
+        })
 
         suite('and `contentType` is explicitly set to form encode', function() {
           test('we encode a custom object', function() {

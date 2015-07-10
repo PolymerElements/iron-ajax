@@ -379,7 +379,9 @@ iron-request can be used to perform XMLHttpRequests.
       // If it's not null, and it's an instance of Object, and its constructor's
       // prototype is the source of the definition of 'hasOwnProperty', then
       // it's probably a direct instance of Object.
-      return ob && (ob instanceof Object) && ob.constructor && ob.constructor.prototype && ob.constructor.prototype.hasOwnProperty('hasOwnProperty');
+      return ob && (ob instanceof Object) && ob.constructor &&
+          ob.constructor.prototype &&
+          ob.constructor.prototype.hasOwnProperty('hasOwnProperty');
     },
 
     /**

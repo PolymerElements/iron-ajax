@@ -324,7 +324,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       suite('when making POST requests', function() {
         setup(function() {
           ajax = fixture('TrivialPost');
-          realAjax = fixture('RealPost');
         });
 
         test('POSTs the value of the `body` attribute', function() {
@@ -336,6 +335,70 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(server.requests[0]).to.be.ok;
           expect(server.requests[0].requestBody).to.be.equal(requestBody);
         });
+
+        suite('and `body` is a plain Object', function() {
+          test('if `contentType` isn\'t set, the body is form encoded',
+            function() {
+              ajax.body = {foo: 'bar\nbip', 'biz bo': 'baz blar'};
+              ajax.generateRequest();
+
+              expect(server.requests[0]).to.be.ok;
+              expect(server.requests[0].requestBody).to.be.equal(
+                  'foo=bar%0D%0Abip&biz+bo=baz+blar');
+            }
+          );
+
+          test('if `contentType` is set to form encode, the body is encoded',
+            function() {
+              ajax.body = {foo: 'bar\nbip', 'biz bo': 'baz blar'};
+              ajax.contentType = 'application/x-www-form-urlencoded';
+              ajax.generateRequest();
+
+              expect(server.requests[0]).to.be.ok;
+              expect(server.requests[0].requestBody).to.be.equal(
+                  'foo=bar%0D%0Abip&biz+bo=baz+blar');
+            }
+          );
+
+          test('if `contentType` is json, the body is json encoded',
+            function() {
+              var requestObj = {foo: 'bar', baz: [1,2,3]}
+              ajax.body = requestObj;
+              ajax.contentType = 'application/json';
+              ajax.generateRequest();
+
+              expect(server.requests[0]).to.be.ok;
+              expect(server.requests[0].requestBody).to.be.equal(
+                  JSON.stringify(requestObj));
+            }
+          );
+        });
+
+        suite('and `contentType` is explicitly set to form encode', function() {
+          test('we encode a custom object', function() {
+            function Foo(bar) { this.bar = bar };
+            var requestObj = new Foo('baz');
+            ajax.body = requestObj;
+            ajax.contentType = 'application/x-www-form-urlencoded';
+            ajax.generateRequest();
+
+            expect(server.requests[0]).to.be.ok;
+            expect(server.requests[0].requestBody).to.be.equal('bar=baz');
+          });
+        })
+
+        suite('and `contentType` isn\'t set', function() {
+          test('we don\'t try to encode an ArrayBuffer', function() {
+            var requestObj = new ArrayBuffer()
+            ajax.body = requestObj;
+            ajax.generateRequest();
+
+            expect(server.requests[0]).to.be.ok;
+            // We give the browser the ArrayBuffer directly, without trying
+            // to encode it.
+            expect(server.requests[0].requestBody).to.be.equal(requestObj);
+          });
+        })
       });
 
       suite('when debouncing requests', function() {

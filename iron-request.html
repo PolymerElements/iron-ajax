@@ -161,7 +161,7 @@ iron-request can be used to perform XMLHttpRequests.
      *   url: string,
      *   method: (string|undefined),
      *   async: (boolean|undefined),
-     *   body: (ArrayBuffer|ArrayBufferView|Blob|Document|FormData|null|string|undefined),
+     *   body: (ArrayBuffer|ArrayBufferView|Blob|Document|FormData|null|string|undefined|Object),
      *   headers: (Object|undefined),
      *   handleAs: (string|undefined),
      *   withCredentials: (boolean|undefined)}} options -
@@ -229,12 +229,21 @@ iron-request can be used to perform XMLHttpRequests.
         }, this);
       }
 
+      var contentType;
+      if (options.headers) {
+        contentType = options.headers['Content-Type'];
+      }
+      body = this._encodeBodyObject(options.body, contentType);
+
+
       // In IE, `xhr.responseType` is an empty string when the response
       // returns. Hence, caching it as `xhr._responseType`.
       xhr.responseType = xhr._responseType = (options.handleAs || 'text');
       xhr.withCredentials = !!options.withCredentials;
 
-      xhr.send(options.body);
+
+
+      xhr.send(body);
 
       return this.completes;
     },
@@ -297,6 +306,80 @@ iron-request can be used to perform XMLHttpRequests.
     abort: function () {
       this._setAborted(true);
       this.xhr.abort();
+    },
+
+    /**
+     * @param {*} body The given body of the request to try and encode.
+     * @param {?string} contentType The given content type, to infer an encoding
+     *     from.
+     * @return {?string|Object} Either the encoded body as a string, if
+     *     successful, or the unaltered body object, if no encoding could be
+     *     inferred.
+     */
+    _encodeBodyObject: function(body, contentType) {
+      if (typeof body == 'string') {
+        return body;  // Already encoded.
+      }
+      switch(contentType) {
+        case('application/json'):
+          return JSON.stringify(body);
+        case('application/x-www-form-urlencoded'):
+          return this._wwwFormUrlEncode(body);
+        case(null):  // fall through
+        case(undefined):
+          // More complex objects may be natively understood by the browser,
+          // e.g. ArrayBuffer, FormData, Document.
+          // If the user wants a non-plain object to be form encoded they'll
+          // need to specify the content type manually, we shouldn't try to
+          // infer it.
+          if (this._isPlainObject(body)) {
+            return this._wwwFormUrlEncode(body);
+          }
+          // fall through
+        default:
+      }
+      return body;  // Unknown, make no change.
+    },
+
+    /**
+     * @param {Object} obj The object to encode in x-www-form-urlencoded format.
+     * @return {string} .
+     */
+    _wwwFormUrlEncode: function(obj) {
+      if (!obj) {
+        return '';
+      }
+      var pieces = [];
+      Object.keys(obj).forEach(function(key) {
+        // TODO(rictic): handle array values here, in a consistent way with
+        //   iron-ajax params.
+        pieces.push(
+            this._wwwFormUrlEncodePiece(key) + '=' +
+            this._wwwFormUrlEncodePiece(obj[key]));
+      }, this);
+      return pieces.join('&');
+    },
+
+    /**
+     * @param {*} str A key/value to encode in x-www-form-urlencoded format.
+     * @param {string} .
+     */
+    _wwwFormUrlEncodePiece: function(str) {
+      // Spec says to normalize newlines to \r\n and replace %20 spaces with +.
+      // jQuery does this as well, so this is likely to be widely compatible.
+      return encodeURIComponent(str.toString().replace(/\r?\n/g, '\r\n'))
+          .replace(/%20/g, '+');
+    },
+
+    /**
+     * @param {*} ob Any value.
+     * @return {boolean} True iff `ob` is a direct descendent of Object.
+     */
+    _isPlainObject: function(ob) {
+      // If it's not null, and it's an instance of Object, and its constructor's
+      // prototype is the source of the definition of 'hasOwnProperty', then
+      // it's probably a direct instance of Object.
+      return ob && (ob instanceof Object) && ob.constructor && ob.constructor.prototype && ob.constructor.prototype.hasOwnProperty('hasOwnProperty');
     },
 
     /**

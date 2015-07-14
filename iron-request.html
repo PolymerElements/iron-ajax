@@ -18,6 +18,8 @@ iron-request can be used to perform XMLHttpRequests.
     this.$.xhr.send({url: url, params: params});
 -->
 <script>
+  'use strict'
+
   Polymer({
     is: 'iron-request',
 
@@ -233,7 +235,7 @@ iron-request can be used to perform XMLHttpRequests.
       if (options.headers) {
         contentType = options.headers['Content-Type'];
       }
-      body = this._encodeBodyObject(options.body, contentType);
+      var body = this._encodeBodyObject(options.body, contentType);
 
 
       // In IE, `xhr.responseType` is an empty string when the response
@@ -312,9 +314,8 @@ iron-request can be used to perform XMLHttpRequests.
      * @param {*} body The given body of the request to try and encode.
      * @param {?string} contentType The given content type, to infer an encoding
      *     from.
-     * @return {?string|Object} Either the encoded body as a string, if
-     *     successful, or the unaltered body object, if no encoding could be
-     *     inferred.
+     * @return {?string|*} Either the encoded body as a string, if successful,
+     *     or the unaltered body object if no encoding could be inferred.
      */
     _encodeBodyObject: function(body, contentType) {
       if (typeof body == 'string') {
@@ -325,63 +326,38 @@ iron-request can be used to perform XMLHttpRequests.
           return JSON.stringify(body);
         case('application/x-www-form-urlencoded'):
           return this._wwwFormUrlEncode(body);
-        case(null):  // fall through
-        case(undefined):
-          // More complex objects may be natively understood by the browser,
-          // e.g. ArrayBuffer, FormData, Document.
-          // If the user wants a non-plain object to be form encoded they'll
-          // need to specify the content type manually, we shouldn't try to
-          // infer it.
-          if (this._isPlainObject(body)) {
-            return this._wwwFormUrlEncode(body);
-          }
-          // fall through
-        default:
       }
       return body;  // Unknown, make no change.
     },
 
     /**
-     * @param {Object} obj The object to encode in x-www-form-urlencoded format.
+     * @param {Object} object The object to encode as x-www-form-urlencoded.
      * @return {string} .
      */
-    _wwwFormUrlEncode: function(obj) {
-      if (!obj) {
+    _wwwFormUrlEncode: function(object) {
+      if (!object) {
         return '';
       }
       var pieces = [];
-      Object.keys(obj).forEach(function(key) {
+      Object.keys(object).forEach(function(key) {
         // TODO(rictic): handle array values here, in a consistent way with
         //   iron-ajax params.
         pieces.push(
             this._wwwFormUrlEncodePiece(key) + '=' +
-            this._wwwFormUrlEncodePiece(obj[key]));
+            this._wwwFormUrlEncodePiece(object[key]));
       }, this);
       return pieces.join('&');
     },
 
     /**
-     * @param {*} str A key/value to encode in x-www-form-urlencoded format.
-     * @param {string} .
+     * @param {*} str A key or value to encode as x-www-form-urlencoded.
+     * @return {string} .
      */
     _wwwFormUrlEncodePiece: function(str) {
       // Spec says to normalize newlines to \r\n and replace %20 spaces with +.
       // jQuery does this as well, so this is likely to be widely compatible.
       return encodeURIComponent(str.toString().replace(/\r?\n/g, '\r\n'))
           .replace(/%20/g, '+');
-    },
-
-    /**
-     * @param {*} ob Any value.
-     * @return {boolean} True iff `ob` is a direct descendent of Object.
-     */
-    _isPlainObject: function(ob) {
-      // If it's not null, and it's an instance of Object, and its constructor's
-      // prototype is the source of the definition of 'hasOwnProperty', then
-      // it's probably a direct instance of Object.
-      return ob && (ob instanceof Object) && ob.constructor &&
-          ob.constructor.prototype &&
-          ob.constructor.prototype.hasOwnProperty('hasOwnProperty');
     },
 
     /**

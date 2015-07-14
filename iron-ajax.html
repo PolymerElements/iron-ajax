@@ -36,6 +36,7 @@ element.
 -->
 
 <script>
+  'use strict';
 
   Polymer({
 
@@ -125,37 +126,18 @@ element.
        * Body content to send with the request, typically used with "POST"
        * requests.
        *
-       * If body is a string it will be sent up raw with the request.
+       * If body is a string it will be sent unmodified.
        *
-       * If body is a plain object and no Content-Type is set, the object
-       * will be form encoded before sending.
+       * If Content-Type is set to a value listed below, then
+       * the body will be encoded accordingly.
        *
-       * If Content-Type is set and iron-request knows how, the body will be
-       * encoded according to that Content-Type. Content-Types known:
-       *    * application/json
-       *    * application/x-www-form-urlencoded
+       *    * `content-type="application/json"`
+       *      * body is encoded like `{"foo":"bar baz","x":1}`
+       *    * `content-type="application/x-www-form-urlencoded"`
+       *      * body is encoded like `foo=bar+baz&x=1`
        *
-       * Otherwise the body will be sent up raw, and the browser will handle
-       * any encoding (e.g. for FormData, Blob, ArrayBuffer, etc).
-       *
-       * Examples:
-       *
-       *     <iron-ajax method="POST" auto url="http://example.com"
-       *         body='{"foo": "bar"}'>
-       *     </iron-ajax>
-       * The body of the request will be `foo=bar` and the Content-Type
-       * will be `application/x-www-form-urlencoded`
-       *
-       *     <iron-ajax method="POST" auto url="http://example.com"
-       *         content-type="application/json"
-       *         body='{"foo": "bar"}'>
-       *     </iron-ajax>
-       * The body of the request will be `{"foo":"bar"}`.
-       *
-       *     <iron-ajax method="POST" auto url="http://example.com"
-       *         body='foobarbaz'>
-       *     </iron-ajax>
-       * The body will be sent up unmodified as `foobarbaz`.
+       * Otherwise the body will be passed to the browser unmodified, and it
+       * will handle any encoding (e.g. for FormData, Blob, ArrayBuffer).
        *
        * @type (ArrayBuffer|ArrayBufferView|Blob|Document|FormData|null|string|undefined|Object)
        */

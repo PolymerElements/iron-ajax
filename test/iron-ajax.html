@@ -337,73 +337,48 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(server.requests[0].requestBody).to.be.equal(requestBody);
         });
 
-        suite('and `body` is a plain Object', function() {
-          test('if `contentType` isn\'t set, the body is form encoded',
-            function() {
-              ajax.body = {foo: 'bar\nbip', 'biz bo': 'baz blar'};
-              ajax.generateRequest();
+        test('if `contentType` is set to form encode, the body is encoded',function() {
+          ajax.body = {foo: 'bar\nbip', 'biz bo': 'baz blar'};
+          ajax.contentType = 'application/x-www-form-urlencoded';
+          ajax.generateRequest();
 
-              expect(server.requests[0]).to.be.ok;
-              expect(server.requests[0].requestBody).to.be.equal(
-                  'foo=bar%0D%0Abip&biz+bo=baz+blar');
-            }
-          );
+          expect(server.requests[0]).to.be.ok;
+          expect(server.requests[0].requestBody).to.be.equal(
+              'foo=bar%0D%0Abip&biz+bo=baz+blar');
+        });
 
-          test('if `contentType` is set to form encode, the body is encoded',
-            function() {
-              ajax.body = {foo: 'bar\nbip', 'biz bo': 'baz blar'};
-              ajax.contentType = 'application/x-www-form-urlencoded';
-              ajax.generateRequest();
+        test('if `contentType` is json, the body is json encoded', function() {
+          var requestObj = {foo: 'bar', baz: [1,2,3]}
+          ajax.body = requestObj;
+          ajax.contentType = 'application/json';
+          ajax.generateRequest();
 
-              expect(server.requests[0]).to.be.ok;
-              expect(server.requests[0].requestBody).to.be.equal(
-                  'foo=bar%0D%0Abip&biz+bo=baz+blar');
-            }
-          );
-
-          test('if `contentType` is json, the body is json encoded',
-            function() {
-              var requestObj = {foo: 'bar', baz: [1,2,3]}
-              ajax.body = requestObj;
-              ajax.contentType = 'application/json';
-              ajax.generateRequest();
-
-              expect(server.requests[0]).to.be.ok;
-              expect(server.requests[0].requestBody).to.be.equal(
-                  JSON.stringify(requestObj));
-            }
-          );
+          expect(server.requests[0]).to.be.ok;
+          expect(server.requests[0].requestBody).to.be.equal(
+              JSON.stringify(requestObj));
         });
 
         suite('the examples in the documentation work', function() {
-          test('no content-type, body attribute is an object', function() {
-            ajax.setAttribute('body', '{"foo": "bar"}');
-            ajax.generateRequest();
-
-            expect(server.requests[0]).to.be.ok;
-            expect(server.requests[0].requestBody).to.be.equal(
-                'foo=bar');
-          });
-
           test('json content, body attribute is an object', function() {
-            ajax.setAttribute('body', '{"foo": "bar"}');
+            ajax.setAttribute('body', '{"foo": "bar baz", "x": 1}');
             ajax.contentType = 'application/json';
             ajax.generateRequest();
 
             expect(server.requests[0]).to.be.ok;
             expect(server.requests[0].requestBody).to.be.equal(
-                '{"foo":"bar"}');
+                '{"foo":"bar baz","x":1}');
           });
 
-          test('form encoded content as a string', function() {
-            ajax.setAttribute('body', 'foobarbaz');
+          test('form content, body attribute is an object', function() {
+            ajax.setAttribute('body', '{"foo": "bar baz", "x": 1}');
+            ajax.contentType = 'application/x-www-form-urlencoded';
             ajax.generateRequest();
 
             expect(server.requests[0]).to.be.ok;
             expect(server.requests[0].requestBody).to.be.equal(
-                'foobarbaz');
+                'foo=bar+baz&x=1');
           });
-        })
+        });
 
         suite('and `contentType` is explicitly set to form encode', function() {
           test('we encode a custom object', function() {

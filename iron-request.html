@@ -18,6 +18,8 @@ iron-request can be used to perform XMLHttpRequests.
     this.$.xhr.send({url: url, params: params});
 -->
 <script>
+  'use strict'
+
   Polymer({
     is: 'iron-request',
 
@@ -161,7 +163,7 @@ iron-request can be used to perform XMLHttpRequests.
      *   url: string,
      *   method: (string|undefined),
      *   async: (boolean|undefined),
-     *   body: (ArrayBuffer|ArrayBufferView|Blob|Document|FormData|null|string|undefined),
+     *   body: (ArrayBuffer|ArrayBufferView|Blob|Document|FormData|null|string|undefined|Object),
      *   headers: (Object|undefined),
      *   handleAs: (string|undefined),
      *   withCredentials: (boolean|undefined)}} options -
@@ -229,12 +231,21 @@ iron-request can be used to perform XMLHttpRequests.
         }, this);
       }
 
+      var contentType;
+      if (options.headers) {
+        contentType = options.headers['Content-Type'];
+      }
+      var body = this._encodeBodyObject(options.body, contentType);
+
+
       // In IE, `xhr.responseType` is an empty string when the response
       // returns. Hence, caching it as `xhr._responseType`.
       xhr.responseType = xhr._responseType = (options.handleAs || 'text');
       xhr.withCredentials = !!options.withCredentials;
 
-      xhr.send(options.body);
+
+
+      xhr.send(body);
 
       return this.completes;
     },
@@ -297,6 +308,56 @@ iron-request can be used to perform XMLHttpRequests.
     abort: function () {
       this._setAborted(true);
       this.xhr.abort();
+    },
+
+    /**
+     * @param {*} body The given body of the request to try and encode.
+     * @param {?string} contentType The given content type, to infer an encoding
+     *     from.
+     * @return {?string|*} Either the encoded body as a string, if successful,
+     *     or the unaltered body object if no encoding could be inferred.
+     */
+    _encodeBodyObject: function(body, contentType) {
+      if (typeof body == 'string') {
+        return body;  // Already encoded.
+      }
+      switch(contentType) {
+        case('application/json'):
+          return JSON.stringify(body);
+        case('application/x-www-form-urlencoded'):
+          return this._wwwFormUrlEncode(body);
+      }
+      return body;  // Unknown, make no change.
+    },
+
+    /**
+     * @param {Object} object The object to encode as x-www-form-urlencoded.
+     * @return {string} .
+     */
+    _wwwFormUrlEncode: function(object) {
+      if (!object) {
+        return '';
+      }
+      var pieces = [];
+      Object.keys(object).forEach(function(key) {
+        // TODO(rictic): handle array values here, in a consistent way with
+        //   iron-ajax params.
+        pieces.push(
+            this._wwwFormUrlEncodePiece(key) + '=' +
+            this._wwwFormUrlEncodePiece(object[key]));
+      }, this);
+      return pieces.join('&');
+    },
+
+    /**
+     * @param {*} str A key or value to encode as x-www-form-urlencoded.
+     * @return {string} .
+     */
+    _wwwFormUrlEncodePiece: function(str) {
+      // Spec says to normalize newlines to \r\n and replace %20 spaces with +.
+      // jQuery does this as well, so this is likely to be widely compatible.
+      return encodeURIComponent(str.toString().replace(/\r?\n/g, '\r\n'))
+          .replace(/%20/g, '+');
     },
 
     /**

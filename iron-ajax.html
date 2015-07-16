@@ -36,6 +36,7 @@ element.
 -->
 
 <script>
+  'use strict';
 
   Polymer({
 
@@ -122,18 +123,27 @@ element.
       },
 
       /**
-       * Optional raw body content to send when method === "POST".
+       * Body content to send with the request, typically used with "POST"
+       * requests.
        *
-       * Example:
+       * If body is a string it will be sent unmodified.
        *
-       *     <iron-ajax method="POST" auto url="http://somesite.com"
-       *         content-type="application/json"
-       *         body='{"foo":1, "bar":2}'>
-       *     </iron-ajax>
+       * If Content-Type is set to a value listed below, then
+       * the body will be encoded accordingly.
+       *
+       *    * `content-type="application/json"`
+       *      * body is encoded like `{"foo":"bar baz","x":1}`
+       *    * `content-type="application/x-www-form-urlencoded"`
+       *      * body is encoded like `foo=bar+baz&x=1`
+       *
+       * Otherwise the body will be passed to the browser unmodified, and it
+       * will handle any encoding (e.g. for FormData, Blob, ArrayBuffer).
+       *
+       * @type (ArrayBuffer|ArrayBufferView|Blob|Document|FormData|null|string|undefined|Object)
        */
       body: {
-        type: String,
-        value: ''
+        type: Object,
+        value: null
       },
 
       /**
@@ -345,7 +355,7 @@ element.
      *   url: string,
      *   method: (string|undefined),
      *   async: (boolean|undefined),
-     *   body: (ArrayBuffer|ArrayBufferView|Blob|Document|FormData|null|string|undefined),
+     *   body: (ArrayBuffer|ArrayBufferView|Blob|Document|FormData|null|string|undefined|Object),
      *   headers: (Object|undefined),
      *   handleAs: (string|undefined),
      *   withCredentials: (boolean|undefined)}}

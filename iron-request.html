@@ -136,6 +136,34 @@ iron-request can be used to perform XMLHttpRequests.
     },
 
     /**
+     * Retrieve the value of the Content-Type header for the response.
+     *
+     * @return string
+     */
+    get responseContentType() {
+      var value = String(xhr.getResponseHeader("Content-Type")).toLowerCase();
+      if (value == null) {
+        return 'text';
+      }
+
+      var delim = value.indexOf(";");
+      if (delim > -1) {
+        value = value.slice(0, delim);
+      }
+
+      var types = value.split('/');
+      if (types.length != 2) {
+        return 'text';
+      }
+
+      if (types[0] == 'text') {
+        return 'text';
+      }
+
+      return types[1];
+    },
+
+    /**
      * Sends an HTTP request to the server and returns the XHR object.
      *
      * @method request

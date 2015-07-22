@@ -242,6 +242,11 @@ iron-request can be used to perform XMLHttpRequests.
       var xhr = this.xhr;
       var responseType = this.xhr.responseType ||
         this.xhr._responseType;
+
+      if (responseType == 'auto') {
+        responseType = this.responseContentType;
+      }
+
       // If we don't have a natural `xhr.responseType`, we prefer parsing
       // `xhr.responseText` over returning `xhr.response`..
       var preferResponseText = !this.xhr.responseType;
@@ -288,4 +293,3 @@ iron-request can be used to perform XMLHttpRequests.
     }
   });
 </script>
-

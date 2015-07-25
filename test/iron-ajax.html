@@ -726,6 +726,69 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           });
         });
       });
+
+      suite('when setting timeout', function() {
+
+        test('it is present in the request xhr object', function (done) {
+          ajax.url = '/responds_to_get_with_json';
+          ajax.timeout = 5000; // 5 Seconds
+
+          request = ajax.generateRequest();
+          expect(request.xhr.timeout).to.be.equal(5000); // 5 Seconds
+          done();
+        });
+
+        // FAILS: Using timeout
+        // test('it fails once that timeout is reached', function (done) {
+        //   ajax.url = '/responds_to_get_with_json';
+        //   ajax.timeout = 1; // 1 Millisecond
+
+        //   request = ajax.generateRequest();
+        //   request.completes.then(function () {
+        //     expect(request.succeeded).to.be.equal(true);
+        //     expect(request.xhr.status).to.be.equal(0);
+        //     done();
+        //   });
+
+        //   window.setTimeout(function() {
+        //     server.respond();
+        //   }, 2); // 2 Millisecond
+        // });
+
+        // FAILS: Using Sinon Fake Timer
+        // test('it fails once that timeout is reached', function (done) {
+        //   var clock = sinon.useFakeTimers();
+
+        //   ajax.url = '/responds_to_get_with_json';
+        //   ajax.timeout = 1; // 1 Millisecond
+
+        //   request = ajax.generateRequest();
+        //   request.completes.then(function () {
+        //     expect(request.succeeded).to.be.equal(true);
+        //     expect(request.xhr.status).to.be.equal(0);
+        //     done();
+        //   });
+
+        //   clock.tick(2);
+        //   server.respond();
+        // });
+
+        // WORKS: Using external server (however prone to outside errors)
+        // test('it fails once that timeout is reached', function (done) {
+        //   server.restore()
+
+        //   ajax.url = 'http://api.lepid.us/iron-ajax-test.php';
+        //   ajax.timeout = 1; // 1 Millisecon
+
+        //   request = ajax.generateRequest();
+        //   request.completes.then(function () {
+        //     expect(request.succeeded).to.be.equal(true);
+        //     expect(request.xhr.status).to.be.equal(0);
+        //     done();
+        //   });
+        // });
+      });
+
     });
   </script>
 

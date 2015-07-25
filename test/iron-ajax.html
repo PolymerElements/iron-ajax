@@ -618,6 +618,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           server.restore() 
         
           var ajax = fixture('RealPost');
+          ajax.body = 'a=foo&b=bar';
           ajax.timeout = 1; // 1 Millisecond
 
           request = ajax.generateRequest();

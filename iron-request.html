@@ -161,8 +161,8 @@ iron-request can be used to perform XMLHttpRequests.
      *
      * @return string
      */
-    get responseContentType() {
-      var value = String(xhr.getResponseHeader("Content-Type")).toLowerCase();
+    get responseType() {
+      var value = String(this.xhr.getResponseHeader("Content-Type")).toLowerCase();
       if (value == null) {
         return 'text';
       }
@@ -292,7 +292,7 @@ iron-request can be used to perform XMLHttpRequests.
         this.xhr._responseType;
 
       if (responseType == 'auto') {
-        responseType = this.responseContentType;
+        responseType = this.responseType;
       }
 
       // If we don't have a natural `xhr.responseType`, we prefer parsing

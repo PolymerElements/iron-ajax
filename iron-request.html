@@ -157,9 +157,9 @@ iron-request can be used to perform XMLHttpRequests.
     },
 
     /**
-     * Retrieve the value of the Content-Type header for the response.
+     * A normalized string reprentation of the type of the response.
      *
-     * @return string
+     * @return {string} Value is returned in the format `text`, `json`, `xml` etc.
      */
     get responseType() {
       var value = String(this.xhr.getResponseHeader("Content-Type")).toLowerCase();

@@ -65,7 +65,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     suite('<iron-ajax>', function () {
       var responseHeaders = {
         json: { 'Content-Type': 'application/json' },
-        plain: { 'Content-Type': 'text/plain' }
+        plain: { 'Content-Type': 'text/plain' },
+        xml: { 'Content-Type': 'text/xml' }
       };
       var ajax;
       var request;
@@ -118,6 +119,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             200,
             responseHeaders.json,
             '{"success": "true"}'
+          ]
+        );
+
+        server.respondWith(
+          'GET',
+          '/responds_to_get_with_xml',
+          [
+            200,
+            responseHeaders.xml,
+            '<?xml version="1.0" encoding="UTF-8"?><response><message>Success</message></response>'
           ]
         );
 
@@ -539,6 +550,64 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         });
 
+      });
+
+      suite('when handleAs parameter is `auto`', function() {
+
+        test('response type is text', function (done) {
+
+          ajax.url = '/responds_to_get_with_text';
+          ajax.handleAs = 'auto';
+
+          request = ajax.generateRequest();
+          request.completes.then(function () {
+            expect(typeof(ajax.lastResponse)).to.be.equal('string');
+            expect(request.response).to.be.equal('Hello World');
+            done();
+          }).catch(function (e) {
+            done(e);
+          });
+
+          server.respond();
+
+        });
+
+        test('response type is json', function (done) {
+
+          ajax.url = '/responds_to_get_with_json';
+          ajax.handleAs = 'auto';
+
+          request = ajax.generateRequest();
+          request.completes.then(function () {
+            expect(typeof(ajax.lastResponse)).to.be.equal('object');
+            expect(request.response.success).to.be.equal(true);
+            done();
+          }).catch(function (e) {
+            done(e);
+          });
+
+          server.respond();
+
+        });
+
+        test('response type is xml', function (done) {
+
+          ajax.url = '/responds_to_get_with_xml';
+          ajax.handleAs = 'auto';
+
+          request = ajax.generateRequest();
+          request.completes.then(function () {
+            expect(typeof(ajax.lastResponse)).to.be.equal('object');
+            var q = request.response.querySelector("message");
+            expect(q.childNodes[0].textContent).to.be.equal("Success");
+            done();
+          }).catch(function (e) {
+            done(e);
+          });
+
+          server.respond();
+
+        });
       });
 
       suite('when making a POST over the wire', function() {

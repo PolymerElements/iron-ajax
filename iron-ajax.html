@@ -399,14 +399,14 @@ element.
       this.fire('request', {
         request: request,
         options: requestOptions
-      });
+      }, {bubbles: false});
 
       return request;
     },
 
     _handleResponse: function(request) {
       this._setLastResponse(request.response);
-      this.fire('response', request);
+      this.fire('response', request, {bubbles: false});
     },
 
     _handleError: function(request, error) {
@@ -421,7 +421,7 @@ element.
       this.fire('error', {
         request: request,
         error: error
-      });
+      }, {bubbles: false});
     },
 
     _discardRequest: function(request) {

@@ -258,7 +258,9 @@ iron-request can be used to perform XMLHttpRequests.
 
       // In IE, `xhr.responseType` is an empty string when the response
       // returns. Hence, caching it as `xhr._responseType`.
-      xhr.responseType = xhr._responseType = (options.handleAs || 'text');
+      if (options.async) {
+        xhr.responseType = xhr._responseType = (options.handleAs || 'text');
+      }
       xhr.withCredentials = !!options.withCredentials;
       xhr.timeout = options.timeout;
 

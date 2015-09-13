@@ -109,16 +109,49 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           });
         });
 
+        test('default responseType of text is not applied, when async is false', function (done) {
+          var options = Object.create(successfulRequestOptions);
+          options.async = false;
+
+          request.send(options);
+          server.respond();
+
+          request.completes.then(function() {
+            expect(request.xhr.responseType).to.be.empty;
+            done();
+          }).catch(function(e) {
+            done(new Error('ResponseType was not empty'));
+          });
+
+        });
+
         test('responseType can be configured via handleAs option', function () {
           var options = Object.create(successfulRequestOptions);
           options.handleAs = 'json';
-
+          
           request.send(options);
           server.respond();
 
           return request.completes.then(function() {
             expect(request.response).to.be.an('object');
           });
+        });
+
+        test('responseType cannot be configured via handleAs option, when async is false', function (done) {
+          var options = Object.create(successfulRequestOptions);
+          options.handleAs = 'json';
+          options.async = false;
+
+          request.send(options);
+          server.respond();
+
+          request.completes.then(function() {
+            expect(request.response).to.be.an('string');
+            done();
+          }).catch(function(e) {
+            done(new Error('Response was not a String'));
+          });
+
         });
 
       });

@@ -215,6 +215,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             expect(ajax.loading).to.be.equal(false);
           });
         });
+
+        test('the loading-changed event gets fired twice', function() {
+
+          var count = 0;
+          ajax.addEventListener('loading-changed', function() {
+            count++;
+          });
+
+          var request = ajax.generateRequest();
+
+          server.respond();
+
+          return request.completes.then(function() {
+            return timePasses(1);
+          }).then(function() {
+            expect(count).to.be.equal(2);
+          });
+
+        });
       });
 
       suite('when there are multiple requests', function() {

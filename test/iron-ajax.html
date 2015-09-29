@@ -653,6 +653,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           });
         });
       });
+
+      suite('when setting timeout', function() {
+        test('it is present in the request xhr object', function (done) {
+          ajax.url = '/responds_to_get_with_json';
+          ajax.timeout = 5000; // 5 Seconds
+
+          request = ajax.generateRequest();
+          expect(request.xhr.timeout).to.be.equal(5000); // 5 Seconds
+          done();
+        });
+
+        test('it fails once that timeout is reached', function (done) {
+          server.restore() 
+        
+          var ajax = fixture('RealPost');
+          ajax.body = 'a=foo&b=bar';
+          ajax.timeout = 1; // 1 Millisecond
+
+          request = ajax.generateRequest();
+          request.completes.then(function () {
+            expect(request.succeeded).to.be.equal(true);
+            expect(request.xhr.status).to.be.equal(0);
+            done();
+          });
+        });
+      });
     });
   </script>
 

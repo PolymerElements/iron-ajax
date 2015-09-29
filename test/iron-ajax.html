@@ -16,7 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script src="../../test-fixture/test-fixture-mocha.js"></script>
 
   <link rel="import" href="../../polymer/polymer.html">
-  <link rel="import" href="../../promise-polyfill/promise-polyfill-lite.html">
+  <link rel="import" href="../../promise-polyfill/promise-polyfill.html">
   <link rel="import" href="../../test-fixture/test-fixture.html">
   <link rel="import" href="../iron-ajax.html">
 </head>
@@ -35,6 +35,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <test-fixture id="AutoGet">
     <template>
       <iron-ajax auto url="/responds_to_get_with_json"></iron-ajax>
+    </template>
+  </test-fixture>
+  <test-fixture id="GetEcho">
+    <template>
+      <iron-ajax handle-as="json" url="/echoes_request_url"></iron-ajax>
     </template>
   </test-fixture>
   <test-fixture id="TrivialPost">
@@ -70,23 +75,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       var ajax;
       var request;
       var server;
-
-      // A stand-in for Promise.all, as promise-polyfill doesn't polyfill it.
-      function promiseAll(promises) {
-        promises = promises.slice(); // defensive copy
-        return new Promise(function(resolve, reject) {
-          var successes = 0;
-          var onSuccess = function() {
-            successes++;
-            if (successes >= promises.length) {
-              resolve();
-            };
-          };
-          for (var i = 0; i < promises.length; i++) {
-            promises[i].then(onSuccess, reject);
-          }
-        });
-      }
 
       function timePasses(ms) {
         return new Promise(function(resolve) {
@@ -144,6 +132,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       teardown(function() {
         server.restore();
       });
+
+      // Echo requests are responded to individually and on demand, unlike the
+      // others in this file which are responded to with server.respond(),
+      // which responds to all open requests.
+      // We don't use server.respondWith here because there's no way to use it
+      // and only respond to a subset of requests.
+      // This way we can test for delayed and out of order responses and
+      // distinquish them by their responses.
+      function respondToEchoRequest(request) {
+        request.respond(200, responseHeaders.json, JSON.stringify({
+          url: request.url
+        }));
+      }
 
       suite('when making simple GET requests for JSON', function() {
         test('has sane defaults that love you', function() {
@@ -219,23 +220,83 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       suite('when there are multiple requests', function() {
         var requests;
+        var echoAjax;
+        var promiseAllComplete;
 
         setup(function() {
+          echoAjax = fixture('GetEcho');
           requests = [];
 
           for (var i = 0; i < 3; ++i) {
-            requests.push(ajax.generateRequest());
+            echoAjax.params = {'order': i + 1};
+            requests.push(echoAjax.generateRequest());
           }
+          var allPromises = requests.map(function(r){return r.completes});
+          promiseAllComplete = Promise.all(allPromises);
         });
 
         test('holds all requests in the `activeRequests` Array', function() {
-          expect(requests).to.deep.eql(ajax.activeRequests);
+          expect(requests).to.deep.eql(echoAjax.activeRequests);
         });
 
         test('empties `activeRequests` when requests are completed', function() {
-          server.respond();
-          promiseAll(requests).then(function() {
-            expect(ajax.activeRequests.length).to.be.equal(0);
+          expect(echoAjax.activeRequests.length).to.be.equal(3);
+          for (var i = 0; i < 3; i++) {
+            respondToEchoRequest(server.requests[i]);
+          }
+          return promiseAllComplete.then(function() {
+            return timePasses(1);
+          }).then(function() {
+            expect(echoAjax.activeRequests.length).to.be.equal(0);
+          });
+        });
+
+        test('avoids race conditions with last response', function() {
+          expect(echoAjax.lastResponse).to.be.equal(undefined);
+
+          // Resolving the oldest request doesn't update lastResponse.
+          respondToEchoRequest(server.requests[0]);
+          return requests[0].completes.then(function() {
+            expect(echoAjax.lastResponse).to.be.equal(undefined);
+
+            // Resolving the most recent request does!
+            respondToEchoRequest(server.requests[2]);
+            return requests[2].completes;
+          }).then(function() {
+            expect(echoAjax.lastResponse).to.be.deep.eql(
+                {url: '/echoes_request_url?order=3'});
+
+
+            // Resolving an out of order stale request after does nothing!
+            respondToEchoRequest(server.requests[1]);
+            return requests[1].completes;
+          }).then(function() {
+            expect(echoAjax.lastResponse).to.be.deep.eql(
+                {url: '/echoes_request_url?order=3'});
+          });
+        });
+
+        test('`loading` is true while the last one is loading', function() {
+          expect(echoAjax.loading).to.be.equal(true);
+
+          respondToEchoRequest(server.requests[0]);
+          return requests[0].completes.then(function() {
+            // We're still loading because requests[2] is the most recently
+            // made request.
+            expect(echoAjax.loading).to.be.equal(true);
+
+            respondToEchoRequest(server.requests[2]);
+            return requests[2].completes;
+          }).then(function() {
+            // Now we're done loading.
+            expect(echoAjax.loading).to.be.eql(false);
+
+            // Resolving an out of order stale request after should have
+            // no effect.
+            respondToEchoRequest(server.requests[1]);
+            return requests[1].completes;
+          }).then(function() {
+            expect(echoAjax.loading).to.be.eql(false);
           });
         });
       });

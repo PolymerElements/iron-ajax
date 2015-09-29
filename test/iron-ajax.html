@@ -66,6 +66,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <iron-ajax method="POST" url="http://httpbin.org/post"></iron-ajax>
     </template>
   </test-fixture>
+  <test-fixture id="Delay">
+    <template>
+      <iron-ajax url="http://httpbin.org/delay/1"></iron-ajax>
+    </template>
+  </test-fixture>
   <script>
     'use strict';
     suite('<iron-ajax>', function () {
@@ -728,28 +733,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       });
 
       suite('when setting timeout', function() {
+        setup(function() {
+          server.restore();
+        });
 
-        test('it is present in the request xhr object', function (done) {
+        test('it is present in the request xhr object', function () {
           ajax.url = '/responds_to_get_with_json';
           ajax.timeout = 5000; // 5 Seconds
 
           request = ajax.generateRequest();
           expect(request.xhr.timeout).to.be.equal(5000); // 5 Seconds
-          done();
         });
 
-        test('it fails once that timeout is reached', function (done) {
-          server.restore()
-
-          var ajax = fixture('RealPost');
-          ajax.body = 'a=foo&b=bar';
+        test('it fails once that timeout is reached', function () {
+          var ajax = fixture('Delay');
           ajax.timeout = 1; // 1 Millisecond
 
           request = ajax.generateRequest();
-          request.completes.then(function () {
-            expect(request.succeeded).to.be.equal(true);
+          return request.completes.then(function () {
+            throw new Error('Expected the request to throw an error.');
+          }, function() {
+            expect(request.succeeded).to.be.equal(false);
             expect(request.xhr.status).to.be.equal(0);
-            done();
+            expect(request.timedOut).to.be.equal(true);
+            return timePasses(1);
+          }).then(function() {
+            expect(ajax.loading).to.be.equal(false);
+            expect(ajax.lastResponse).to.be.equal(null);
+            expect(ajax.lastError).to.not.be.equal(null);
           });
         });
       });

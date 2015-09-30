@@ -300,8 +300,19 @@ element.
         value = this.params[param];
         param = window.encodeURIComponent(param);
 
-        if (value !== null) {
-          param += '=' + window.encodeURIComponent(value);
+        //if this parameter is an array
+        if( Object.prototype.toString.call( value ) === '[object Array]' ){
+          //we create the queryString differently
+          var URIEncodedArrayItems = [];
+          param = window.encodeURIComponent(param + "[]");
+          for(index in value){
+            URIEncodedArrayItems.push(param + '=' + window.encodeURIComponent(value[index]));
+          }
+          param = URIEncodedArrayItems.join('&');
+        }else{
+          if (value !== null) {
+            param += '=' + window.encodeURIComponent(value);
+          }
         }
 
         queryParts.push(param);

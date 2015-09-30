@@ -67,6 +67,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
   </test-fixture>
   <script>
+    'use strict';
     suite('<iron-ajax>', function () {
       var responseHeaders = {
         json: { 'Content-Type': 'application/json' },
@@ -208,6 +209,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           ajax.params = {'c': 'd'};
           expect(ajax.requestUrl).to.be.equal('/responds_to_get_with_json?a=b&c=d')
         })
+
+        test('encodes params properly', function() {
+          ajax.params = {'a b,c': 'd e f'};
+
+          expect(ajax.queryString).to.be.equal('a%20b%2Cc=d%20e%20f');
+        });
+
+        test('encodes array params properly', function() {
+          ajax.params = {'a b': ['c','d e', 'f']};
+
+          expect(ajax.queryString).to.be.equal('a%20b=c&a%20b=d%20e&a%20b=f');
+        });
 
         test('reflects the loading state in the `loading` property', function() {
           var request = ajax.generateRequest();

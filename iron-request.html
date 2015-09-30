@@ -189,13 +189,13 @@ iron-request can be used to perform XMLHttpRequests.
       xhr.addEventListener('readystatechange', function () {
         if (xhr.readyState === 4 && !this.aborted) {
           this._updateStatus();
+          this._setResponse(this.parseResponse());
 
           if (!this.succeeded) {
             this.rejectCompletes(new Error('The request failed with status code: ' + this.xhr.status));
             return;
           }
 
-          this._setResponse(this.parseResponse());
           this.resolveCompletes(this);
         }
       }.bind(this));
@@ -374,4 +374,3 @@ iron-request can be used to perform XMLHttpRequests.
     }
   });
 </script>
-

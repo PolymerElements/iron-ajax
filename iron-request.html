@@ -186,20 +186,6 @@ iron-request can be used to perform XMLHttpRequests.
         return null;
       }
 
-      xhr.addEventListener('readystatechange', function () {
-        if (xhr.readyState === 4 && !this.aborted) {
-          this._updateStatus();
-
-          if (!this.succeeded) {
-            this.rejectCompletes(new Error('The request failed with status code: ' + this.xhr.status));
-            return;
-          }
-
-          this._setResponse(this.parseResponse());
-          this.resolveCompletes(this);
-        }
-      }.bind(this));
-
       xhr.addEventListener('progress', function (progress) {
         this._setProgress({
           lengthComputable: progress.lengthComputable,
@@ -218,6 +204,20 @@ iron-request can be used to perform XMLHttpRequests.
         this.rejectCompletes(new Error('Request aborted.'));
       }.bind(this));
 
+      // Called after all of the above.
+      xhr.addEventListener('loadend', function () {
+        this._updateStatus();
+
+        if (!this.succeeded) {
+          this.rejectCompletes(new Error('The request failed with status code: ' + this.xhr.status));
+          return;
+        }
+
+        this._setResponse(this.parseResponse());
+        this.resolveCompletes(this);
+      }.bind(this));
+
+      this.url = options.url;
       xhr.open(
         options.method || 'GET',
         options.url,
@@ -264,29 +264,25 @@ iron-request can be used to perform XMLHttpRequests.
      */
     parseResponse: function () {
       var xhr = this.xhr;
-      var responseType = this.xhr.responseType ||
-        this.xhr._responseType;
-      // If we don't have a natural `xhr.responseType`, we prefer parsing
-      // `xhr.responseText` over returning `xhr.response`..
+      var responseType = xhr.responseType || xhr._responseType;
       var preferResponseText = !this.xhr.responseType;
 
       try {
         switch (responseType) {
           case 'json':
-            // If xhr.response is undefined, responseType `json` may
-            // not be supported.
+            // If the xhr object doesn't have a natural `xhr.responseType`,
+            // we can assume that the browser hasn't parsed the response for us,
+            // and so parsing is our responsibility. Likewise if response is
+            // undefined, as there's no way to encode undefined in JSON.
             if (preferResponseText || xhr.response === undefined) {
-              // If accessing `xhr.responseText` throws, responseType `json`
-              // is supported and the result is rightly `undefined`.
+              // Try to emulate the JSON section of the response body section of
+              // the spec: https://xhr.spec.whatwg.org/#response-body
+              // That is to say, we try to parse as JSON, but if anything goes
+              // wrong return null.
               try {
-                /** @suppress {suspiciousCode} */ xhr.responseText;
-              } catch (e) {
-                return xhr.response;
-              }
-
-              // Otherwise, attempt to parse `xhr.responseText` as JSON.
-              if (xhr.responseText) {
-                return JSON.parse(xhr.responseText);
+                return JSON.parse(xhr.responseText);;
+              } catch (_) {
+                return null;
               }
             }
 

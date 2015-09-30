@@ -320,7 +320,8 @@ element.
       var queryString = this.queryString;
 
       if (queryString) {
-        return this.url + '?' + queryString;
+        var bindingChar = this.url.indexOf('?') >= 0 ? '&' : '?';
+        return this.url + bindingChar + queryString;
       }
 
       return this.url;

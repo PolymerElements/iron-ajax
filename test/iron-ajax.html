@@ -363,6 +363,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             ajax.headers = { 'X-Foo': 'Bar' };
           });
         });
+        
+        test('automatically generates new request when a sub-property of params is changed', function(done) {
+          ajax.addEventListener('request', function() {
+            server.respond();
+          });
+          
+          ajax.params = { foo: 'bar' };
+          ajax.addEventListener('response', function() {
+            ajax.addEventListener('request', function() {
+              done();
+            });
+            
+            ajax.set('params.foo', 'xyz');
+          });
+        });
       });
 
       suite('the last response', function() {

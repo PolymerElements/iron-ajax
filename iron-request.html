@@ -266,6 +266,11 @@ iron-request can be used to perform XMLHttpRequests.
       var xhr = this.xhr;
       var responseType = this.xhr.responseType ||
         this.xhr._responseType;
+
+      if (responseType == 'auto') {
+        responseType = this._responseType;
+      }
+
       // If we don't have a natural `xhr.responseType`, we prefer parsing
       // `xhr.responseText` over returning `xhr.response`..
       var preferResponseText = !this.xhr.responseType;
@@ -296,6 +301,8 @@ iron-request can be used to perform XMLHttpRequests.
           case 'blob':
           case 'document':
           case 'arraybuffer':
+          case 'octet-stream':
+          case 'html':
             return xhr.response;
           case 'text':
           default:
@@ -371,7 +378,30 @@ iron-request can be used to perform XMLHttpRequests.
     _updateStatus: function() {
       this._setStatus(this.xhr.status);
       this._setStatusText((this.xhr.statusText === undefined) ? '' : this.xhr.statusText);
+    },
+
+    /**
+     * A normalized string reprentation of the type of the response.
+     *
+     * @return {string} Value is returned in the format `text`, `json`, `xml` etc.
+     */
+    get _responseType() {
+      var value = String(this.xhr.getResponseHeader("Content-Type")).toLowerCase();
+      if (value == null) {
+        return 'text';
+      }
+
+      var delim = value.indexOf(";");
+      if (delim > -1) {
+        value = value.slice(0, delim);
+      }
+
+      var types = value.split('/');
+      if (types.length != 2) {
+        return 'text';
+      }
+
+      return types[1];
     }
   });
 </script>
-

@@ -138,18 +138,34 @@ iron-request can be used to perform XMLHttpRequests.
         notify: true,
         readOnly: true,
         value: false,
+      },
+
+      /**
+       * Errored will be true if the browser fired an error event from the
+       * XHR object (mainly network errors).
+       */
+      errored: {
+        type: Boolean,
+        notify: true,
+        readOnly: true,
+        value: false
       }
     },
 
     /**
-     * Succeeded is true if the request succeeded. The request succeeded if the
-     * status code is greater-than-or-equal-to 200, and less-than 300. Also,
-     * the status code 0 is accepted as a success even though the outcome may
-     * be ambiguous.
+     * Succeeded is true if the request succeeded. The request succeeded if it
+     * loaded without error, wasn't aborted, and the status code is ≥ 200, and
+     * < 300, or if the status code is 0.
+     *
+     * The status code 0 is accepted as a success because some schemes - e.g.
+     * file:// - don't provide status codes.
      *
      * @return {boolean}
      */
     get succeeded() {
+      if (this.errored || this.aborted) {
+        return false;
+      }
       var status = this.xhr.status || 0;
 
       // Note: if we are using the file:// protocol, the status code will be 0
@@ -195,6 +211,7 @@ iron-request can be used to perform XMLHttpRequests.
       }.bind(this))
 
       xhr.addEventListener('error', function (error) {
+        this._setErrored(true);
         this._updateStatus();
         this.rejectCompletes(error);
       }.bind(this));

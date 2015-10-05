@@ -138,18 +138,34 @@ iron-request can be used to perform XMLHttpRequests.
         notify: true,
         readOnly: true,
         value: false,
+      },
+
+      /**
+       * Errored will be true if the browser fired an error event from the
+       * XHR object (mainly network errors).
+       */
+      errored: {
+        type: Boolean,
+        notify: true,
+        readOnly: true,
+        value: false
       }
     },
 
     /**
-     * Succeeded is true if the request succeeded. The request succeeded if the
-     * status code is greater-than-or-equal-to 200, and less-than 300. Also,
-     * the status code 0 is accepted as a success even though the outcome may
-     * be ambiguous.
+     * Succeeded is true if the request succeeded. The request succeeded if it
+     * loaded without error, wasn't aborted, and the status code is ≥ 200, and
+     * < 300, or if the status code is 0.
+     *
+     * The status code 0 is accepted as a success because some schemes - e.g.
+     * file:// - don't provide status codes.
      *
      * @return {boolean}
      */
     get succeeded() {
+      if (this.errored || this.aborted) {
+        return false;
+      }
       var status = this.xhr.status || 0;
 
       // Note: if we are using the file:// protocol, the status code will be 0
@@ -186,20 +202,6 @@ iron-request can be used to perform XMLHttpRequests.
         return null;
       }
 
-      xhr.addEventListener('readystatechange', function () {
-        if (xhr.readyState === 4 && !this.aborted) {
-          this._updateStatus();
-
-          if (!this.succeeded) {
-            this.rejectCompletes(new Error('The request failed with status code: ' + this.xhr.status));
-            return;
-          }
-
-          this._setResponse(this.parseResponse());
-          this.resolveCompletes(this);
-        }
-      }.bind(this));
-
       xhr.addEventListener('progress', function (progress) {
         this._setProgress({
           lengthComputable: progress.lengthComputable,
@@ -209,6 +211,7 @@ iron-request can be used to perform XMLHttpRequests.
       }.bind(this))
 
       xhr.addEventListener('error', function (error) {
+        this._setErrored(true);
         this._updateStatus();
         this.rejectCompletes(error);
       }.bind(this));
@@ -218,6 +221,20 @@ iron-request can be used to perform XMLHttpRequests.
         this.rejectCompletes(new Error('Request aborted.'));
       }.bind(this));
 
+      // Called after all of the above.
+      xhr.addEventListener('loadend', function () {
+        this._updateStatus();
+
+        if (!this.succeeded) {
+          this.rejectCompletes(new Error('The request failed with status code: ' + this.xhr.status));
+          return;
+        }
+
+        this._setResponse(this.parseResponse());
+        this.resolveCompletes(this);
+      }.bind(this));
+
+      this.url = options.url;
       xhr.open(
         options.method || 'GET',
         options.url,
@@ -264,29 +281,25 @@ iron-request can be used to perform XMLHttpRequests.
      */
     parseResponse: function () {
       var xhr = this.xhr;
-      var responseType = this.xhr.responseType ||
-        this.xhr._responseType;
-      // If we don't have a natural `xhr.responseType`, we prefer parsing
-      // `xhr.responseText` over returning `xhr.response`..
+      var responseType = xhr.responseType || xhr._responseType;
       var preferResponseText = !this.xhr.responseType;
 
       try {
         switch (responseType) {
           case 'json':
-            // If xhr.response is undefined, responseType `json` may
-            // not be supported.
+            // If the xhr object doesn't have a natural `xhr.responseType`,
+            // we can assume that the browser hasn't parsed the response for us,
+            // and so parsing is our responsibility. Likewise if response is
+            // undefined, as there's no way to encode undefined in JSON.
             if (preferResponseText || xhr.response === undefined) {
-              // If accessing `xhr.responseText` throws, responseType `json`
-              // is supported and the result is rightly `undefined`.
+              // Try to emulate the JSON section of the response body section of
+              // the spec: https://xhr.spec.whatwg.org/#response-body
+              // That is to say, we try to parse as JSON, but if anything goes
+              // wrong return null.
               try {
-                /** @suppress {suspiciousCode} */ xhr.responseText;
-              } catch (e) {
-                return xhr.response;
-              }
-
-              // Otherwise, attempt to parse `xhr.responseText` as JSON.
-              if (xhr.responseText) {
-                return JSON.parse(xhr.responseText);
+                return JSON.parse(xhr.responseText);;
+              } catch (_) {
+                return null;
               }
             }
 

@@ -127,6 +127,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           ]
         );
 
+        server.respondWith(
+          'GET',
+          '/responds_to_get_with_502_error_json',
+          [
+            502,
+            responseHeaders.json,
+            '{"message": "an error has occurred"}'
+          ]
+        );
+
         ajax = fixture('TrivialGet');
       });
 
@@ -584,7 +594,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       suite('when a request fails', function() {
         test('we give an error with useful details', function() {
-          ajax.url = '/responds_to_get_with_text';
+          ajax.url = '/responds_to_get_with_502_error_json';
           ajax.handleAs = 'json';
           var eventFired = false;
           ajax.addEventListener('error', function(event) {
@@ -592,13 +602,42 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             expect(event.detail.error).to.be.okay;
             eventFired = true;
           });
-          var promise = ajax.generateRequest().completes.then(function() {
+          var request = ajax.generateRequest();
+          var promise = request.completes.then(function() {
             throw new Error('Expected the request to fail!');
           }, function(error) {
             expect(error).to.be.instanceof(Error);
+            expect(request.succeeded).to.be.eq(false);
             return timePasses(100);
           }).then(function() {
             expect(eventFired).to.be.eq(true);
+            expect(ajax.lastError).to.not.be.eq(null);
+          });
+
+          server.respond();
+
+          return promise;
+        });
+
+        test('we give a useful error even when the domain doesn\'t resolve', function() {
+          ajax.url = 'http://nonexistant.example.com/';
+          server.restore();
+          var eventFired = false;
+          ajax.addEventListener('error', function(event) {
+            expect(event.detail.request).to.be.okay;
+            expect(event.detail.error).to.be.okay;
+            eventFired = true;
+          });
+          var request = ajax.generateRequest();
+          var promise = request.completes.then(function() {
+            throw new Error('Expected the request to fail!');
+          }, function(error) {
+            expect(request.succeeded).to.be.eq(false);
+            expect(error).to.not.be.eq(null);
+            return timePasses(100);
+          }).then(function() {
+            expect(eventFired).to.be.eq(true);
+            expect(ajax.lastError).to.not.be.eq(null);
           });
 
           server.respond();

@@ -33,9 +33,7 @@ iron-request can be used to perform XMLHttpRequests.
        * A reference to the XMLHttpRequest instance used to generate the
        * network request.
        *
-       * @attribute xhr
-       * @type XMLHttpRequest
-       * @default `new XMLHttpRequest`
+       * @type {XMLHttpRequest}
        */
       xhr: {
         type: Object,
@@ -50,7 +48,6 @@ iron-request can be used to perform XMLHttpRequests.
        * A reference to the parsed response body, if the `xhr` has completely
        * resolved.
        *
-       * @attribute response
        * @type {*}
        * @default null
        */
@@ -65,9 +62,6 @@ iron-request can be used to perform XMLHttpRequests.
 
       /**
        * A reference to the status code, if the `xhr` has completely resolved.
-       *
-       * @attribute status
-       * @default 0
        */
       status: {
         type: Number,
@@ -78,9 +72,6 @@ iron-request can be used to perform XMLHttpRequests.
 
       /**
        * A reference to the status text, if the `xhr` has completely resolved.
-       *
-       * @attribute statusText
-       * @default ""
        */
       statusText: {
         type: String,
@@ -93,9 +84,7 @@ iron-request can be used to perform XMLHttpRequests.
        * A promise that resolves when the `xhr` response comes back, or rejects
        * if there is an error before the `xhr` completes.
        *
-       * @attribute completes
-       * @type Promise
-       * @default `new Promise`
+       * @type {Promise}
        */
       completes: {
         type: Object,
@@ -113,8 +102,6 @@ iron-request can be used to perform XMLHttpRequests.
        * An object that contains progress information emitted by the XHR if
        * available.
        *
-       * @attribute progress
-       * @type Object
        * @default {}
        */
       progress: {
@@ -128,10 +115,6 @@ iron-request can be used to perform XMLHttpRequests.
 
       /**
        * Aborted will be true if an abort of the request is attempted.
-       *
-       * @attribute aborted
-       * @type boolean
-       * @default false
        */
       aborted: {
         type: Boolean,
@@ -145,6 +128,16 @@ iron-request can be used to perform XMLHttpRequests.
        * XHR object (mainly network errors).
        */
       errored: {
+        type: Boolean,
+        notify: true,
+        readOnly: true,
+        value: false
+      },
+
+      /**
+       * TimedOut will be true if the XHR threw a timeout event.
+       */
+      timedOut: {
         type: Boolean,
         notify: true,
         readOnly: true,
@@ -163,7 +156,7 @@ iron-request can be used to perform XMLHttpRequests.
      * @return {boolean}
      */
     get succeeded() {
-      if (this.errored || this.aborted) {
+      if (this.errored || this.aborted || this.timedOut) {
         return false;
       }
       var status = this.xhr.status || 0;
@@ -193,6 +186,7 @@ iron-request can be used to perform XMLHttpRequests.
      *     headers HTTP request headers.
      *     handleAs The response type. Default is 'text'.
      *     withCredentials Whether or not to send credentials on the request. Default is false.
+     *   timeout: (Number|undefined)
      * @return {Promise}
      */
     send: function (options) {
@@ -212,6 +206,12 @@ iron-request can be used to perform XMLHttpRequests.
 
       xhr.addEventListener('error', function (error) {
         this._setErrored(true);
+        this._updateStatus();
+        this.rejectCompletes(error);
+      }.bind(this));
+
+      xhr.addEventListener('timeout', function (error) {
+        this._setTimedOut(true);
         this._updateStatus();
         this.rejectCompletes(error);
       }.bind(this));
@@ -260,6 +260,7 @@ iron-request can be used to perform XMLHttpRequests.
       // returns. Hence, caching it as `xhr._responseType`.
       xhr.responseType = xhr._responseType = (options.handleAs || 'text');
       xhr.withCredentials = !!options.withCredentials;
+      xhr.timeout = options.timeout;
 
 
 

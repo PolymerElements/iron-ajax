@@ -377,6 +377,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           });
         });
 
+        test('does not send requests if url is empty', function() {
+          return new Promise(function(resolve, reject) {
+            ajax.addEventListener('request', function() {
+              reject('A request was generated but url is null!');
+            });
+
+            ajax.url = '';
+            ajax.handleAs = 'text';
+
+            Polymer.Base.async(function() {
+              resolve();
+            }, 1);
+          });
+        });
+
         test('deduplicates multiple changes to a single request', function() {
           return new Promise(function(resolve, reject) {
             ajax.addEventListener('request', function() {

@@ -242,7 +242,7 @@ element.
        *
        * The type of the response is determined by the value of `handleAs` at
        * the time that the request was generated.
-       * 
+       *
        * @type {Object}
        */
       lastResponse: {
@@ -253,7 +253,7 @@ element.
 
       /**
        * lastRequest's error, if any.
-       * 
+       *
        * @type {Object}
        */
       lastError: {
@@ -466,7 +466,7 @@ element.
 
     _requestOptionsChanged: function() {
       this.debounce('generate-request', function() {
-        if (!this.url && this.url !== '') {
+        if (!this.url || this.url === '') {
           return;
         }
 

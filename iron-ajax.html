@@ -69,8 +69,7 @@ element.
        * The URL target of the request.
        */
       url: {
-        type: String,
-        value: ''
+        type: String
       },
 
       /**
@@ -385,7 +384,7 @@ element.
      */
     toRequestOptions: function() {
       return {
-        url: this.requestUrl,
+        url: this.requestUrl || '',
         method: this.method,
         headers: this.requestHeaders,
         body: this.body,
@@ -466,7 +465,7 @@ element.
 
     _requestOptionsChanged: function() {
       this.debounce('generate-request', function() {
-        if (!this.url && this.url !== '') {
+        if (this.url == null) {
           return;
         }
 

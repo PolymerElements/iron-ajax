@@ -619,6 +619,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             expect(typeof(ajax.lastResponse)).to.be.equal('string');
           });
 
+          expect(server.requests.length).to.be.equal(1);
+          expect(server.requests[0].requestHeaders['accept']).to.be.equal(
+            'text/plain');
           server.respond();
 
           return promise;
@@ -690,6 +693,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           var promise = request.completes.then(function () {
             expect(typeof(ajax.lastResponse)).to.be.equal('object');
           });
+
+          expect(server.requests.length).to.be.equal(1);
+          expect(server.requests[0].requestHeaders['accept']).to.be.equal(
+            'application/json');
 
           server.respond();
 

@@ -356,13 +356,15 @@ element.
         contentType = 'application/x-www-form-urlencoded';
       }
       if (contentType) {
-        headers['Content-Type'] = contentType;
+        headers['content-type'] = contentType;
       }
       var header;
 
       if (this.headers instanceof Object) {
         for (header in this.headers) {
-          headers[header] = this.headers[header].toString();
+          // Normalize headers in lower case to make it easier for iron-request
+          // to reason about them.
+          headers[header.toLowerCase()] = this.headers[header].toString();
         }
       }
 

@@ -438,7 +438,7 @@ element.
 
     _handleError: function(request, error) {
       if (this.verbose) {
-        console.error(error);
+        console.error(error.error);
       }
 
       if (request === this.lastRequest) {

@@ -208,7 +208,7 @@ iron-request can be used to perform XMLHttpRequests.
       xhr.addEventListener('readystatechange', function () {
         if (xhr.readyState === 2 && options.async !== false) {
           // Headers have been received.
-          var jsonPrefix = xhr.getResponseHeader('X-JSON-Prefix') ||
+          var jsonPrefix = this._responseHeader('X-JSON-Prefix') ||
               options.jsonPrefix;
           var handleAs = options.handleAs;
 
@@ -318,9 +318,9 @@ iron-request can be used to perform XMLHttpRequests.
       var xhr = this.xhr;
       var responseType = xhr.responseType || xhr._responseType;
       var preferResponseText = !this.xhr.responseType;
-      var prefixHeader = xhr.getResponseHeader('X-JSON-Prefix');
+      var prefixHeader = this._responseHeader('X-JSON-Prefix');
       if (prefixHeader) {
-        // If a JSON prefix header is set, the response must be interpretted as
+        // If a JSON prefix header is set, the response must be interpreted as
         // text so that the prefix can be stripped. Otherwise the browser will
         // try and fail to.
         responseType = 'text';
@@ -440,6 +440,23 @@ iron-request can be used to perform XMLHttpRequests.
     _updateStatus: function() {
       this._setStatus(this.xhr.status);
       this._setStatusText((this.xhr.statusText === undefined) ? '' : this.xhr.statusText);
+    },
+
+    /**
+     * Returns the given response header in way that won’t cause an error during
+     * CORS requests if it is not returned or accessible due to
+     * `Access-Control-Expose-Headers`.
+     *
+     * @param {string} header The HTTP response header to return.
+     * @return {string|null} The header value or null if it is not present.
+     */
+    _responseHeader: function(header) {
+      var allHeaders = this.xhr.getAllResponseHeaders();
+      if (!!allHeaders &&
+          allHeaders.toLowerCase().indexOf(header.toLowerCase()) !== -1) {
+        return this.xhr.getResponseHeader(header);
+      }
+      return null;
     }
   });
 </script>

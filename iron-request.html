@@ -228,9 +228,9 @@ iron-request can be used to perform XMLHttpRequests.
         this._updateStatus();
 
         if (!this.succeeded) {
-          this.rejectCompletes(new Error('The request failed with status code: ' + this.xhr.status));
-          return;
-        }
+            this.rejectCompletes({error : new Error('The request failed with status code: ' + this.xhr.status), response : this.parseResponse()});
+            return;
+          }
 
         this._setResponse(this.parseResponse());
         this.resolveCompletes(this);

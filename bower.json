@@ -11,7 +11,10 @@
     "polymer",
     "ajax"
   ],
-  "main": "iron-ajax.html",
+  "main": [
+    "iron-ajax.html",
+    "iron-request.html"
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/PolymerElements/iron-ajax.git"

@@ -12,9 +12,9 @@ thing! https://github.com/PolymerLabs/tedium/issues
 
 -->
 
-[![Build Status](https://travis-ci.org/PolymerElements/iron-ajax.svg?branch=master)](https://travis-ci.org/PolymerElements/iron-ajax)
+[![Build status](https://travis-ci.org/PolymerElements/iron-ajax.svg?branch=master)](https://travis-ci.org/PolymerElements/iron-ajax)
 
-_[Demo and API Docs](https://elements.polymer-project.org/elements/iron-ajax)_
+_[Demo and API docs](https://elements.polymer-project.org/elements/iron-ajax)_
 
 
 ##&lt;iron-ajax&gt;

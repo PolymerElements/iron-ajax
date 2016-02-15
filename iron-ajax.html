@@ -419,6 +419,9 @@ element.
      * @return {!IronRequestElement}
      */
     generateRequest: function() {
+      if (!this.url) {
+          return undefined;
+      }
       var request = /** @type {!IronRequestElement} */ (document.createElement('iron-request'));
       var requestOptions = this.toRequestOptions();
 

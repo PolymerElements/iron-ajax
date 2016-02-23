@@ -300,7 +300,9 @@ element.
       },
 
       /**
-       * Whether the request, response, and error events should bubble to document.
+       * By default, these events do not bubble largely because the `error` event has special
+       * meaning in the window object. Setting this attribute will cause iron-ajax's request,
+       * response, and error events to bubble to the window object.
        */
       bubbles: {
         type: Boolean,

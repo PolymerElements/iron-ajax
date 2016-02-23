@@ -299,6 +299,14 @@ element.
         value: ''
       },
 
+      /**
+       * Whether the request, response, and error events should bubble to document.
+       */
+      bubbles: {
+        type: Boolean,
+        value: false
+      },
+
       _boundHandleResponse: {
         type: Function,
         value: function() {
@@ -440,7 +448,7 @@ element.
       this.fire('request', {
         request: request,
         options: requestOptions
-      }, {bubbles: false});
+      }, {bubbles: this.bubbles});
 
       return request;
     },
@@ -451,7 +459,7 @@ element.
         this._setLastError(null);
         this._setLoading(false);
       }
-      this.fire('response', request, {bubbles: false});
+      this.fire('response', request, {bubbles: this.bubbles});
     },
 
     _handleError: function(request, error) {
@@ -470,7 +478,7 @@ element.
       this.fire('error', {
         request: request,
         error: error
-      }, {bubbles: false});
+      }, {bubbles: this.bubbles});
     },
 
     _discardRequest: function(request) {

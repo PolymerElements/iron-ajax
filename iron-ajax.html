@@ -459,6 +459,9 @@ element.
         console.error(error);
       }
 
+      error.status = request.status;
+      error.statusText = request.statusText;
+
       if (request === this.lastRequest) {
         this._setLastError({
           request: request,

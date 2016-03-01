@@ -58,20 +58,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <iron-ajax auto handle-as='text'></iron-ajax>
     </template>
   </test-fixture>
-  <!-- note(rictic):
-       This makes us dependent on a third-party server, but we need to be able
-       to check what headers the browser actually sends on the wire.
-       If necessary we can spin up our own httpbin server, as the code is open
-       source.
-    -->
   <test-fixture id="RealPost">
     <template>
-      <iron-ajax method="POST" url="http://httpbin.org/post"></iron-ajax>
+      <iron-ajax method="POST" url="/httpbin/post"></iron-ajax>
     </template>
   </test-fixture>
   <test-fixture id="Delay">
     <template>
-      <iron-ajax url="http://httpbin.org/delay/1"></iron-ajax>
+      <iron-ajax url="/httpbin/delay/1"></iron-ajax>
     </template>
   </test-fixture>
   <test-fixture id="Bubbles">

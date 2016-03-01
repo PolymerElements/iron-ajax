@@ -838,7 +838,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
           }
           window.addEventListener('request', incrementTotal);
-          document.addEventListener('response', incrementTotal);
+          window.addEventListener('response', incrementTotal);
           var ajax = fixture('Bubbles')[0];
           ajax.generateRequest();
           server.respond();

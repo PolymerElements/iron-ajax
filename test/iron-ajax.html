@@ -68,6 +68,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <iron-ajax url="/httpbin/delay/1"></iron-ajax>
     </template>
   </test-fixture>
+  <test-fixture id="Bubbles">
+    <template>
+      <iron-ajax url="/httpbin/post" method="POST" bubbles></iron-ajax>
+      <iron-ajax url="/responds_to_get_with_502_error_json" bubbles></iron-ajax>
+    </template>
+  </test-fixture>
   <script>
     'use strict';
     suite('<iron-ajax>', function () {
@@ -809,6 +815,43 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             expect(ajax.lastResponse).to.be.equal(null);
             expect(ajax.lastError).to.not.be.equal(null);
           });
+        });
+      });
+
+      suite('when using the bubbles attribute', function () {
+        setup(function() {
+          server.restore();
+        });
+        test('the request and response events should bubble to window', function (done) {
+          server.restore();
+          var total = 0;
+          function incrementTotal(){
+            total++;
+            if (total === 2){
+              done();
+            }
+          }
+          window.addEventListener('request', incrementTotal);
+          window.addEventListener('response', incrementTotal);
+          var ajax = fixture('Bubbles')[0];
+          ajax.generateRequest();
+          server.respond();
+        });
+
+        test('the request and error events should bubble to window', function (done) {
+          server.restore();
+          var total = 0;
+          function incrementTotal(){
+            total++;
+            if (total === 2){
+              done();
+            }
+          }
+          window.addEventListener('request', incrementTotal);
+          window.addEventListener('error', incrementTotal);
+          var ajax = fixture('Bubbles')[1];
+          ajax.generateRequest();
+          server.respond();
         });
       });
 

@@ -833,7 +833,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           var total = 0;
           function incrementTotal(){
             total++;
-            if(total === 2) done();
+            if (total === 2){
+              done();
+            }
           }
           window.addEventListener('request', incrementTotal);
           document.addEventListener('response', incrementTotal);
@@ -847,7 +849,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           var total = 0;
           function incrementTotal(){
             total++;
-            if(total === 2) done();
+            if (total === 2){
+              done();
+            }
           }
           window.addEventListener('request', incrementTotal);
           window.addEventListener('error', incrementTotal);

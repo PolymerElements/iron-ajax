@@ -223,6 +223,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             expect(server.requests.length).to.be.equal(1);
           });
         });
+
+        test('requestUrl remains empty despite valid queryString', function() {
+          ajax = fixture('BlankUrl');
+          expect(ajax.url).to.be.equal(undefined);
+          expect(ajax.queryString).to.be.equal('');
+          expect(ajax.requestUrl).to.be.equal('');
+
+          ajax.params = {'a':'b', 'c':'d'};
+
+          expect(ajax.queryString).to.be.equal('a=b&c=d');
+          expect(ajax.requestUrl).to.be.equal('?a=b&c=d');
+        });
       });
 
       suite('when properties are changed', function() {

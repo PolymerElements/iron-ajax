@@ -360,13 +360,18 @@ element.
      */
     get requestUrl() {
       var queryString = this.queryString;
+      var url = this.url;
 
-      if (queryString) {
-        var bindingChar = this.url.indexOf('?') >= 0 ? '&' : '?';
-        return this.url + bindingChar + queryString;
+      if (!url) {
+        url = '';
       }
 
-      return this.url;
+      if (queryString) {
+        var bindingChar = url.indexOf('?') >= 0 ? '&' : '?';
+        return url + bindingChar + queryString;
+      }
+
+      return url;
     },
 
     /**

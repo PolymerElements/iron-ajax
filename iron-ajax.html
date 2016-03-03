@@ -459,13 +459,13 @@ element.
         console.error(error);
       }
 
-      error.status = request.status;
-      error.statusText = request.statusText;
-
       if (request === this.lastRequest) {
         this._setLastError({
           request: request,
-          error: error
+          error: error,
+          status: request.xhr.status,
+          statusText: request.xhr.statusText,
+          response: request.xhr.response
         });
         this._setLastResponse(null);
         this._setLoading(false);

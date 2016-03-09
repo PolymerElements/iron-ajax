@@ -235,6 +235,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(ajax.queryString).to.be.equal('a=b&c=d');
           expect(ajax.requestUrl).to.be.equal('?a=b&c=d');
         });
+
+        test('generateRequest works with empty URL and valid queryString', function() {
+          ajax = fixture('BlankUrl');
+          expect(ajax.url).to.be.equal(undefined);
+
+          ajax.generateRequest();
+          expect(server.requests[0].url).to.be.eql('');
+
+          ajax.params = {'a':'b', 'c':'d'};
+
+          ajax.generateRequest();
+          expect(server.requests[1].url).to.be.eql('?a=b&c=d');
+        });
       });
 
       suite('when properties are changed', function() {

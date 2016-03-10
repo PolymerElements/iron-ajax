@@ -46,18 +46,21 @@ element.
      * Fired when a request is sent.
      *
      * @event request
+     * @event iron-ajax-request (only when this.bubbles is true)
      */
 
     /**
      * Fired when a response is received.
      *
      * @event response
+     * @event iron-ajax-response (only when this.bubbles is true)
      */
 
     /**
      * Fired when an error is received.
      *
      * @event error
+     * @event iron-ajax-error (only when this.bubbles is true)
      */
 
     hostAttributes: {
@@ -302,7 +305,8 @@ element.
       /**
        * By default, these events do not bubble largely because the `error` event has special
        * meaning in the window object. Setting this attribute will cause iron-ajax's request,
-       * response, and error events to bubble to the window object.
+       * response, and error events to bubble to the window object. It will also cause
+       * iron-ajax to emit duplicate events prefixed with "iron-ajax-".
        */
       bubbles: {
         type: Boolean,
@@ -452,6 +456,13 @@ element.
         options: requestOptions
       }, {bubbles: this.bubbles});
 
+      if(this.bubbles){
+        this.fire('request', {
+          request: request,
+          options: requestOptions
+        }, {bubbles: true});
+      }
+
       return request;
     },
 
@@ -462,6 +473,9 @@ element.
         this._setLoading(false);
       }
       this.fire('response', request, {bubbles: this.bubbles});
+      if(this.bubbles){
+        this.fire('iron-ajax-response', request, {bubbles: true});
+      }
     },
 
     _handleError: function(request, error) {
@@ -477,6 +491,15 @@ element.
         this._setLastResponse(null);
         this._setLoading(false);
       }
+
+      // Tests fail if this goes after the normal this.fire('error', ...)
+      if(this.bubbles){
+        this.fire('iron-ajax-error', {
+          request: request,
+          error: error
+        }, {bubbles: true});
+      }
+
       this.fire('error', {
         request: request,
         error: error

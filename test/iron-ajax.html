@@ -827,12 +827,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           var total = 0;
           function incrementTotal(){
             total++;
-            if (total === 2){
+            if (total === 4){
               done();
             }
           }
           window.addEventListener('request', incrementTotal);
+          window.addEventListener('iron-ajax-request', incrementTotal);
           window.addEventListener('response', incrementTotal);
+          window.addEventListener('iron-ajax-response', incrementTotal);
           var ajax = fixture('Bubbles')[0];
           ajax.generateRequest();
           server.respond();
@@ -843,12 +845,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           var total = 0;
           function incrementTotal(){
             total++;
-            if (total === 2){
+            if (total === 4){
               done();
             }
           }
           window.addEventListener('request', incrementTotal);
+          window.addEventListener('iron-ajax-request', incrementTotal);
           window.addEventListener('error', incrementTotal);
+          window.addEventListener('iron-ajax-error', incrementTotal);
           var ajax = fixture('Bubbles')[1];
           ajax.generateRequest();
           server.respond();

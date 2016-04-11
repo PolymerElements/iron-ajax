@@ -266,7 +266,7 @@ iron-request can be used to perform XMLHttpRequests.
       }
       Object.keys(headers).forEach(function (requestHeader) {
         if (/[A-Z]/.test(requestHeader)) {
-          console.error('Headers must be lower case, got', requestHeader);
+          Polymer.Base._error('Headers must be lower case, got', requestHeader);
         }
         xhr.setRequestHeader(
           requestHeader,

@@ -248,7 +248,7 @@ iron-request can be used to perform XMLHttpRequests.
       );
 
       var acceptType = {
-        'json': 'application/json',
+        'json': 'application/json',u
         'text': 'text/plain',
         'html': 'text/html',
         'xml': 'application/xml',
@@ -421,7 +421,7 @@ iron-request can be used to perform XMLHttpRequests.
      */
     _wwwFormUrlEncodePiece: function(str) {
       // Support undefined input 
-      if (typeof(str) == 'undefined') {
+      if (typeof(str) == 'undefined' || !str) {
           return '';
       }
       

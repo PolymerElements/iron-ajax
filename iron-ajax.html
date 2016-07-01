@@ -360,11 +360,7 @@ element.
      */
     get requestUrl() {
       var queryString = this.queryString;
-      var url = this.url;
-
-      if (!url) {
-        url = '';
-      }
+      var url = this.url || '';
 
       if (queryString) {
         var bindingChar = url.indexOf('?') >= 0 ? '&' : '?';

@@ -1,23 +1,25 @@
 language: node_js
 sudo: required
 before_script:
-- npm install -g bower polylint web-component-tester
-- bower install
-- polylint
+  - npm install -g bower polylint web-component-tester
+  - bower install
+  - polylint
 env:
   global:
-  - secure: A8oq0Hezejdg77sYQOvCcTwwRRMnGLIihqsj2hPxIH8HkaDKJfjdHiZ0e2K3+Djt6eJDfnfBZObLbeq/V8WSDPIiBo3Ce+Ly/Uea2esLALwMWbjfQx+uS9X/CEO8VThDSjhqavgQ/VD8Glpeh5jLaNQuyOz3JTbSzluq6/e8+YU=
-  - secure: kWsziifYV2QXhXvuaQvb5kuYAkyRq8KjGLiE8UIJ9IQ0qXfaOPR8gv10X4Bth4WLe7BTAV3c3mDxVzMkjGyuIojVCVTFqXLaHaObmyNXDnTq7FYqcLLqqDY8gaNqee6zrdglignmS/aissuI2Tg7IPmaSUF1UNX45D3cKVF2Z+E=
+    - secure: >-
+        A8oq0Hezejdg77sYQOvCcTwwRRMnGLIihqsj2hPxIH8HkaDKJfjdHiZ0e2K3+Djt6eJDfnfBZObLbeq/V8WSDPIiBo3Ce+Ly/Uea2esLALwMWbjfQx+uS9X/CEO8VThDSjhqavgQ/VD8Glpeh5jLaNQuyOz3JTbSzluq6/e8+YU=
+    - secure: >-
+        kWsziifYV2QXhXvuaQvb5kuYAkyRq8KjGLiE8UIJ9IQ0qXfaOPR8gv10X4Bth4WLe7BTAV3c3mDxVzMkjGyuIojVCVTFqXLaHaObmyNXDnTq7FYqcLLqqDY8gaNqee6zrdglignmS/aissuI2Tg7IPmaSUF1UNX45D3cKVF2Z+E=
 node_js: stable
 addons:
   firefox: '46.0'
   apt:
     sources:
-    - google-chrome
+      - google-chrome
     packages:
-    - google-chrome-stable
+      - google-chrome-stable
   sauce_connect: true
 script:
-- xvfb-run wct
-- if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then wct -s 'default'; fi
+  - xvfb-run wct
+  - 'if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then wct -s ''default''; fi'
 dist: trusty

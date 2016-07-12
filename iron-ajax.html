@@ -433,7 +433,7 @@ element.
       var request = /** @type {!IronRequestElement} */ (document.createElement('iron-request'));
       var requestOptions = this.toRequestOptions();
 
-      this.activeRequests.push(request);
+      this.push('activeRequests', request);
 
       request.completes.then(
         this._boundHandleResponse
@@ -491,7 +491,7 @@ element.
       var requestIndex = this.activeRequests.indexOf(request);
 
       if (requestIndex > -1) {
-        this.activeRequests.splice(requestIndex, 1);
+        this.splice('activeRequests', requestIndex, 1);
       }
     },
 

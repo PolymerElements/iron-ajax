@@ -307,7 +307,7 @@ element.
        * request, and response events as well as its iron-ajax-request, -response,  and -error
        * events to bubble to the window object. The vanilla error event never bubbles even if
        * this.bubbles is true because the shadow dom spec does not allow certain events,
-       * including events named error, to leak, outside of shadow trees.
+       * including events named error, to leak outside of shadow trees.
        * https://www.w3.org/TR/2015/WD-shadow-dom-20151215/#events-that-are-not-leaked-into-ancestor-trees
        */
       bubbles: {

@@ -46,21 +46,21 @@ element.
      * Fired when a request is sent.
      *
      * @event request
-     * @event iron-ajax-request (only when this.bubbles is true)
+     * @event iron-ajax-request
      */
 
     /**
      * Fired when a response is received.
      *
      * @event response
-     * @event iron-ajax-response (only when this.bubbles is true)
+     * @event iron-ajax-response
      */
 
     /**
      * Fired when an error is received.
      *
      * @event error
-     * @event iron-ajax-error (only when this.bubbles is true)
+     * @event iron-ajax-error
      */
 
     hostAttributes: {
@@ -303,10 +303,12 @@ element.
       },
 
       /**
-       * By default, these events do not bubble largely because the `error` event has special
-       * meaning in the window object. Setting this attribute will cause iron-ajax's request,
-       * response, and error events to bubble to the window object. It will also cause
-       * iron-ajax to emit duplicate events prefixed with "iron-ajax-".
+       * By default, these events do not bubble. Setting this attribute will cause iron-ajax's
+       * request, and response events as well as its iron-ajax-request, -response,  and -error
+       * events to bubble to the window object. The vanilla error event never bubbles even if
+       * this.bubbles is true because the shadow dom spec does not allow certain events,
+       * including events named error, to leak, outside of shadow trees.
+       * https://www.w3.org/TR/2015/WD-shadow-dom-20151215/#events-that-are-not-leaked-into-ancestor-trees
        */
       bubbles: {
         type: Boolean,
@@ -456,12 +458,10 @@ element.
         options: requestOptions
       }, {bubbles: this.bubbles});
 
-      if(this.bubbles){
-        this.fire('iron-ajax-request', {
-          request: request,
-          options: requestOptions
-        }, {bubbles: true});
-      }
+      this.fire('iron-ajax-request', {
+        request: request,
+        options: requestOptions
+      }, {bubbles: this.bubbles});
 
       return request;
     },
@@ -473,9 +473,7 @@ element.
         this._setLoading(false);
       }
       this.fire('response', request, {bubbles: this.bubbles});
-      if(this.bubbles){
-        this.fire('iron-ajax-response', request, {bubbles: true});
-      }
+      this.fire('iron-ajax-response', request, {bubbles: this.bubbles});
     },
 
     _handleError: function(request, error) {
@@ -493,12 +491,10 @@ element.
       }
 
       // Tests fail if this goes after the normal this.fire('error', ...)
-      if(this.bubbles){
-        this.fire('iron-ajax-error', {
-          request: request,
-          error: error
-        }, {bubbles: true});
-      }
+      this.fire('iron-ajax-error', {
+        request: request,
+        error: error
+      }, {bubbles: this.bubbles});
 
       this.fire('error', {
         request: request,

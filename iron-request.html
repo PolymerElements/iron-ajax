@@ -294,7 +294,10 @@ iron-request can be used to perform XMLHttpRequests.
       }
 
       xhr.withCredentials = !!options.withCredentials;
-      xhr.timeout = options.timeout;
+
+      if (options.async) {
+        xhr.timeout = options.timeout;
+      }
 
       var body = this._encodeBodyObject(options.body, headers['content-type']);
 

@@ -275,6 +275,10 @@ iron-request can be used to perform XMLHttpRequests.
       }, this);
 
       if (options.async !== false) {
+        if (options.async) {
+          xhr.timeout = options.timeout;
+        }
+
         var handleAs = options.handleAs;
 
         // If a JSON prefix is present, the responseType must be 'text' or the
@@ -294,7 +298,7 @@ iron-request can be used to perform XMLHttpRequests.
       }
 
       xhr.withCredentials = !!options.withCredentials;
-      xhr.timeout = options.timeout;
+
 
       var body = this._encodeBodyObject(options.body, headers['content-type']);
 

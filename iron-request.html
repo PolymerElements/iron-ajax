@@ -226,17 +226,16 @@ iron-request can be used to perform XMLHttpRequests.
         this.rejectCompletes(new Error('Request aborted.'));
       }.bind(this));
 
-
       // Called after all of the above.
       xhr.addEventListener('loadend', function () {
         this._updateStatus();
+        this._setResponse(this.parseResponse());
 
         if (!this.succeeded) {
           this.rejectCompletes(new Error('The request failed with status code: ' + this.xhr.status));
           return;
         }
 
-        this._setResponse(this.parseResponse());
         this.resolveCompletes(this);
       }.bind(this));
 

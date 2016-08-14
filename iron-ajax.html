@@ -236,6 +236,15 @@ element.
       },
 
       /**
+       * The `progress` property of this element's `lastRequest`.
+       */
+      lastRequestProgress: {
+        type: Object,
+        notify: true,
+        readOnly: true
+      },
+
+      /**
        * True while lastRequest is in flight.
        */
       loading: {
@@ -420,6 +429,10 @@ element.
       return headers;
     },
 
+    _onProgressChanged: function(event) {
+      this._setLastRequestProgress(event.detail.value);
+    },
+
     /**
      * Request options suitable for generating an `iron-request` instance based
      * on the current state of the `iron-ajax` instance's properties.
@@ -457,6 +470,8 @@ element.
     generateRequest: function() {
       var request = /** @type {!IronRequestElement} */ (document.createElement('iron-request'));
       var requestOptions = this.toRequestOptions();
+      
+      this.listen(request, 'progress-changed', '_onProgressChanged');
 
       this.push('activeRequests', request);
 
@@ -504,6 +519,8 @@ element.
     },
 
     _handleResponse: function(request) {
+      this.unlisten(this.lastRequest, 'progress-changed', '_onProgressChanged');
+
       if (request === this.lastRequest) {
         this._setLastResponse(request.response);
         this._setLastError(null);
@@ -520,6 +537,8 @@ element.
     },
 
     _handleError: function(request, error) {
+      this.unlisten(this.lastRequest, 'progress-changed', '_onProgressChanged');
+
       if (this.verbose) {
         Polymer.Base._error(error);
       }

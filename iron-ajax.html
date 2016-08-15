@@ -238,7 +238,7 @@ element.
       /**
        * The `progress` property of this element's `lastRequest`.
        */
-      lastRequestProgress: {
+      lastProgress: {
         type: Object,
         notify: true,
         readOnly: true
@@ -430,7 +430,7 @@ element.
     },
 
     _onProgressChanged: function(event) {
-      this._setLastRequestProgress(event.detail.value);
+      this._setLastProgress(event.detail.value);
     },
 
     /**

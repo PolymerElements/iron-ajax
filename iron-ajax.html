@@ -460,12 +460,18 @@ element.
       this.fire('request', {
         request: request,
         options: requestOptions
-      }, {bubbles: this.bubbles});
+      }, {
+        bubbles: this.bubbles,
+        composed: true
+      });
 
       this.fire('iron-ajax-request', {
         request: request,
         options: requestOptions
-      }, {bubbles: this.bubbles});
+      }, {
+        bubbles: this.bubbles,
+        composed: true
+      });
 
       return request;
     },
@@ -476,8 +482,14 @@ element.
         this._setLastError(null);
         this._setLoading(false);
       }
-      this.fire('response', request, {bubbles: this.bubbles});
-      this.fire('iron-ajax-response', request, {bubbles: this.bubbles});
+      this.fire('response', request, {
+        bubbles: this.bubbles,
+        composed: true
+      });
+      this.fire('iron-ajax-response', request, {
+        bubbles: this.bubbles,
+        composed: true
+      });
     },
 
     _handleError: function(request, error) {
@@ -501,12 +513,18 @@ element.
       this.fire('iron-ajax-error', {
         request: request,
         error: error
-      }, {bubbles: this.bubbles});
+      }, {
+        bubbles: this.bubbles,
+        composed: true
+      });
 
       this.fire('error', {
         request: request,
         error: error
-      }, {bubbles: this.bubbles});
+      }, {
+        bubbles: this.bubbles,
+        composed: true
+      });
     },
 
     _discardRequest: function(request) {

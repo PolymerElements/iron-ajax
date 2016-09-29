@@ -444,12 +444,11 @@ iron-request can be used to perform XMLHttpRequests.
       // Spec says to normalize newlines to \r\n and replace %20 spaces with +.
       // jQuery does this as well, so this is likely to be widely compatible.
       try {
-        str.toString
+        return encodeURIComponent(str.toString().replace(/\r?\n/g, '\r\n'))
+          .replace(/%20/g, '+');
       } catch (e) {
         return '';
       }
-      return encodeURIComponent(str.toString().replace(/\r?\n/g, '\r\n'))
-          .replace(/%20/g, '+');
     },
 
     /**

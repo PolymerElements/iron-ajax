@@ -23,17 +23,16 @@
     "polymer": "Polymer/polymer#2.0-preview"
   },
   "devDependencies": {
-    "iron-component-page": "polymerelements/iron-component-page#^1.0.0",
+    "iron-component-page": "polymerelements/iron-component-page#2.0-preview",
     "iron-image": "polymerelements/iron-image#2.0-preview",
-    "promise-polyfill": "polymerlabs/promise-polyfill#^1.0.0",
+    "promise-polyfill": "polymerlabs/promise-polyfill#2.0-preview",
     "test-fixture": "polymerelements/test-fixture#custom-elements-v1",
     "web-component-tester": "^4.0.0",
     "webcomponentsjs": "webcomponents/webcomponentsjs#v1"
   },
   "resolutions": {
     "test-fixture": "custom-elements-v1",
-    "iron-flex-layout": "2.0-preview",
-    "polymer": "2.0-preview",
-    "webcomponentsjs": "v1"
+    "webcomponentsjs": "v1",
+    "polymer": "2.0-preview"
   }
 }

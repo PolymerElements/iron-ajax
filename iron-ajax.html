@@ -323,7 +323,16 @@ element.
         value: function() {
           return this._handleResponse.bind(this);
         }
-      }
+      },
+
+      /**
+       * Manages whether iron-request should listen to this.xhr or this.xhr.upload
+	   * for progress events
+       */
+      isUpload: {
+		type: Boolean,
+		value: false
+	  }
     },
 
     observers: [
@@ -441,6 +450,8 @@ element.
     generateRequest: function() {
       var request = /** @type {!IronRequestElement} */ (document.createElement('iron-request'));
       var requestOptions = this.toRequestOptions();
+
+	  request.isUpload = this.isUpload;
 
       this.push('activeRequests', request);
 

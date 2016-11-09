@@ -143,7 +143,16 @@ iron-request can be used to perform XMLHttpRequests.
         notify: true,
         readOnly: true,
         value: false
-      }
+      },
+
+      /**
+       * Manages whether iron-request should listen to this.xhr or this.xhr.upload
+	   * for progress events
+       */
+      isUpload: {
+		type: Boolean,
+		value: false
+	  }
     },
 
     /**
@@ -201,13 +210,23 @@ iron-request can be used to perform XMLHttpRequests.
         return null;
       }
 
-      xhr.addEventListener('progress', function (progress) {
-        this._setProgress({
-          lengthComputable: progress.lengthComputable,
-          loaded: progress.loaded,
-          total: progress.total
-        });
-      }.bind(this))
+	  if (this.isUpload) {
+        xhr.upload.addEventListener('progress', function (progress) {
+          this._setProgress({
+            lengthComputable: progress.lengthComputable,
+            loaded: progress.loaded,
+            total: progress.total
+          });
+	    }.bind(this));
+	  } else {
+        xhr.addEventListener('progress', function (progress) {
+          this._setProgress({
+            lengthComputable: progress.lengthComputable,
+            loaded: progress.loaded,
+            total: progress.total
+          });
+	    }.bind(this));
+	  }
 
       xhr.addEventListener('error', function (error) {
         this._setErrored(true);

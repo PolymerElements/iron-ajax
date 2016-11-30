@@ -61,17 +61,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </test-fixture>
   <test-fixture id="RealPost">
     <template>
-      <iron-ajax method="POST" url="/httpbin/post"></iron-ajax>
+      <iron-ajax method="POST" url="http://httpbin.org/post"></iron-ajax>
     </template>
   </test-fixture>
   <test-fixture id="Delay">
     <template>
-      <iron-ajax url="/httpbin/delay/1"></iron-ajax>
+      <iron-ajax url="http://httpbin.org/delay/1"></iron-ajax>
     </template>
   </test-fixture>
   <test-fixture id="Bubbles">
     <template>
-      <iron-ajax url="/httpbin/post" method="POST" bubbles></iron-ajax>
+      <iron-ajax url="http://httpbin.org/post" method="POST" bubbles></iron-ajax>
       <iron-ajax url="/responds_to_get_with_502_error_json" bubbles></iron-ajax>
     </template>
   </test-fixture>
@@ -848,9 +848,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       });
 
       suite('when using the bubbles attribute', function () {
-        setup(function() {
-          server.restore();
-        });
         test('the request and response events should bubble to window', function (done) {
           server.restore();
           var total = 0;
@@ -870,7 +867,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
 
         test('the request and error events should bubble to window', function (done) {
-          server.restore();
           var total = 0;
           function incrementTotal(){
             total++;
@@ -880,7 +876,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
           window.addEventListener('request', incrementTotal);
           window.addEventListener('iron-ajax-request', incrementTotal);
-          window.addEventListener('error', incrementTotal);
+          // NOTE(cdata): This needs to be capturing because Mocha + Firefox
+          // results in the error event being observed too early by the test
+          // runner and failing the test:
+          window.addEventListener('error', incrementTotal, true);
           window.addEventListener('iron-ajax-error', incrementTotal);
           var ajax = fixture('Bubbles')[1];
           ajax.generateRequest();

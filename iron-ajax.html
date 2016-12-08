@@ -213,6 +213,14 @@ element.
       },
 
       /**
+       * If true, automatically abort old requests when new requests are created.
+       */
+      abortRequests: {
+        type: Boolean,
+        value: false
+      },
+
+      /**
        * If true, error messages will automatically be logged to the console.
        */
       verbose: {
@@ -441,6 +449,14 @@ element.
     generateRequest: function() {
       var request = /** @type {!IronRequestElement} */ (document.createElement('iron-request'));
       var requestOptions = this.toRequestOptions();
+
+      if (this.abortRequests) {
+        this.activeRequests.filter(function(request) {
+          return !request.aborted;
+        }).forEach(function(request) {
+          request.abort();
+        });
+      }
 
       this.push('activeRequests', request);
 

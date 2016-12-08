@@ -290,6 +290,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(ajax.queryString).to.be.equal('a%20b=c&a%20b=d%20e&a%20b=f');
         });
 
+        test('aborts old requests if abortRequests is true', function() {
+          ajax.abortRequests = true;
+          request = ajax.generateRequest();
+          request = ajax.generateRequest();
+          expect(ajax.activeRequests[0].aborted).to.be.equal(true);
+          expect(ajax.activeRequests[1].aborted).to.be.equal(false);
+        });
+
         test('reflects the loading state in the `loading` property', function() {
           var request = ajax.generateRequest();
 

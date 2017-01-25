@@ -27,7 +27,7 @@
     "iron-image": "polymerelements/iron-image#2.0-preview",
     "promise-polyfill": "polymerlabs/promise-polyfill#2.0-preview",
     "test-fixture": "PolymerElements/test-fixture#^2.0.0",
-    "web-component-tester": "^4.0.0",
+    "web-component-tester": "v6.0.0-prerelease.5",
     "webcomponentsjs": "webcomponents/webcomponentsjs#v1"
   },
   "variants": {

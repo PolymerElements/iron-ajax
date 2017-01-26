@@ -43,12 +43,16 @@
         "test-fixture": "polymerelements/test-fixture#^1.0.0",
         "web-component-tester": "^4.0.0",
         "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+      },
+      "resolutions": {
+        "promise-polyfill": "^1.0.0"
       }
     }
   },
   "resolutions": {
     "test-fixture": "^2.0.0",
     "webcomponentsjs": "v1",
-    "polymer": "2.0-preview"
+    "polymer": "2.0-preview",
+    "promise-polyfill": "2.0-preview"
   }
 }

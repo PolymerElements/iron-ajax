@@ -48,11 +48,5 @@
         "promise-polyfill": "^1.0.0"
       }
     }
-  },
-  "resolutions": {
-    "test-fixture": "^2.0.0",
-    "webcomponentsjs": "v1",
-    "polymer": "2.0-preview",
-    "promise-polyfill": "2.0-preview"
   }
 }

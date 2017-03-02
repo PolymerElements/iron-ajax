@@ -286,9 +286,16 @@ iron-request can be used to perform XMLHttpRequests.
           handleAs = 'text';
         }
 
-        // In IE, `xhr.responseType` is an empty string when the response
-        // returns. Hence, caching it as `xhr._responseType`.
-        xhr.responseType = xhr._responseType = handleAs;
+        //placing the following line inside try catch as some browsers like UC doesn't support JSON as response type. It throws SYNTAX_ERROR: DOM EXCEPTION 12
+        try{
+          // In IE, `xhr.responseType` is an empty string when the response
+          // returns. Hence, caching it as `xhr._responseType`.
+          xhr.responseType = xhr._responseType = handleAs;
+
+        }
+        catch(e){
+            //nothing to do. UC works without setting it.
+        }
 
         // Cache the JSON prefix, if it exists.
         if (!!options.jsonPrefix) {

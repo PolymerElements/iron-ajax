@@ -203,8 +203,15 @@ iron-request can be used to perform XMLHttpRequests.
         return null;
       }
         
-      var evt = window.dispatchEvent(new CustomEvent('iron-request-presend', {xhr: xhr, options: options}));
-      if (evt.defaultPrevented) {
+      var cancelled = !this.dispatchEvent(new CustomEvent('iron-request-presend', {
+          detail: {
+              xhr: xhr,
+              options: options
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true));
+      if (cancelled) {
         return null;
       }
 

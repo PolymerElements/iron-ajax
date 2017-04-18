@@ -498,15 +498,17 @@ element.
       }
 
       // Tests fail if this goes after the normal this.fire('error', ...)
-      this.fire('iron-ajax-error', {
+      var errorEvent = this.fire('iron-ajax-error', {
         request: request,
         error: error
       }, {bubbles: this.bubbles});
 
-      this.fire('error', {
-        request: request,
-        error: error
-      }, {bubbles: this.bubbles});
+      if(!errorEvent.defaultPrevented) {
+        this.fire('error', {
+          request: request,
+          error: error
+        }, {bubbles: this.bubbles});
+      }
     },
 
     _discardRequest: function(request) {

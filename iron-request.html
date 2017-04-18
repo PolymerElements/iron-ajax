@@ -211,18 +211,25 @@ iron-request can be used to perform XMLHttpRequests.
       xhr.addEventListener('error', function (error) {
         this._setErrored(true);
         this._updateStatus();
-        this.rejectCompletes(error);
+        this.rejectCompletes({
+          error: error,
+          request: this
+        });
       }.bind(this));
 
       xhr.addEventListener('timeout', function (error) {
         this._setTimedOut(true);
         this._updateStatus();
-        this.rejectCompletes(error);
+        this.rejectCompletes({
+          error: error,
+          request: this
+        });
       }.bind(this));
 
       xhr.addEventListener('abort', function () {
+        this._setAborted(true);
         this._updateStatus();
-        this.rejectCompletes(new Error('Request aborted.'));
+        this.rejectCompletes({request: this});
       }.bind(this));
 
       // Called after all of the above.
@@ -231,7 +238,7 @@ iron-request can be used to perform XMLHttpRequests.
         this._setResponse(this.parseResponse());
 
         if (!this.succeeded) {
-          this.rejectCompletes(new Error('The request failed with status code: ' + this.xhr.status));
+          this.rejectCompletes({request: this});
           return;
         }
 
@@ -365,7 +372,10 @@ iron-request can be used to perform XMLHttpRequests.
           }
         }
       } catch (e) {
-        this.rejectCompletes(new Error('Could not parse response. ' + e.message));
+        this.rejectCompletes({
+          error: new Error('Could not parse response. ' + e.message),
+          request: this
+        });
       }
     },
 

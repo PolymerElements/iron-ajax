@@ -457,17 +457,12 @@ element.
         this._discardRequest.bind(this, request)
       );
 
-      var event = new CustomEvent('iron-ajax-presend', {
-        detail: {
-          request: request,
-          options: requestOptions
-        },
-        bubbles: this.bubbles,
-        cancelable: true,
-        composed: true
-      });
-      var cancelled = !this.dispatchEvent(event);
-      if (cancelled) {
+      var evt = this.fire('iron-ajax-presend', {
+        request: request,
+        options: requestOptions
+      }, {bubbles: this.bubbles});
+
+      if (evt.defaultPrevented) {
         return request;
       }
 

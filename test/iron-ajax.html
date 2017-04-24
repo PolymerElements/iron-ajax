@@ -702,6 +702,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           return promise;
         });
 
+        test('with rejectWithRequest the promise chain contains the request and error', function () {
+          ajax.url = '/responds_to_get_with_502_error_json';
+          ajax.handleAs = 'json';
+          ajax.rejectWithRequest = true;
+
+          var request = ajax.generateRequest();
+          var promise = request.completes.then(function() {
+            throw new Error('Expected the request to fail!');
+          }, function(resp) {
+            expect(resp.error).to.be.instanceof(Error);
+            expect(resp.request).to.deep.equal(request);
+          });
+
+          server.respond();
+
+          return promise;
+        });
+
         test('we give a useful error even when the domain doesn\'t resolve', function() {
           ajax.url = 'http://nonexistant.example.com/';
           server.restore();

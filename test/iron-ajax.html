@@ -349,7 +349,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             echoAjax.params = {'order': i + 1};
             requests.push(echoAjax.generateRequest());
           }
-          var allPromises = requests.map(function(r) {return r.completes});
+          var allPromises = requests.map(function(r){return r.completes});
           promiseAllComplete = Promise.all(allPromises);
         });
 
@@ -907,17 +907,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
 
         test('ability to cancel request', function() {
+          var requestSpy = sinon.spy();
+          var promiseSpy = sinon.spy();
+
           ajax.addEventListener('iron-ajax-presend', function(e) {
             e.preventDefault();
           });
-          var requestSpy = sinon.spy();
           ajax.addEventListener('iron-ajax-request', requestSpy);
 
           var request = ajax.generateRequest();
 
-          // TODO: Add expectations for promise chain and activeRequests
-
-          expect(requestSpy).not.to.be.called;
+          return request.completes.catch(function(request) {
+            expect(request.aborted).to.be.true;
+            promiseSpy();
+          }).then(function() {
+            expect(promiseSpy).to.be.calledOnce;
+            expect(requestSpy).not.to.be.called;
+          });
         });
 
         test('ability to modify the request options', function(done) {

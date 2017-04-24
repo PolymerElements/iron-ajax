@@ -463,6 +463,8 @@ element.
       }, {bubbles: this.bubbles, cancelable: true});
 
       if (evt.defaultPrevented) {
+        request.abort();
+        request.rejectCompletes(request);
         return request;
       }
 

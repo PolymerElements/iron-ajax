@@ -318,6 +318,15 @@ element.
         value: false
       },
 
+      /**
+       * Changes the completes promise chain from generateRequest to reject with an object
+       *  containing the error message as well as the request.
+       */
+      rejectWithRequest: {
+        type: Boolean,
+        value: false
+      },
+
       _boundHandleResponse: {
         type: Function,
         value: function() {
@@ -429,7 +438,8 @@ element.
         handleAs: this.handleAs,
         jsonPrefix: this.jsonPrefix,
         withCredentials: this.withCredentials,
-        timeout: this.timeout
+        timeout: this.timeout,
+        rejectWithRequest: this.rejectWithRequest,
       };
     },
 

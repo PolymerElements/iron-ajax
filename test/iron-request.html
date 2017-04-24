@@ -132,6 +132,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           });
         });
 
+        test('can be aborted with request element', function () {
+          var options = {
+            url: successfulRequestOptions.url,
+            rejectWithRequest: true
+          };
+          request.send(options);
+
+          request.abort();
+
+          server.respond();
+
+          return request.completes.then(function () {
+            throw new Error('Request did not abort appropriately!');
+          }).catch(function (e) {
+            expect(e.error).to.be.instanceof(Error);
+            expect(e.request).to.deep.equal(request);
+          });
+        });
+
         test('default responseType is text', function () {
           request.send(successfulRequestOptions);
           server.respond();

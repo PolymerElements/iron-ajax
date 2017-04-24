@@ -460,7 +460,7 @@ element.
       var evt = this.fire('iron-ajax-presend', {
         request: request,
         options: requestOptions
-      }, {bubbles: this.bubbles});
+      }, {bubbles: this.bubbles, cancelable: true});
 
       if (evt.defaultPrevented) {
         return request;

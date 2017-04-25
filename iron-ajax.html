@@ -44,6 +44,12 @@ element.
     is: 'iron-ajax',
 
     /**
+     * Fired before a request is sent.
+     *
+     * @event iron-ajax-presend
+     */
+
+    /**
      * Fired when a request is sent.
      *
      * @event request
@@ -461,6 +467,17 @@ element.
       ).then(
         this._discardRequest.bind(this, request)
       );
+
+      var evt = this.fire('iron-ajax-presend', {
+        request: request,
+        options: requestOptions
+      }, {bubbles: this.bubbles, cancelable: true});
+
+      if (evt.defaultPrevented) {
+        request.abort();
+        request.rejectCompletes(request);
+        return request;
+      }
 
       request.send(requestOptions);
 

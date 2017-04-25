@@ -91,7 +91,7 @@ iron-request can be used to perform XMLHttpRequests.
         readOnly: true,
         notify: true,
         value: function() {
-          return new Promise(function (resolve, reject) {
+          return new Promise(function(resolve, reject) {
             this.resolveCompletes = resolve;
             this.rejectCompletes = reject;
           }.bind(this));
@@ -193,14 +193,14 @@ iron-request can be used to perform XMLHttpRequests.
      *   timeout: (Number|undefined)
      * @return {Promise}
      */
-    send: function (options) {
+    send: function(options) {
       var xhr = this.xhr;
 
       if (xhr.readyState > 0) {
         return null;
       }
 
-      xhr.addEventListener('progress', function (progress) {
+      xhr.addEventListener('progress', function(progress) {
         this._setProgress({
           lengthComputable: progress.lengthComputable,
           loaded: progress.loaded,
@@ -208,7 +208,7 @@ iron-request can be used to perform XMLHttpRequests.
         });
       }.bind(this))
 
-      xhr.addEventListener('error', function (error) {
+      xhr.addEventListener('error', function(error) {
         this._setErrored(true);
         this._updateStatus();
         var response = options.rejectWithRequest ? {
@@ -218,7 +218,7 @@ iron-request can be used to perform XMLHttpRequests.
         this.rejectCompletes(response);
       }.bind(this));
 
-      xhr.addEventListener('timeout', function (error) {
+      xhr.addEventListener('timeout', function(error) {
         this._setTimedOut(true);
         this._updateStatus();
         var response = options.rejectWithRequest ? {
@@ -228,7 +228,7 @@ iron-request can be used to perform XMLHttpRequests.
         this.rejectCompletes(response);
       }.bind(this));
 
-      xhr.addEventListener('abort', function () {
+      xhr.addEventListener('abort', function() {
         this._setAborted(true);
         this._updateStatus();
         var error = new Error('Request aborted.');
@@ -240,7 +240,7 @@ iron-request can be used to perform XMLHttpRequests.
       }.bind(this));
 
       // Called after all of the above.
-      xhr.addEventListener('loadend', function () {
+      xhr.addEventListener('loadend', function() {
         this._updateStatus();
         this._setResponse(this.parseResponse());
 
@@ -281,7 +281,7 @@ iron-request can be used to perform XMLHttpRequests.
       if (acceptType && !headers['accept']) {
         headers['accept'] = acceptType;
       }
-      Object.keys(headers).forEach(function (requestHeader) {
+      Object.keys(headers).forEach(function(requestHeader) {
         if (/[A-Z]/.test(requestHeader)) {
           Polymer.Base._error('Headers must be lower case, got', requestHeader);
         }
@@ -335,7 +335,7 @@ iron-request can be used to perform XMLHttpRequests.
      * @return {*} The parsed response,
      * or undefined if there was an empty response or parsing failed.
      */
-    parseResponse: function () {
+    parseResponse: function() {
       var xhr = this.xhr;
       var responseType = xhr.responseType || xhr._responseType;
       var preferResponseText = !this.xhr.responseType;
@@ -391,7 +391,7 @@ iron-request can be used to perform XMLHttpRequests.
     /**
      * Aborts the request.
      */
-    abort: function () {
+    abort: function() {
       this._setAborted(true);
       this.xhr.abort();
     },

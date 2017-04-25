@@ -307,7 +307,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         test('the `iron-ajax-presend` event gets fired', function() {
           var spy = sinon.spy();
+          var windowSpy = sinon.spy();
           ajax.addEventListener('iron-ajax-presend', spy);
+          window.addEventListener('iron-ajax-presend', windowSpy);
 
           var request = ajax.generateRequest();
 
@@ -315,6 +317,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           return request.completes.then(function() {
             expect(spy).to.be.calledOnce;
+            expect(windowSpy).not.to.be.called;
           });
         });
 

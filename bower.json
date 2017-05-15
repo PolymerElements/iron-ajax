@@ -20,21 +20,21 @@
   "homepage": "https://github.com/PolymerElements/iron-ajax",
   "ignore": [],
   "dependencies": {
-    "polymer": "Polymer/polymer#^2.0.0-rc.1"
+    "polymer": "Polymer/polymer#1.9 - 2"
   },
   "devDependencies": {
-    "iron-component-page": "polymerelements/iron-component-page#2.0-preview",
-    "iron-image": "polymerelements/iron-image#2.0-preview",
-    "promise-polyfill": "polymerlabs/promise-polyfill#2.0-preview",
-    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0-rc.1",
+    "iron-component-page": "polymerelements/iron-component-page#1 - 2",
+    "iron-image": "polymerelements/iron-image#1 - 2",
+    "promise-polyfill": "polymerlabs/promise-polyfill#1 - 2",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0",
     "test-fixture": "PolymerElements/test-fixture#^3.0.0-rc.1",
-    "web-component-tester": "Polymer/web-component-tester#^6.0.0-prerelease.6"
+    "web-component-tester": "^6.0.0"
   },
   "variants": {
     "1.x": {
       "dependencies": {
         "promise-polyfill": "polymerlabs/promise-polyfill#^1.0.0",
-        "polymer": "Polymer/polymer#^1.5.0"
+        "polymer": "Polymer/polymer#^1.9"
       },
       "devDependencies": {
         "iron-component-page": "polymerelements/iron-component-page#^1.0.0",
@@ -45,8 +45,12 @@
         "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
       },
       "resolutions": {
-        "promise-polyfill": "^1.0.0"
+        "promise-polyfill": "^1.0.0",
+        "webcomponentsjs": "^0.7"
       }
     }
+  },
+  "resolutions": {
+    "webcomponentsjs": "^1.0.0"
   }
 }

@@ -547,9 +547,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(server.requests[0].requestBody).to.be.equal(requestBody);
         });
 
-        test('if `contentType` is set to form encode, the body is encoded',function() {
+        test('if `ctype` is set to form encode, the body is encoded',function() {
           ajax.body = {foo: 'bar\nbip', 'biz bo': 'baz blar'};
-          ajax.contentType = 'application/x-www-form-urlencoded';
+          ajax.ctype = 'application/x-www-form-urlencoded';
           ajax.generateRequest();
 
           expect(server.requests[0]).to.be.ok;
@@ -557,10 +557,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               'foo=bar%0D%0Abip&biz+bo=baz+blar');
         });
 
-        test('if `contentType` is json, the body is json encoded', function() {
+        test('if `ctype` is json, the body is json encoded', function() {
           var requestObj = {foo: 'bar', baz: [1,2,3]}
           ajax.body = requestObj;
-          ajax.contentType = 'application/json';
+          ajax.ctype = 'application/json';
           ajax.generateRequest();
 
           expect(server.requests[0]).to.be.ok;
@@ -571,7 +571,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         suite('the examples in the documentation work', function() {
           test('json content, body attribute is an object', function() {
             ajax.setAttribute('body', '{"foo": "bar baz", "x": 1}');
-            ajax.contentType = 'application/json';
+            ajax.ctype = 'application/json';
             ajax.generateRequest();
 
             expect(server.requests[0]).to.be.ok;
@@ -581,7 +581,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           test('form content, body attribute is an object', function() {
             ajax.setAttribute('body', '{"foo": "bar baz", "x": 1}');
-            ajax.contentType = 'application/x-www-form-urlencoded';
+            ajax.ctype = 'application/x-www-form-urlencoded';
             ajax.generateRequest();
 
             expect(server.requests[0]).to.be.ok;
@@ -590,12 +590,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           });
         });
 
-        suite('and `contentType` is explicitly set to form encode', function() {
+        suite('and `ctype` is explicitly set to form encode', function() {
           test('we encode a custom object', function() {
             function Foo(bar) { this.bar = bar };
             var requestObj = new Foo('baz');
             ajax.body = requestObj;
-            ajax.contentType = 'application/x-www-form-urlencoded';
+            ajax.ctype = 'application/x-www-form-urlencoded';
             ajax.generateRequest();
 
             expect(server.requests[0]).to.be.ok;
@@ -603,7 +603,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           });
         })
 
-        suite('and `contentType` isn\'t set', function() {
+        suite('and `ctype` isn\'t set', function() {
           test('we don\'t try to encode an ArrayBuffer', function() {
             var requestObj = new ArrayBuffer()
             ajax.body = requestObj;
@@ -806,7 +806,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           server.restore();
           var ajax = fixture('RealPost');
           ajax.body = JSON.stringify({a: 'foo', b: 'bar'});
-          ajax.contentType = 'application/json';
+          ajax.ctype = 'application/json';
           return ajax.generateRequest().completes.then(function() {
             expect(ajax.lastResponse.headers['Content-Type']).to.match(
                 /^application\/json(;.*)?$/);

@@ -116,7 +116,7 @@ element.
        *         handle-as="json"></iron-ajax>
        *
        * Note: setting a `Content-Type` header here will override the value
-       * specified by the `contentType` property of this element.
+       * specified by the `ctype` property of this element.
        */
       headers: {
         type: Object,
@@ -126,13 +126,13 @@ element.
       },
 
       /**
-       * Content type to use when sending data. If the `contentType` property
+       * Content type to use when sending data. If the `ctype` property
        * is set and a `Content-Type` header is specified in the `headers`
        * property, the `headers` property value will take precedence.
        *
        * Varies the handling of the `body` param.
        */
-      contentType: {
+      ctype: {
         type: String,
         value: null
       },
@@ -342,7 +342,7 @@ element.
     },
 
     observers: [
-      '_requestOptionsChanged(url, method, params.*, headers, contentType, ' +
+      '_requestOptionsChanged(url, method, params.*, headers, ctype, ' +
           'body, sync, handleAs, jsonPrefix, withCredentials, timeout, auto)'
     ],
 
@@ -402,12 +402,12 @@ element.
      */
     get requestHeaders() {
       var headers = {};
-      var contentType = this.contentType;
-      if (contentType == null && (typeof this.body === 'string')) {
-        contentType = 'application/x-www-form-urlencoded';
+      var ctype = this.ctype;
+      if (ctype == null && (typeof this.body === 'string')) {
+        ctype = 'application/x-www-form-urlencoded';
       }
-      if (contentType) {
-        headers['content-type'] = contentType;
+      if (ctype) {
+        headers['content-type'] = ctype;
       }
       var header;
 

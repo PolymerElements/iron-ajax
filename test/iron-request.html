@@ -295,7 +295,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
           ];
 
-          for (var testCase of testCases) {
+          var testCase;
+          for (var i = 0; i < testCases.length; i++) {
+            testCase = testCases[i];
             var encoded = request._wwwFormUrlEncodePiece(testCase.test);
 
             expect(encoded).to.be.equal(testCase.answer);

@@ -206,7 +206,7 @@ iron-request can be used to perform XMLHttpRequests.
           loaded: progress.loaded,
           total: progress.total
         });
-      }.bind(this))
+      }.bind(this));
 
       xhr.addEventListener('error', function(error) {
         this._setErrored(true);

@@ -478,13 +478,13 @@ element.
       var request = /** @type {!IronRequestElement} */ (document.createElement('iron-request'));
       var requestOptions = this.toRequestOptions();
 
-      console.log(request.progress);
       if (this.lastRequest) {
-        this.lastRequest.removeEventListener('progress-changed',
+        this.lastRequest.removeEventListener('iron-request-progress-changed',
               this._boundOnProgressChanged);
       }
 
-      request.addEventListener('progress-changed', this._boundOnProgressChanged);
+      request.addEventListener('iron-request-progress-changed',
+          this._boundOnProgressChanged);
 
       this.push('activeRequests', request);
 

@@ -969,23 +969,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           server.restore();
         });
 
-        test('lastProgress is set', function(done) {
-          ajax = fixture('TrivialGet');
-
-          ajax.generateRequest();
-
-          expect(ajax.lastProgress).to.be.eql({});
-
-          server.respond();
-          ajax.addEventListener('last-progress-changed', function() {
-            expect(ajax.lastProgress.lengthComputable).to.be.equal(true);
-            expect(ajax.lastProgress.loaded).to.be.equal(ajax.lastProgress.total);
-            expect(ajax.lastProgress.loaded).to.be.ok;
-            expect(ajax.lastProgress.total).to.be.ok;
-            done();
-          });
-        });
-
         test('lastProgress is same as lastRequest', function(done) {
           ajax = fixture('TrivialGet');
 
@@ -996,11 +979,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           server.respond();
 
-          Polymer.Base.async(function() {
+          ajax.addEventListener('last-progress-changed', function() {
             expect(ajax.lastProgress.total).to.not.be.undefined;
             expect(ajax.lastProgress).to.be.equal(ajax.lastRequest.progress);
             done();
-          }, 500);
+          });
         });
       });
     });

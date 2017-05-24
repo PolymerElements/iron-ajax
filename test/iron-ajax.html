@@ -977,16 +977,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(ajax.lastProgress).to.be.eql({});
 
           server.respond();
-          Polymer.Base.async(function() {
-
+          ajax.addEventListener('last-progress-changed', function() {
             expect(ajax.lastProgress.lengthComputable).to.be.equal(true);
-            console.log(ajax.lastProgress.loaded);
-            console.log(ajax.lastProgress.total);
             expect(ajax.lastProgress.loaded).to.be.equal(ajax.lastProgress.total);
             expect(ajax.lastProgress.loaded).to.be.ok;
             expect(ajax.lastProgress.total).to.be.ok;
             done();
-          }, 500);
+          });
         });
 
         test('lastProgress is same as lastRequest', function(done) {

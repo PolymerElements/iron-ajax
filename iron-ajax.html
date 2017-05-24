@@ -358,6 +358,10 @@ element.
           'body, sync, handleAs, jsonPrefix, withCredentials, timeout, auto)'
     ],
 
+    created: function() {
+      this._boundOnProgressChanged = this._onProgressChanged.bind(this);
+    },
+
     /**
      * The query string that should be appended to the `url`, serialized from
      * the current value of `params`.
@@ -473,8 +477,14 @@ element.
     generateRequest: function() {
       var request = /** @type {!IronRequestElement} */ (document.createElement('iron-request'));
       var requestOptions = this.toRequestOptions();
-      
-      this.listen(request, 'progress-changed', '_onProgressChanged');
+
+      console.log(request.progress);
+      if (this.lastRequest) {
+        this.lastRequest.removeEventListener('progress-changed',
+              this._boundOnProgressChanged);
+      }
+
+      request.addEventListener('progress-changed', this._boundOnProgressChanged);
 
       this.push('activeRequests', request);
 
@@ -522,8 +532,6 @@ element.
     },
 
     _handleResponse: function(request) {
-      this.unlisten(this.lastRequest, 'progress-changed', '_onProgressChanged');
-
       if (request === this.lastRequest) {
         this._setLastResponse(request.response);
         this._setLastError(null);
@@ -540,8 +548,6 @@ element.
     },
 
     _handleError: function(request, error) {
-      this.unlisten(this.lastRequest, 'progress-changed', '_onProgressChanged');
-
       if (this.verbose) {
         Polymer.Base._error(error);
       }

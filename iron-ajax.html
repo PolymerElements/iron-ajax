@@ -411,7 +411,7 @@ element.
       }
       var header;
 
-      if (this.headers instanceof Object) {
+      if (typeof this.headers === 'object') {
         for (header in this.headers) {
           headers[header] = this.headers[header].toString();
         }

@@ -207,7 +207,7 @@ iron-request can be used to perform XMLHttpRequests.
           total: progress.total
         });
 
-        // Webcomponents v1 spec does not fire events when not connected
+        // Webcomponents v1 spec does not fire *-changed events when not connected
         this.fire('iron-request-progress-changed', { value: this.progress });
       }.bind(this))
 

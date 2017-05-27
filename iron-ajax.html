@@ -478,14 +478,6 @@ element.
       var request = /** @type {!IronRequestElement} */ (document.createElement('iron-request'));
       var requestOptions = this.toRequestOptions();
 
-      if (this.lastRequest) {
-        this.lastRequest.removeEventListener('iron-request-progress-changed',
-              this._boundOnProgressChanged);
-      }
-
-      request.addEventListener('iron-request-progress-changed',
-          this._boundOnProgressChanged);
-
       this.push('activeRequests', request);
 
       request.completes.then(
@@ -507,8 +499,15 @@ element.
         return request;
       }
 
-      request.send(requestOptions);
+      if (this.lastRequest) {
+        this.lastRequest.removeEventListener('iron-request-progress-changed',
+                this._boundOnProgressChanged);
+      }
 
+      request.addEventListener('iron-request-progress-changed',
+          this._boundOnProgressChanged);
+
+      request.send(requestOptions);
       this._setLastRequest(request);
       this._setLoading(true);
 

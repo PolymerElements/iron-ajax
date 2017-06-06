@@ -192,11 +192,25 @@ iron-request can be used to perform XMLHttpRequests.
      *     withCredentials Whether or not to send credentials on the request. Default is false.
      *   timeout: (Number|undefined)
      * @return {Promise}
+     *
+     * @fires iron-request-presend
      */
     send: function(options) {
       var xhr = this.xhr;
 
       if (xhr.readyState > 0) {
+        return null;
+      }
+        
+      var cancelled = !this.dispatchEvent(new CustomEvent('iron-request-presend', {
+          detail: {
+              xhr: xhr,
+              options: options
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true));
+      if (cancelled) {
         return null;
       }
 

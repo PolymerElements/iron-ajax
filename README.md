@@ -22,6 +22,16 @@ _[Demo and API docs](https://elements.polymer-project.org/elements/iron-ajax)_
 
 TODO: remove flag in #265 when we can introduce breaking changes
 
+## Hybrid elements
+
+To use as a hybrid element with Polymer 1.x, you must now include the Promise polyfill as it is not included with the required version of the webcomponentsjs polyfills.
+
+i.e.
+`bower install --save polymerlabs/promise-polyfill#1.0.1`
+```html
+<link rel="import" href="../bower_components/promise-polyfill/promise-polyfill.html">
+```
+
 ## &lt;iron-ajax&gt;
 
 The `iron-ajax` element exposes network request functionality.

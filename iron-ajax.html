@@ -44,6 +44,12 @@ element.
     is: 'iron-ajax',
 
     /**
+     * Fired before a request is sent.
+     *
+     * @event iron-ajax-presend
+     */
+
+    /**
      * Fired when a request is sent.
      *
      * @event request
@@ -318,21 +324,21 @@ element.
         value: false
       },
 
+      /**
+       * Changes the completes promise chain from generateRequest to reject with an object
+       *  containing the error message as well as the request.
+       */
+      rejectWithRequest: {
+        type: Boolean,
+        value: false
+      },
+
       _boundHandleResponse: {
         type: Function,
         value: function() {
           return this._handleResponse.bind(this);
         }
-      },
-
-      /**
-       * Manages whether iron-request should listen to this.xhr or this.xhr.upload
-	   * for progress events
-       */
-      isUpload: {
-		type: Boolean,
-		value: false
-	  }
+      }
     },
 
     observers: [
@@ -405,7 +411,7 @@ element.
       }
       var header;
 
-      if (this.headers instanceof Object) {
+      if (typeof this.headers === 'object') {
         for (header in this.headers) {
           headers[header] = this.headers[header].toString();
         }
@@ -438,7 +444,8 @@ element.
         handleAs: this.handleAs,
         jsonPrefix: this.jsonPrefix,
         withCredentials: this.withCredentials,
-        timeout: this.timeout
+        timeout: this.timeout,
+        rejectWithRequest: this.rejectWithRequest,
       };
     },
 
@@ -451,8 +458,6 @@ element.
       var request = /** @type {!IronRequestElement} */ (document.createElement('iron-request'));
       var requestOptions = this.toRequestOptions();
 
-	  request.isUpload = this.isUpload;
-
       this.push('activeRequests', request);
 
       request.completes.then(
@@ -462,6 +467,17 @@ element.
       ).then(
         this._discardRequest.bind(this, request)
       );
+
+      var evt = this.fire('iron-ajax-presend', {
+        request: request,
+        options: requestOptions
+      }, {bubbles: this.bubbles, cancelable: true});
+
+      if (evt.defaultPrevented) {
+        request.abort();
+        request.rejectCompletes(request);
+        return request;
+      }
 
       request.send(requestOptions);
 

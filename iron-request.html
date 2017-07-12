@@ -114,6 +114,21 @@ iron-request can be used to perform XMLHttpRequests.
       },
 
       /**
+       * An object that contains upload progress information emitted by the XHR if
+       * available.
+       *
+       * @default {}
+       */
+      uploadProgress: {
+        type: Object,
+        notify: true,
+        readOnly: true,
+        value: function() {
+          return {};
+        }
+      },
+
+      /**
        * Aborted will be true if an abort of the request is attempted.
        */
       aborted: {
@@ -202,6 +217,14 @@ iron-request can be used to perform XMLHttpRequests.
 
       xhr.addEventListener('progress', function(progress) {
         this._setProgress({
+          lengthComputable: progress.lengthComputable,
+          loaded: progress.loaded,
+          total: progress.total
+        });
+      }.bind(this));
+
+      xhr.upload.addEventListener('progress', function(progress) {
+        this._setUploadProgress({
           lengthComputable: progress.lengthComputable,
           loaded: progress.loaded,
           total: progress.total

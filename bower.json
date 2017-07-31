@@ -33,7 +33,7 @@
   "variants": {
     "1.x": {
       "dependencies": {
-        "promise-polyfill": "polymerlabs/promise-polyfill#^1.0.0",
+        "promise-polyfill": "PolymerLabs/promise-polyfill#^1.0.0",
         "polymer": "Polymer/polymer#^1.9"
       },
       "devDependencies": {

@@ -266,6 +266,43 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           expect(request.succeeded).to.be.equal(true);
         });
+
+        test('special form characters', function() {
+          var testCases = [
+            {
+              test: null,
+              answer: ''
+            },
+            {
+              test: undefined,
+              answer: ''
+            },
+            {
+              test: NaN,
+              answer: 'NaN'
+            },
+            {
+              test: new String('\n\r\n\r'),
+              answer: '%0D%0A%0D%0A%0D' // \r\n\r\n\r
+            },
+            {
+              test: 0,
+              answer: '0'
+            },
+            {
+              test: new String('hello world'),
+              answer: 'hello+world'
+            }
+          ];
+
+          var testCase;
+          for (var i = 0; i < testCases.length; i++) {
+            testCase = testCases[i];
+            var encoded = request._wwwFormUrlEncodePiece(testCase.test);
+
+            expect(encoded).to.be.equal(testCase.answer);
+          }
+        });
       });
 
       suite('errors', function() {

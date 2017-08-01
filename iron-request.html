@@ -407,6 +407,9 @@ iron-request can be used to perform XMLHttpRequests.
       if (typeof body == 'string') {
         return body;  // Already encoded.
       }
+      if (body === null) {
+        return ''; // No need for stringify or encode
+      }
       var bodyObj = /** @type {Object} */ (body);
       switch(contentType) {
         case('application/json'):

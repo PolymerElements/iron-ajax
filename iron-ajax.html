@@ -424,7 +424,7 @@ element.
      * Request options suitable for generating an `iron-request` instance based
      * on the current state of the `iron-ajax` instance's properties.
      *
-     * @return {{
+     * @return {
      *   url: string,
      *   method: (string|undefined),
      *   async: (boolean|undefined),
@@ -432,7 +432,8 @@ element.
      *   headers: (Object|undefined),
      *   handleAs: (string|undefined),
      *   jsonPrefix: (string|undefined),
-     *   withCredentials: (boolean|undefined)}}
+     *   withCredentials: (boolean|undefined)
+     * }
      */
     toRequestOptions: function() {
       return {

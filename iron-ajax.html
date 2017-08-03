@@ -424,28 +424,31 @@ element.
      * Request options suitable for generating an `iron-request` instance based
      * on the current state of the `iron-ajax` instance's properties.
      *
-     * @return {{
-     *   url: string,
-     *   method: (string|undefined),
+     * @return {
      *   async: (boolean|undefined),
      *   body: (ArrayBuffer|ArrayBufferView|Blob|Document|FormData|null|string|undefined|Object),
-     *   headers: (Object|undefined),
+     *   method: (string|undefined),
      *   handleAs: (string|undefined),
+     *   headers: (Object|undefined),
      *   jsonPrefix: (string|undefined),
-     *   withCredentials: (boolean|undefined)}}
+     *   rejectWithRequest: (boolean|undefined),
+     *   url: string,
+     *   timeout: (number|undefined)
+     *   withCredentials: (boolean|undefined)
+     *  }
      */
     toRequestOptions: function() {
       return {
-        url: this.requestUrl || '',
-        method: this.method,
-        headers: this.requestHeaders,
-        body: this.body,
         async: !this.sync,
+        body: this.body,
+        method: this.method,
         handleAs: this.handleAs,
+        headers: this.requestHeaders,
         jsonPrefix: this.jsonPrefix,
-        withCredentials: this.withCredentials,
-        timeout: this.timeout,
         rejectWithRequest: this.rejectWithRequest,
+        timeout: this.timeout,
+        url: this.requestUrl || '',
+        withCredentials: this.withCredentials,
       };
     },
 

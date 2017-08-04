@@ -22,7 +22,7 @@ _[Demo and API docs](https://elements.polymer-project.org/elements/iron-ajax)_
 
     `iron-ajax` uses the `Promise` API, which is not yet supported in all browsers.
 
-    The 1.x version of `iron-ajax` automatically loaded the promise polyfill. This was 
+    The 1.x version of `iron-ajax` automatically loaded the promise polyfill. This 
     forced the application to include the polyfill, whether or not it was needed.
 
     When using `iron-ajax` 2.x with Polymer 1.x, you must provide your own Promise polyfill, 

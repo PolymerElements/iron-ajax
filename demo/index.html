@@ -14,10 +14,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <title>iron-ajax</title>
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-  <link rel="import" href="../../polymer/polymer.html">
-  <link rel="import" href="../../promise-polyfill/promise-polyfill.html">
-  <link rel="import" href="../iron-ajax.html">
-  <link rel="import" href="../../iron-image/iron-image.html">
+  <script type="module" src="../../polymer/polymer.js"></script>
+  <script type="module" src="../../promise-polyfill/promise-polyfill.js"></script>
+  <script type="module" src="../iron-ajax.js"></script>
+  <script type="module" src="../../iron-image/iron-image.js"></script>
 </head>
 <body unresolved>
   <h1>Video Feed</h1>
@@ -69,17 +69,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </div>
     </template>
 
-    <script>
-      window.addEventListener('WebComponentsReady', function() {
-        Polymer({
-          is: 'iron-ajax-demo',
+    <script type="module">
+import '../../polymer/polymer.js';
+import '../../promise-polyfill/promise-polyfill.js';
+import '../iron-ajax.js';
+import '../../iron-image/iron-image.js';
+import { Polymer } from '../../polymer/lib/legacy/polymer-fn.js';
+Polymer({
+  is: 'iron-ajax-demo',
 
-          url: function(videoId) {
-            return 'https://www.youtube.com/watch?v=' + videoId;
-          }
-        });
-      })
-    </script>
+  url: function(videoId) {
+    return 'https://www.youtube.com/watch?v=' + videoId;
+  }
+});
+</script>
   </dom-module>
 
   <iron-ajax-demo></iron-ajax-demo>

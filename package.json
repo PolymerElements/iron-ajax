@@ -1,0 +1,25 @@
+{
+  "name": "@polymer/iron-ajax",
+  "flat": true,
+  "version": "3.0.0-pre.1",
+  "description": "Makes it easy to make ajax calls and parse the response",
+  "contributors": [
+    "The Polymer Authors"
+  ],
+  "keywords": [
+    "web-components",
+    "polymer",
+    "ajax"
+  ],
+  "main": "iron-ajax.html",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/PolymerElements/iron-ajax.git"
+  },
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "homepage": "https://github.com/PolymerElements/iron-ajax",
+  "dependencies": {
+    "@polymer/polymer": "^3.0.0-pre.1"
+  },
+  "devDependencies": {}
+}

@@ -436,11 +436,16 @@ iron-request can be used to perform XMLHttpRequests.
       }
       var pieces = [];
       Object.keys(object).forEach(function(key) {
-        // TODO(rictic): handle array values here, in a consistent way with
-        //   iron-ajax params.
-        pieces.push(
-            this._wwwFormUrlEncodePiece(key) + '=' +
-            this._wwwFormUrlEncodePiece(object[key]));
+        if( !Array.isArray(object[key]))  {
+            // Cast to array.
+            object[key] = [object[key]];
+        }
+
+        for( var i = 0; i < object[key].length; i++ ) {
+          pieces.push(
+              this._wwwFormUrlEncodePiece(key) + '=' +
+              this._wwwFormUrlEncodePiece(object[key][i]));
+        }
       }, this);
       return pieces.join('&');
     },

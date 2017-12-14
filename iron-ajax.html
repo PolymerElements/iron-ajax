@@ -454,10 +454,10 @@ element.
     /**
      * Performs an AJAX request to the specified URL.
      *
-     * @return {!IronRequestElement}
+     * @return {IronRequestElement}
      */
     generateRequest: function() {
-      var request = /** @type {!IronRequestElement} */ (document.createElement('iron-request'));
+      var request = /** @type {IronRequestElement} */ (document.createElement('iron-request'));
       var requestOptions = this.toRequestOptions();
 
       this.push('activeRequests', request);

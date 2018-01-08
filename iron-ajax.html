@@ -507,6 +507,8 @@ element.
       request.addEventListener('iron-request-progress-changed',
           this._boundOnProgressChanged);
 
+      this._setLastProgress({});
+
       request.send(requestOptions);
       this._setLastRequest(request);
       this._setLoading(true);

@@ -979,6 +979,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           server.respond();
 
+          expect(ajax.lastProgress).to.be.eql({});
+
           ajax.addEventListener('last-progress-changed', function() {
             expect(ajax.lastProgress.total).to.not.be.undefined;
             expect(ajax.lastProgress).to.be.equal(ajax.lastRequest.progress);

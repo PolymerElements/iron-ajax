@@ -241,10 +241,7 @@ element.
       lastProgress: {
         type: Object,
         notify: true,
-        readOnly: true,
-        value: function() {
-          return {};
-        }
+        readOnly: true
       },
 
       /**
@@ -507,9 +504,8 @@ element.
       request.addEventListener('iron-request-progress-changed',
           this._boundOnProgressChanged);
 
-      this._setLastProgress({});
-
       request.send(requestOptions);
+      this._setLastProgress(null);
       this._setLastRequest(request);
       this._setLoading(true);
 

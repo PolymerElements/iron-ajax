@@ -1,0 +1,10 @@
+{
+  "name": "@polymer/iron-ajax",
+  "private": true,
+  "description": "Makes it easy to make ajax calls and parse the response",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/PolymerElements/iron-ajax.git"
+  },
+  "license": "http://polymer.github.io/LICENSE.txt"
+}

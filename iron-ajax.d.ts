@@ -33,7 +33,6 @@
  * element.
  */
 interface IronAjaxElement extends Polymer.Element {
-  hostAttributes: object|null;
 
   /**
    * The URL target of the request.
@@ -211,34 +210,35 @@ interface IronAjaxElement extends Polymer.Element {
   bubbles: boolean|null|undefined;
 
   /**
-   * Changes the [`completes`](iron-request#property-completes) promise chain 
+   * Changes the [`completes`](iron-request#property-completes) promise chain
    * from `generateRequest` to reject with an object
    * containing the original request, as well an error message.
    * If false (default), the promise rejects with an error message only.
    */
   rejectWithRequest: boolean|null|undefined;
   _boundHandleResponse: Function|null|undefined;
+  hostAttributes: object|null;
 
   /**
    * The query string that should be appended to the `url`, serialized from
    * the current value of `params`.
    */
-  queryString: object|null;
+  readonly queryString: string;
 
   /**
    * The `url` with query string (if `params` are specified), suitable for
    * providing to an `iron-request` instance.
    */
-  requestUrl: object|null;
+  readonly requestUrl: string;
 
   /**
    * An object that maps header names to header values, first applying the
    * the value of `Content-Type` and then overlaying the headers specified
    * in the `headers` property.
    */
-  requestHeaders: object|null;
-  created(): any;
-  _onProgressChanged(event: any): any;
+  readonly requestHeaders: object|null;
+  created(): void;
+  _onProgressChanged(event: any): void;
 
   /**
    * Request options suitable for generating an `iron-request` instance based
@@ -250,10 +250,10 @@ interface IronAjaxElement extends Polymer.Element {
    * Performs an AJAX request to the specified URL.
    */
   generateRequest(): IronRequestElement;
-  _handleResponse(request: any): any;
-  _handleError(request: any, error: any): any;
-  _discardRequest(request: any): any;
-  _requestOptionsChanged(): any;
+  _handleResponse(request: any): void;
+  _handleError(request: any, error: any): void;
+  _discardRequest(request: any): void;
+  _requestOptionsChanged(): void;
 }
 
 interface HTMLElementTagNameMap {

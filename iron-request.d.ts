@@ -18,7 +18,6 @@
  *     this.$.xhr.send({url: url, body: params});
  */
 interface IronRequestElement extends Polymer.Element {
-  hostAttributes: object|null;
 
   /**
    * A reference to the XMLHttpRequest instance used to generate the
@@ -74,6 +73,7 @@ interface IronRequestElement extends Polymer.Element {
    * TimedOut will be true if the XHR threw a timeout event.
    */
   readonly timedOut: boolean|null|undefined;
+  hostAttributes: object|null;
 
   /**
    * Succeeded is true if the request succeeded. The request succeeded if it
@@ -83,7 +83,7 @@ interface IronRequestElement extends Polymer.Element {
    * The status code 0 is accepted as a success because some schemes - e.g.
    * file:// - don't provide status codes.
    */
-  succeeded: object|null;
+  readonly succeeded: boolean;
 
   /**
    * Sends an HTTP request to the server and returns a promise (see the `completes`
@@ -118,7 +118,7 @@ interface IronRequestElement extends Polymer.Element {
   /**
    * Aborts the request.
    */
-  abort(): any;
+  abort(): void;
 
   /**
    * @param body The given body of the request to try and encode.
@@ -144,7 +144,7 @@ interface IronRequestElement extends Polymer.Element {
   /**
    * Updates the status code and status text.
    */
-  _updateStatus(): any;
+  _updateStatus(): void;
 }
 
 interface HTMLElementTagNameMap {

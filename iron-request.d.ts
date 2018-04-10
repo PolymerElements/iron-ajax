@@ -86,22 +86,24 @@ interface IronRequestElement extends Polymer.Element {
   readonly succeeded: boolean;
 
   /**
-   * Sends an HTTP request to the server and returns a promise (see the `completes`
-   * property for details).
+   * Sends an HTTP request to the server and returns a promise (see the
+   * `completes` property for details).
    *
    * The handling of the `body` parameter will vary based on the Content-Type
    * header. See the docs for iron-ajax's `body` property for details.
    *
    * @param options   - url The url to which the request is sent.
    *   - method The HTTP method to use, default is GET.
-   *   - async By default, all requests are sent asynchronously. To send synchronous requests,
-   *         set to false.
+   *   - async By default, all requests are sent asynchronously. To send
+   * synchronous requests, set to false.
    *   -  body The content for the request body for POST method.
    *   -  headers HTTP request headers.
    *   -  handleAs The response type. Default is 'text'.
-   *   -  withCredentials Whether or not to send credentials on the request. Default is false.
+   *   -  withCredentials Whether or not to send credentials on the request.
+   * Default is false.
    *   -  timeout - Timeout for request, in milliseconds.
-   *   -  rejectWithRequest Set to true to include the request object with promise rejections.
+   *   -  rejectWithRequest Set to true to include the request object with
+   * promise rejections.
    */
   send(options: {url: string, method?: string, async?: boolean, body?: ArrayBuffer|ArrayBufferView|Blob|Document|FormData|string|object|null, headers?: object|null, handleAs?: string, jsonPrefix?: string, withCredentials?: boolean, timeout?: Number|null, rejectWithRequest?: boolean}): Promise<any>|null;
 

@@ -23,9 +23,7 @@ iron-request can be used to perform XMLHttpRequests.
   Polymer({
     is: 'iron-request',
 
-    hostAttributes: {
-      hidden: true
-    },
+    hostAttributes: {hidden: true},
 
     properties: {
 
@@ -63,22 +61,12 @@ iron-request can be used to perform XMLHttpRequests.
       /**
        * A reference to the status code, if the `xhr` has completely resolved.
        */
-      status: {
-        type: Number,
-        notify: true,
-        readOnly: true,
-        value: 0
-      },
+      status: {type: Number, notify: true, readOnly: true, value: 0},
 
       /**
        * A reference to the status text, if the `xhr` has completely resolved.
        */
-      statusText: {
-        type: String,
-        notify: true,
-        readOnly: true,
-        value: ''
-      },
+      statusText: {type: String, notify: true, readOnly: true, value: ''},
 
       /**
        * A promise that resolves when the `xhr` response comes back, or rejects
@@ -132,22 +120,12 @@ iron-request can be used to perform XMLHttpRequests.
        * Errored will be true if the browser fired an error event from the
        * XHR object (mainly network errors).
        */
-      errored: {
-        type: Boolean,
-        notify: true,
-        readOnly: true,
-        value: false
-      },
+      errored: {type: Boolean, notify: true, readOnly: true, value: false},
 
       /**
        * TimedOut will be true if the XHR threw a timeout event.
        */
-      timedOut: {
-        type: Boolean,
-        notify: true,
-        readOnly: true,
-        value: false
-      }
+      timedOut: {type: Boolean, notify: true, readOnly: true, value: false}
     },
 
     /**
@@ -168,13 +146,12 @@ iron-request can be used to perform XMLHttpRequests.
 
       // Note: if we are using the file:// protocol, the status code will be 0
       // for all outcomes (successful or otherwise).
-      return status === 0 ||
-        (status >= 200 && status < 300);
+      return status === 0 || (status >= 200 && status < 300);
     },
 
     /**
-     * Sends an HTTP request to the server and returns a promise (see the `completes`
-     * property for details).
+     * Sends an HTTP request to the server and returns a promise (see the
+     * `completes` property for details).
      *
      * The handling of the `body` parameter will vary based on the Content-Type
      * header. See the docs for iron-ajax's `body` property for details.
@@ -183,7 +160,8 @@ iron-request can be used to perform XMLHttpRequests.
      *   url: string,
      *   method: (string|undefined),
      *   async: (boolean|undefined),
-     *   body: (ArrayBuffer|ArrayBufferView|Blob|Document|FormData|null|string|undefined|Object),
+     *   body:
+     * (ArrayBuffer|ArrayBufferView|Blob|Document|FormData|null|string|undefined|Object),
      *   headers: (Object|undefined),
      *   handleAs: (string|undefined),
      *   jsonPrefix: (string|undefined),
@@ -192,14 +170,16 @@ iron-request can be used to perform XMLHttpRequests.
      *   rejectWithRequest: (boolean|undefined)}} options -
      *   - url The url to which the request is sent.
      *   - method The HTTP method to use, default is GET.
-     *   - async By default, all requests are sent asynchronously. To send synchronous requests,
-     *         set to false.
+     *   - async By default, all requests are sent asynchronously. To send
+     * synchronous requests, set to false.
      *   -  body The content for the request body for POST method.
      *   -  headers HTTP request headers.
      *   -  handleAs The response type. Default is 'text'.
-     *   -  withCredentials Whether or not to send credentials on the request. Default is false.
+     *   -  withCredentials Whether or not to send credentials on the request.
+     * Default is false.
      *   -  timeout - Timeout for request, in milliseconds.
-     *   -  rejectWithRequest Set to true to include the request object with promise rejections.
+     *   -  rejectWithRequest Set to true to include the request object with
+     * promise rejections.
      * @return {Promise}
      */
     send: function(options) {
@@ -217,26 +197,22 @@ iron-request can be used to perform XMLHttpRequests.
         });
 
         // Webcomponents v1 spec does not fire *-changed events when not connected
-        this.fire('iron-request-progress-changed', { value: this.progress });
+        this.fire('iron-request-progress-changed', {value: this.progress});
       }.bind(this))
 
       xhr.addEventListener('error', function(error) {
         this._setErrored(true);
         this._updateStatus();
-        var response = options.rejectWithRequest ? {
-          error: error,
-          request: this
-        } : error;
+        var response =
+            options.rejectWithRequest ? {error: error, request: this} : error;
         this.rejectCompletes(response);
       }.bind(this));
 
       xhr.addEventListener('timeout', function(error) {
         this._setTimedOut(true);
         this._updateStatus();
-        var response = options.rejectWithRequest ? {
-          error: error,
-          request: this
-        } : error;
+        var response =
+            options.rejectWithRequest ? {error: error, request: this} : error;
         this.rejectCompletes(response);
       }.bind(this));
 
@@ -244,10 +220,8 @@ iron-request can be used to perform XMLHttpRequests.
         this._setAborted(true);
         this._updateStatus();
         var error = new Error('Request aborted.');
-        var response = options.rejectWithRequest ? {
-          error: error,
-          request: this
-        } : error;
+        var response =
+            options.rejectWithRequest ? {error: error, request: this} : error;
         this.rejectCompletes(response);
       }.bind(this));
 
@@ -257,11 +231,10 @@ iron-request can be used to perform XMLHttpRequests.
         this._setResponse(this.parseResponse());
 
         if (!this.succeeded) {
-          var error = new Error('The request failed with status code: ' + this.xhr.status);
-          var response = options.rejectWithRequest ? {
-            error: error,
-            request: this
-          } : error;
+          var error = new Error(
+              'The request failed with status code: ' + this.xhr.status);
+          var response =
+              options.rejectWithRequest ? {error: error, request: this} : error;
           this.rejectCompletes(response);
           return;
         }
@@ -271,11 +244,7 @@ iron-request can be used to perform XMLHttpRequests.
 
       this.url = options.url;
       var isXHRAsync = options.async !== false;
-      xhr.open(
-        options.method || 'GET',
-        options.url,
-        isXHRAsync
-      );
+      xhr.open(options.method || 'GET', options.url, isXHRAsync);
 
       var acceptType = {
         'json': 'application/json',
@@ -298,10 +267,7 @@ iron-request can be used to perform XMLHttpRequests.
         if (/[A-Z]/.test(requestHeader)) {
           Polymer.Base._error('Headers must be lower case, got', requestHeader);
         }
-        xhr.setRequestHeader(
-          requestHeader,
-          headers[requestHeader]
-        );
+        xhr.setRequestHeader(requestHeader, headers[requestHeader]);
       }, this);
 
       if (isXHRAsync) {
@@ -331,9 +297,11 @@ iron-request can be used to perform XMLHttpRequests.
       var body = this._encodeBodyObject(options.body, headers['content-type']);
 
       xhr.send(
-        /** @type {ArrayBuffer|ArrayBufferView|Blob|Document|FormData|
-                   null|string|undefined} */
-        (body));
+          /**
+             @type {ArrayBuffer|ArrayBufferView|Blob|Document|FormData|
+                     null|string|undefined}
+           */
+          (body));
 
       return this.completes;
     },
@@ -421,10 +389,10 @@ iron-request can be used to perform XMLHttpRequests.
         return body;  // Already encoded.
       }
       var bodyObj = /** @type {Object} */ (body);
-      switch(contentType) {
-        case('application/json'):
+      switch (contentType) {
+        case ('application/json'):
           return JSON.stringify(bodyObj);
-        case('application/x-www-form-urlencoded'):
+        case ('application/x-www-form-urlencoded'):
           return this._wwwFormUrlEncode(bodyObj);
       }
       return body;
@@ -461,7 +429,7 @@ iron-request can be used to perform XMLHttpRequests.
       }
 
       return encodeURIComponent(str.toString().replace(/\r?\n/g, '\r\n'))
-        .replace(/%20/g, '+');
+          .replace(/%20/g, '+');
     },
 
     /**
@@ -469,7 +437,8 @@ iron-request can be used to perform XMLHttpRequests.
      */
     _updateStatus: function() {
       this._setStatus(this.xhr.status);
-      this._setStatusText((this.xhr.statusText === undefined) ? '' : this.xhr.statusText);
+      this._setStatusText(
+          (this.xhr.statusText === undefined) ? '' : this.xhr.statusText);
     }
   });
 </script>

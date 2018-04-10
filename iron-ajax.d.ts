@@ -183,7 +183,8 @@ interface IronAjaxElement extends Polymer.Element {
   readonly activeRequests: any[]|null|undefined;
 
   /**
-   * Length of time in milliseconds to debounce multiple automatically generated requests.
+   * Length of time in milliseconds to debounce multiple automatically
+   * generated requests.
    */
   debounceDuration: number|null|undefined;
 
@@ -198,12 +199,13 @@ interface IronAjaxElement extends Polymer.Element {
   jsonPrefix: string|null|undefined;
 
   /**
-   * By default, iron-ajax's events do not bubble. Setting this attribute will cause its
-   * request and response events as well as its iron-ajax-request, -response,  and -error
-   * events to bubble to the window object. The vanilla error event never bubbles when
-   * using shadow dom even if this.bubbles is true because a scoped flag is not passed with
-   * it (first link) and because the shadow dom spec did not used to allow certain events,
-   * including events named error, to leak outside of shadow trees (second link).
+   * By default, iron-ajax's events do not bubble. Setting this attribute will
+   * cause its request and response events as well as its iron-ajax-request,
+   * -response,  and -error events to bubble to the window object. The vanilla
+   * error event never bubbles when using shadow dom even if this.bubbles is
+   * true because a scoped flag is not passed with it (first link) and because
+   * the shadow dom spec did not used to allow certain events, including
+   * events named error, to leak outside of shadow trees (second link).
    * https://www.w3.org/TR/shadow-dom/#scoped-flag
    * https://www.w3.org/TR/2015/WD-shadow-dom-20151215/#events-that-are-not-leaked-into-ancestor-trees
    */

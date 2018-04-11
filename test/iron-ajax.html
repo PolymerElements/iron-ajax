@@ -560,7 +560,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             });
 
         test('if `contentType` is json, the body is json encoded', function() {
-          var requestObj = {foo: 'bar', baz: [1, 2, 3]} ajax.body = requestObj;
+          var requestObj = {foo: 'bar', baz: [1, 2, 3]};
+          ajax.body = requestObj;
           ajax.contentType = 'application/json';
           ajax.generateRequest();
 

@@ -85,17 +85,13 @@ element.
      * @event iron-ajax-error
      */
 
-    hostAttributes: {
-      hidden: true
-    },
+    hostAttributes: {hidden: true},
 
     properties: {
       /**
        * The URL target of the request.
        */
-      url: {
-        type: String
-      },
+      url: {type: String},
 
       /**
        * An object that contains query parameters to be appended to the
@@ -114,10 +110,7 @@ element.
        * The HTTP method to use such as 'GET', 'POST', 'PUT', or 'DELETE'.
        * Default is 'GET'.
        */
-      method: {
-        type: String,
-        value: 'GET'
-      },
+      method: {type: String, value: 'GET'},
 
       /**
        * HTTP request headers to send.
@@ -147,10 +140,7 @@ element.
        *
        * Varies the handling of the `body` param.
        */
-      contentType: {
-        type: String,
-        value: null
-      },
+      contentType: {type: String, value: null},
 
       /**
        * Body content to send with the request, typically used with "POST"
@@ -169,21 +159,16 @@ element.
        * Otherwise the body will be passed to the browser unmodified, and it
        * will handle any encoding (e.g. for FormData, Blob, ArrayBuffer).
        *
-       * @type (ArrayBuffer|ArrayBufferView|Blob|Document|FormData|null|string|undefined|Object)
+       * @type
+       * (ArrayBuffer|ArrayBufferView|Blob|Document|FormData|null|string|undefined|Object)
        */
-      body: {
-        type: Object,
-        value: null
-      },
+      body: {type: Object, value: null},
 
       /**
        * Toggle whether XHR is synchronous or asynchronous. Don't change this
        * to true unless You Know What You Are Doing™.
        */
-      sync: {
-        type: Boolean,
-        value: false
-      },
+      sync: {type: Boolean, value: false},
 
       /**
        * Specifies what data to store in the `response` property, and
@@ -203,74 +188,47 @@ element.
        *
        *    `document`: uses `XHR.response`.
        */
-      handleAs: {
-        type: String,
-        value: 'json'
-      },
+      handleAs: {type: String, value: 'json'},
 
       /**
        * Set the withCredentials flag on the request.
        */
-      withCredentials: {
-        type: Boolean,
-        value: false
-      },
+      withCredentials: {type: Boolean, value: false},
 
       /**
        * Set the timeout flag on the request.
        */
-      timeout: {
-        type: Number,
-        value: 0
-      },
+      timeout: {type: Number, value: 0},
 
       /**
        * If true, automatically performs an Ajax request when either `url` or
        * `params` changes.
        */
-      auto: {
-        type: Boolean,
-        value: false
-      },
+      auto: {type: Boolean, value: false},
 
       /**
        * If true, error messages will automatically be logged to the console.
        */
-      verbose: {
-        type: Boolean,
-        value: false
-      },
+      verbose: {type: Boolean, value: false},
 
       /**
        * The most recent request made by this iron-ajax element.
        *
        * @type {Object|undefined}
        */
-      lastRequest: {
-        type: Object,
-        notify: true,
-        readOnly: true
-      },
+      lastRequest: {type: Object, notify: true, readOnly: true},
 
       /**
        * The `progress` property of this element's `lastRequest`.
        *
        * @type {Object|undefined}
        */
-      lastProgress: {
-        type: Object,
-        notify: true,
-        readOnly: true
-      },
+      lastProgress: {type: Object, notify: true, readOnly: true},
 
       /**
        * True while lastRequest is in flight.
        */
-      loading: {
-        type: Boolean,
-        notify: true,
-        readOnly: true
-      },
+      loading: {type: Boolean, notify: true, readOnly: true},
 
       /**
        * lastRequest's response.
@@ -284,22 +242,14 @@ element.
        *
        * @type {Object}
        */
-      lastResponse: {
-        type: Object,
-        notify: true,
-        readOnly: true
-      },
+      lastResponse: {type: Object, notify: true, readOnly: true},
 
       /**
        * lastRequest's error, if any.
        *
        * @type {Object}
        */
-      lastError: {
-        type: Object,
-        notify: true,
-        readOnly: true
-      },
+      lastError: {type: Object, notify: true, readOnly: true},
 
       /**
        * An Array of all in-flight requests originating from this iron-ajax
@@ -315,13 +265,10 @@ element.
       },
 
       /**
-       * Length of time in milliseconds to debounce multiple automatically generated requests.
+       * Length of time in milliseconds to debounce multiple automatically
+       * generated requests.
        */
-      debounceDuration: {
-        type: Number,
-        value: 0,
-        notify: true
-      },
+      debounceDuration: {type: Number, value: 0, notify: true},
 
       /**
        * Prefix to be stripped from a JSON response before parsing it.
@@ -332,36 +279,28 @@ element.
        * with a string that would be nonsensical to a JavaScript parser.
        *
        */
-      jsonPrefix: {
-        type: String,
-        value: ''
-      },
+      jsonPrefix: {type: String, value: ''},
 
       /**
-       * By default, iron-ajax's events do not bubble. Setting this attribute will cause its
-       * request and response events as well as its iron-ajax-request, -response,  and -error
-       * events to bubble to the window object. The vanilla error event never bubbles when
-       * using shadow dom even if this.bubbles is true because a scoped flag is not passed with
-       * it (first link) and because the shadow dom spec did not used to allow certain events,
-       * including events named error, to leak outside of shadow trees (second link).
+       * By default, iron-ajax's events do not bubble. Setting this attribute will
+       * cause its request and response events as well as its iron-ajax-request,
+       * -response,  and -error events to bubble to the window object. The vanilla
+       * error event never bubbles when using shadow dom even if this.bubbles is
+       * true because a scoped flag is not passed with it (first link) and because
+       * the shadow dom spec did not used to allow certain events, including
+       * events named error, to leak outside of shadow trees (second link).
        * https://www.w3.org/TR/shadow-dom/#scoped-flag
        * https://www.w3.org/TR/2015/WD-shadow-dom-20151215/#events-that-are-not-leaked-into-ancestor-trees
        */
-      bubbles: {
-        type: Boolean,
-        value: false
-      },
+      bubbles: {type: Boolean, value: false},
 
       /**
-       * Changes the [`completes`](iron-request#property-completes) promise chain 
+       * Changes the [`completes`](iron-request#property-completes) promise chain
        * from `generateRequest` to reject with an object
        * containing the original request, as well an error message.
        * If false (default), the promise rejects with an error message only.
        */
-      rejectWithRequest: {
-        type: Boolean,
-        value: false
-      },
+      rejectWithRequest: {type: Boolean, value: false},
 
       _boundHandleResponse: {
         type: Function,
@@ -371,10 +310,9 @@ element.
       }
     },
 
-    observers: [
-      '_requestOptionsChanged(url, method, params.*, headers, contentType, ' +
-          'body, sync, handleAs, jsonPrefix, withCredentials, timeout, auto)'
-    ],
+    observers:
+        ['_requestOptionsChanged(url, method, params.*, headers, contentType, ' +
+         'body, sync, handleAs, jsonPrefix, withCredentials, timeout, auto)'],
 
     created: function() {
       this._boundOnProgressChanged = this._onProgressChanged.bind(this);
@@ -386,7 +324,7 @@ element.
      *
      * @return {string}
      */
-    get queryString () {
+    get queryString() {
       var queryParts = [];
       var param;
       var value;
@@ -466,7 +404,8 @@ element.
      *   url: string,
      *   method: (string|undefined),
      *   async: (boolean|undefined),
-     *   body: (ArrayBuffer|ArrayBufferView|Blob|Document|FormData|null|string|undefined|Object),
+     *   body:
+     * (ArrayBuffer|ArrayBufferView|Blob|Document|FormData|null|string|undefined|Object),
      *   headers: (Object|undefined),
      *   handleAs: (string|undefined),
      *   jsonPrefix: (string|undefined),
@@ -493,23 +432,20 @@ element.
      * @return {!IronRequestElement}
      */
     generateRequest: function() {
-      var request = /** @type {!IronRequestElement} */ (document.createElement('iron-request'));
+      var request = /** @type {!IronRequestElement} */ (
+          document.createElement('iron-request'));
       var requestOptions = this.toRequestOptions();
 
       this.push('activeRequests', request);
 
-      request.completes.then(
-        this._boundHandleResponse
-      ).catch(
-        this._handleError.bind(this, request)
-      ).then(
-        this._discardRequest.bind(this, request)
-      );
+      request.completes.then(this._boundHandleResponse)
+          .catch(this._handleError.bind(this, request))
+          .then(this._discardRequest.bind(this, request));
 
-      var evt = this.fire('iron-ajax-presend', {
-        request: request,
-        options: requestOptions
-      }, {bubbles: this.bubbles, cancelable: true});
+      var evt = this.fire(
+          'iron-ajax-presend',
+          {request: request, options: requestOptions},
+          {bubbles: this.bubbles, cancelable: true});
 
       if (evt.defaultPrevented) {
         request.abort();
@@ -518,33 +454,27 @@ element.
       }
 
       if (this.lastRequest) {
-        this.lastRequest.removeEventListener('iron-request-progress-changed',
-                this._boundOnProgressChanged);
+        this.lastRequest.removeEventListener(
+            'iron-request-progress-changed', this._boundOnProgressChanged);
       }
 
-      request.addEventListener('iron-request-progress-changed',
-          this._boundOnProgressChanged);
+      request.addEventListener(
+          'iron-request-progress-changed', this._boundOnProgressChanged);
 
       request.send(requestOptions);
       this._setLastProgress(null);
       this._setLastRequest(request);
       this._setLoading(true);
 
-      this.fire('request', {
-        request: request,
-        options: requestOptions
-      }, {
-        bubbles: this.bubbles,
-        composed: true
-      });
+      this.fire(
+          'request',
+          {request: request, options: requestOptions},
+          {bubbles: this.bubbles, composed: true});
 
-      this.fire('iron-ajax-request', {
-        request: request,
-        options: requestOptions
-      }, {
-        bubbles: this.bubbles,
-        composed: true
-      });
+      this.fire(
+          'iron-ajax-request',
+          {request: request, options: requestOptions},
+          {bubbles: this.bubbles, composed: true});
 
       return request;
     },
@@ -555,14 +485,9 @@ element.
         this._setLastError(null);
         this._setLoading(false);
       }
-      this.fire('response', request, {
-        bubbles: this.bubbles,
-        composed: true
-      });
-      this.fire('iron-ajax-response', request, {
-        bubbles: this.bubbles,
-        composed: true
-      });
+      this.fire('response', request, {bubbles: this.bubbles, composed: true});
+      this.fire(
+          'iron-ajax-response', request, {bubbles: this.bubbles, composed: true});
     },
 
     _handleError: function(request, error) {
@@ -583,21 +508,15 @@ element.
       }
 
       // Tests fail if this goes after the normal this.fire('error', ...)
-      this.fire('iron-ajax-error', {
-        request: request,
-        error: error
-      }, {
-        bubbles: this.bubbles,
-        composed: true
-      });
+      this.fire(
+          'iron-ajax-error',
+          {request: request, error: error},
+          {bubbles: this.bubbles, composed: true});
 
-      this.fire('error', {
-        request: request,
-        error: error
-      }, {
-        bubbles: this.bubbles,
-        composed: true
-      });
+      this.fire(
+          'error',
+          {request: request, error: error},
+          {bubbles: this.bubbles, composed: true});
     },
 
     _discardRequest: function(request) {

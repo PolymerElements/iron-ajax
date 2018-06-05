@@ -1,33 +1,25 @@
 language: node_js
-sudo: required
+sudo: 'false'
 before_script:
   - npm install -g polymer-cli
   - polymer install --variants
-  - >-
-    npm run update-types && git diff --exit-code || (echo -e
-    '\n\033[31mERROR:\033[0m Typings are stale. Please run "npm run
-    update-types".' && false)
-  - >-
-    npm run format && git diff --exit-code || (echo -e '\n\033[31mERROR:\033[0m
-    Typings are stale. Please run "npm run format".' && false)
 env:
   global:
     - secure: >-
-        HWwX1XiMfkZkC5XzAz6HkMJcFR+O1DZ+g9hnogZ0e3zdjqZ8VFkCsx0glJLA4TIPdWDfq93gRmeGtbepIx0x4BVOWX8rqoIjb9fbNJDU4ItZsbOvDLInFqKevdq+/klDavVfbR4hNeaHgDmcIEa/IolDU0qIrIdefBfZLOQ0ajM=
+        Tnh6hBNeOMU+JzJCvB50kyJ5FLXJJ1gLy9unf9Cz9MWnH8duclcZ3k2K0JT0sgb2eP1NiNtUK2bV2KVdCAvpGMj0ExK0hS+p7L0vWb4i16+gyCuf13jVwcZFU6MVEVeZlgfpxcrcXqPE9TX+E3JMliKFRJIAram9r4Ok/i+1kCE=
     - secure: >-
-        hBkZz41jJfEP+Z8Uwcw3/EWDLLBzKT+WKY/XI7ubT/bxlXn95RJqY+j1pBX7+fHfLrUfjRmQHTsqkkST2JwRGAZoZpBX+lmUuNRyMoYsDKMl+CYinhSNTVVGSv7JPt5Ls5fktfzIt6Qd97vBy25hcCGKB6HBy+ppfP2DuII4uC8=
-node_js: stable
+        QTd3c12RWi0RRsGrtxxSSvc9tgaCUnSmzyW9tSfK+z+06MSeJf8U8evE9IiZCEHB+9flLS5w6+fANnV7FRw1o0r5bQD8moWAMjTw1kZYlfAAf/2XGKR5wY00lyMs5a4BkimgPAU4FsJj2Gqojb7kKHmZ46y2ZKKbOQETsztXuKA=
+node_js: '9'
 addons:
   firefox: latest
-  apt:
-    sources:
-      - google-chrome
-    packages:
-      - google-chrome-stable
-  sauce_connect: true
+  chrome: stable
 script:
   - xvfb-run polymer test
-  - >-
+  - |-
+    >-
     if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then polymer test -s 'default';
     fi
 dist: trusty
+cache:
+  directories:
+    - node_modules

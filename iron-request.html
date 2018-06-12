@@ -407,16 +407,43 @@ iron-request can be used to perform XMLHttpRequests.
         return '';
       }
       var pieces = [];
-      Object.keys(object).forEach(function(key) {
-        // TODO(rictic): handle array values here, in a consistent way with
-        //   iron-ajax params.
-        pieces.push(
-            this._wwwFormUrlEncodePiece(key) + '=' +
-            this._wwwFormUrlEncodePiece(object[key]));
-      }, this);
+      pieces = this._wwwFormUrlEncodeRecurrent(null, object , pieces);
       return pieces.join('&');
     },
-
+    /**
+     * Funcion parse recurrently whole object. Support multi level nodes
+     *
+     * @param {String} keyprefix The prefix of key (parent name).
+     * @param {Object} object The object (or part of it) to encode
+     * as x-www-form-urlencoded.
+     * @param {Array} container Array which contains all parsed elements.
+     * @return {Array} array with parsed element
+     */
+    _wwwFormUrlEncodeRecurrent: function(keyprefix, object, container) {
+      if(!container){
+        container = [];
+      }
+      if(!object){
+        return container;
+      }
+      Object.keys(object).forEach(function(key) {
+          var keyWithPrefix;
+          if(!keyprefix){
+            keyWithPrefix = key;
+          }else{
+            keyWithPrefix = keyprefix + '[' + key + ']';
+          }
+          if((Object.keys(object[key]).length > 0) && (typeof object[key] != 'string')){
+            container = this._wwwFormUrlEncodeRecurrent(keyWithPrefix, object[key], container);
+          } else {
+            container.push(
+              this._wwwFormUrlEncodePiece(keyWithPrefix) + '=' +
+              this._wwwFormUrlEncodePiece(object[key]));
+          }
+        }
+      , this);
+      return container;
+    },
     /**
      * @param {*} str A key or value to encode as x-www-form-urlencoded.
      * @return {string} .
@@ -431,7 +458,6 @@ iron-request can be used to perform XMLHttpRequests.
       return encodeURIComponent(str.toString().replace(/\r?\n/g, '\r\n'))
           .replace(/%20/g, '+');
     },
-
     /**
      * Updates the status code and status text.
      */

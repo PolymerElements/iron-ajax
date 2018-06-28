@@ -988,9 +988,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       suite('Progress Tests', function() {
         var ajax;
+        var server2;
 
         setup(function() {
-          server.restore();
+          // sinon does not seem to catch requests here without creating a new
+          // fakeServer here
+          server2 = sinon.fakeServer.create();
+          server2.respondWith(
+              'GET',
+              /\/responds_to_get_with_json.*/,
+              [200, responseHeaders.json, '{"success":true}']);
         });
 
         test('lastProgress is same as lastRequest', function(done) {
@@ -1031,9 +1038,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 done(err);
               });
 
-          server.respond();
-
           ajax.addEventListener('last-progress-changed', onLastProgressChanged);
+          server2.respond();
         });
       });
     });

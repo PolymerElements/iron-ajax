@@ -7,6 +7,11 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
+import { Base } from '@polymer/polymer/polymer-legacy.js';
+
+import './iron-request.js';
+import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
+
 /**
 The `iron-ajax` element exposes network request functionality.
 
@@ -31,16 +36,6 @@ element.
 @demo demo/index.html
 @hero hero.svg
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
-import { Base } from '@polymer/polymer/polymer-legacy.js';
-
-import './iron-request.js';
-import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
-
 Polymer({
 
   is: 'iron-ajax',

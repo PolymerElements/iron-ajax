@@ -7,6 +7,9 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
+import { Base } from '@polymer/polymer/polymer-legacy.js';
+
+import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
 /*
 iron-request can be used to perform XMLHttpRequests.
 
@@ -14,15 +17,6 @@ iron-request can be used to perform XMLHttpRequests.
     ...
     this.$.xhr.send({url: url, body: params});
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
-import { Base } from '@polymer/polymer/polymer-legacy.js';
-
-import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
-
 Polymer({
   is: 'iron-request',
 

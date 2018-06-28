@@ -66,19 +66,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
 
     <script type="module">
-import '@polymer/polymer/polymer-legacy.js';
-import '@polymer/promise-polyfill/promise-polyfill.js';
-import '../iron-ajax.js';
-import '@polymer/iron-image/iron-image.js';
-import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
-Polymer({
-  is: 'iron-ajax-demo',
+      import '@polymer/polymer/polymer-legacy.js';
+      import '@polymer/promise-polyfill/promise-polyfill.js';
+      import '../iron-ajax.js';
+      import '@polymer/iron-image/iron-image.js';
+      import {Polymer} from '@polymer/polymer/lib/legacy/polymer-fn.js';
+      Polymer({
+        is: 'iron-ajax-demo',
 
-  url: function(videoId) {
-    return 'https://www.youtube.com/watch?v=' + videoId;
-  }
-});
-</script>
+        url: function(videoId) {
+          return 'https://www.youtube.com/watch?v=' + videoId;
+        }
+      });
+    </script>
   </dom-module>
 
   <iron-ajax-demo></iron-ajax-demo>

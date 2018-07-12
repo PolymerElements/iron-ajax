@@ -34,7 +34,6 @@ You can trigger a request explicitly by calling `generateRequest` on the
 element.
 
 @demo demo/index.html
-@hero hero.svg
 */
 Polymer({
 

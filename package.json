@@ -15,7 +15,6 @@
   "devDependencies": {
     "webmat": "^0.2.0",
     "@polymer/iron-image": "^3.0.0-pre.20",
-    "@polymer/promise-polyfill": "^3.0.0-pre.20",
     "@webcomponents/webcomponentsjs": "^2.0.0",
     "@polymer/test-fixture": "^3.0.0-pre.20",
     "wct-browser-legacy": "^1.0.1"

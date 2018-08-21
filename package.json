@@ -17,10 +17,13 @@
     "@polymer/iron-image": "^3.0.0-pre.20",
     "@webcomponents/webcomponentsjs": "^2.0.0",
     "@polymer/test-fixture": "^3.0.0-pre.20",
-    "wct-browser-legacy": "^1.0.1"
+    "wct-browser-legacy": "^1.0.1",
+    "@polymer/gen-typescript-declarations": "^1.5.0"
   },
   "scripts": {
-    "format": "webmat"
+    "format": "webmat",
+    "generate-types": "gen-typescript-declarations --deleteExisting --outDir .",
+    "prepack": "npm run generate-types"
   },
   "version": "3.0.0-pre.20",
   "main": "iron-ajax.js",

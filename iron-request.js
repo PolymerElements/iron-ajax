@@ -164,7 +164,7 @@ Polymer({
    *   handleAs: (string|undefined),
    *   jsonPrefix: (string|undefined),
    *   withCredentials: (boolean|undefined),
-   *   timeout: (Number|undefined),
+   *   timeout: (number|undefined),
    *   rejectWithRequest: (boolean|undefined)}} options -
    *   - url The url to which the request is sent.
    *   - method The HTTP method to use, default is GET.

@@ -14,9 +14,9 @@
   "license": "BSD-3-Clause",
   "devDependencies": {
     "webmat": "^0.2.0",
-    "@polymer/iron-image": "^3.0.0-pre.22",
+    "@polymer/iron-image": "^3.0.0-pre.24",
     "@webcomponents/webcomponentsjs": "^2.0.0",
-    "@polymer/test-fixture": "^4.0.0-pre.0",
+    "@polymer/test-fixture": "^4.0.0-pre.2",
     "wct-browser-legacy": "^1.0.1",
     "@polymer/gen-typescript-declarations": "^1.5.1"
   },

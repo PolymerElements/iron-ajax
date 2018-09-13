@@ -798,7 +798,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
       });
 
-      suite('when making a POST over the wire', function() {
+      // TODO: Enable these tests once a better solution for testing request
+      // contents exists. http://httpbin.org is too flaky.
+      suite.skip('when making a POST over the wire', function() {
         test('FormData is handled correctly', function() {
           server.restore();
           var requestBody = new FormData();
@@ -873,7 +875,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(request.xhr.timeout).to.be.equal(5000);  // 5 Seconds
         });
 
-        test('it fails once that timeout is reached', function() {
+        // TODO: Enable these tests once a better solution for testing request
+        // contents exists. http://httpbin.org is too flaky.
+        test.skip('it fails once that timeout is reached', function() {
           var ajax = fixture('Delay');
           ajax.timeout = 1;  // 1 Millisecond
 
@@ -898,7 +902,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       });
 
       suite('when using the bubbles attribute', function() {
-        test(
+        // TODO: Enable these tests once a better solution for testing request
+        // contents exists. http://httpbin.org is too flaky.
+        test.skip(
             'the request and response events should bubble to window',
             function(done) {
               server.restore();

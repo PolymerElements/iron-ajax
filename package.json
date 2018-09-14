@@ -25,7 +25,7 @@
     "generate-types": "gen-typescript-declarations --deleteExisting --outDir . --verify",
     "prepare": "npm run generate-types"
   },
-  "version": "3.0.0",
+  "version": "3.0.1",
   "main": "iron-ajax.js",
   "author": "The Polymer Authors",
   "dependencies": {

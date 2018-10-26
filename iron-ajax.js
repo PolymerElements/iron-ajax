@@ -38,6 +38,7 @@ element.
 Polymer({
 
   is: 'iron-ajax',
+  _template: null,
 
   /**
    * Fired before a request is sent.

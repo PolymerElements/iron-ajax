@@ -270,7 +270,7 @@ Polymer({
     }, this);
 
     if (isXHRAsync) {
-      xhr.timeout = options.timeout;
+      xhr.timeout = options.timeout || 0;
 
       var handleAs = options.handleAs;
 

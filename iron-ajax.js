@@ -38,6 +38,7 @@ element.
 Polymer({
 
   is: 'iron-ajax',
+  /** @override */
   _template: null,
 
   /**
@@ -311,6 +312,7 @@ Polymer({
       ['_requestOptionsChanged(url, method, params.*, headers, contentType, ' +
        'body, sync, handleAs, jsonPrefix, withCredentials, timeout, auto)'],
 
+  /** @override */
   created: function() {
     this._boundOnProgressChanged = this._onProgressChanged.bind(this);
   },

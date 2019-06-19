@@ -20,6 +20,7 @@ iron-request can be used to perform XMLHttpRequests.
 */
 Polymer({
   is: 'iron-request',
+  /** @override */
   _template: null,
 
   hostAttributes: {hidden: true},
